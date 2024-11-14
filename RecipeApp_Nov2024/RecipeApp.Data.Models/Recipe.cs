@@ -1,0 +1,39 @@
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace RecipeApp.Data.Models
+{
+    public class Recipe
+    {
+        public int Id { get; set; }
+
+        public string Title { get; set; } = null!;
+
+        public DateTime CreatedOn { get; set; }
+
+        public string Description { get; set; } = null!;
+
+        public string Instructions { get; set; } = null!;
+
+        public string? ImageUrl { get; set; }
+
+        // UserId uses string because IdentityUser uses string for the Id
+        public string UserId { get; set; } = null!;
+
+        [ForeignKey(nameof(UserId))]
+        public ApplicationUser User { get; set; } = null!;
+
+        public ICollection<RecipeCategory> RecipeCategories { get; set; } =
+            new HashSet<RecipeCategory>();
+
+        public ICollection<RecipeIngredient> RecipeIngredients { get; set; } =
+            new HashSet<RecipeIngredient>();
+
+        public ICollection<Comment> Comments { get; set; } =
+            new HashSet<Comment>();
+
+        public ICollection<Rating> Ratings { get; set; } =
+            new HashSet<Rating>();
+
+        public bool IsDeleted { get; set; }
+    }
+}
