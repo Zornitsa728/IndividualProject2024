@@ -12,7 +12,7 @@ namespace RecipeApp.Data.Configuration
 
             builder.HasOne(ri => ri.Recipe)
                 .WithMany(r => r.RecipeIngredients)
-                .HasForeignKey(r => r.RecipeId)
+                .HasForeignKey(ri => ri.RecipeId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(ri => ri.Ingredient)

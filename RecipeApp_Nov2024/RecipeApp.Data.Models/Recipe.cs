@@ -34,6 +34,9 @@ namespace RecipeApp.Data.Models
         public ICollection<Rating> Ratings { get; set; } =
             new HashSet<Rating>();
 
+        // Navigation property for the cookbooks containing this recipe
+        public ICollection<RecipeCookbook> RecipeCookbooks { get; set; } = new HashSet<RecipeCookbook>();
+
         public bool IsDeleted { get; set; }
     }
 }

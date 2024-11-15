@@ -26,6 +26,8 @@ namespace RecipeApp.Data
 
         public DbSet<RecipeIngredient> RecipesIngredients { get; set; } = null!;
 
+        public DbSet<RecipeCookbook> RecipesCookbooks { get; set; } = null!;
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
