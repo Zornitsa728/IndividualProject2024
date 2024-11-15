@@ -22,6 +22,11 @@ namespace RecipeApp.Data.Configuration
                 .WithMany(c => c.RecipeCategories)
                 .HasForeignKey(rc => rc.CategoryId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            // Seed some initial data to assign recipes to categories
+            builder.HasData(
+                new RecipeCategory { RecipeId = -1, CategoryId = 4 }, // Cranberry Pie -> Desserts
+                new RecipeCategory { RecipeId = -2, CategoryId = 10 }); // Sweet Potato Soup -> Soups
         }
     }
 }

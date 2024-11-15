@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RecipeApp.Data;
 
@@ -11,9 +12,11 @@ using RecipeApp.Data;
 namespace RecipeApp.Data.Migrations
 {
     [DbContext(typeof(RecipeDbContext))]
-    partial class RecipeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241115092606_SeedRecipeCategoryData")]
+    partial class SeedRecipeCategoryData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -228,22 +231,22 @@ namespace RecipeApp.Data.Migrations
                         {
                             Id = "9ccd592c-f245-4344-b4ed-dde7df4677e1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "c3299e5a-e86d-432c-bd07-b2faea7388d3",
+                            ConcurrencyStamp = "76104c50-0372-45e5-a16b-19c36f549577",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "363b3120-eb47-4bdd-8b68-dff9282db6c5",
+                            SecurityStamp = "476ee64c-c73a-4b88-a3ed-091cf89047f0",
                             TwoFactorEnabled = false
                         },
                         new
                         {
                             Id = "6ca87836-1e87-4648-803f-c4c416c5d850",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "2e481150-4623-41cc-b510-e01e52e9f6fb",
+                            ConcurrencyStamp = "c38796cb-ffe5-4478-99de-52b7db19a780",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "af747ed2-7ffd-43f2-abc1-f4518b7e4cc8",
+                            SecurityStamp = "450fdc4f-7926-4120-a1d4-230342e511d8",
                             TwoFactorEnabled = false
                         });
                 });
@@ -255,10 +258,6 @@ namespace RecipeApp.Data.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -273,61 +272,51 @@ namespace RecipeApp.Data.Migrations
                         new
                         {
                             Id = 1,
-                            ImageUrl = "/images/Category/default.jpg",
                             Name = "Appetizers"
                         },
                         new
                         {
                             Id = 2,
-                            ImageUrl = "/images/Category/default.jpg",
                             Name = "Bread Recipes"
                         },
                         new
                         {
                             Id = 3,
-                            ImageUrl = "/images/Category/default.jpg",
                             Name = "Breakfast"
                         },
                         new
                         {
                             Id = 4,
-                            ImageUrl = "/images/Category/default.jpg",
                             Name = "Desserts"
                         },
                         new
                         {
                             Id = 5,
-                            ImageUrl = "/images/Category/default.jpg",
                             Name = "Drinks"
                         },
                         new
                         {
                             Id = 6,
-                            ImageUrl = "/images/Category/default.jpg",
                             Name = "Main Dishes"
                         },
                         new
                         {
                             Id = 7,
-                            ImageUrl = "/images/Category/default.jpg",
                             Name = "Salads"
                         },
                         new
                         {
                             Id = 8,
-                            ImageUrl = "/images/Category/default.jpg",
                             Name = "Sandwiches"
                         },
                         new
                         {
                             Id = 9,
-                            ImageUrl = "/images/Category/default.jpg",
                             Name = "Side Dishes"
                         },
                         new
                         {
                             Id = 10,
-                            ImageUrl = "/images/Category/default.jpg",
                             Name = "Soups"
                         });
                 });
@@ -492,9 +481,9 @@ namespace RecipeApp.Data.Migrations
                         new
                         {
                             Id = -1,
-                            CreatedOn = new DateTime(2024, 11, 15, 11, 54, 42, 60, DateTimeKind.Local).AddTicks(5831),
+                            CreatedOn = new DateTime(2024, 11, 15, 11, 26, 5, 241, DateTimeKind.Local).AddTicks(2991),
                             Description = "This vibrant Cranberry Pie, made with a flaky homemade pie crust and a sweet-tart cranberry filling, is the dessert perfect for the holiday season. Top a slice with vanilla ice cream, and the whole family will love this festive dessert!",
-                            ImageUrl = "/images/Recipe/Cranberry-Pie.jpg",
+                            ImageUrl = "/images/Cranberry-Pie.jpg",
                             Instructions = "1. Preheat the oven to 425°F. Let the pie dough soften on the counter so it is easier to roll out. Meanwhile, combine 5 cups of cranberries, sugar, cornstarch, orange zest, cinnamon, ginger, salt, and vanilla extract in the bowl of a food processor. Process the food processor for about 10 seconds to roughly chop the cranberries. 2. Transfer the mixture to a large bowl and fold in the remaining 1 cup of cranberries. Set aside.3. On a lightly floured surface, roll 1 disk of pie dough into a 13-inch circle (about ⅛-inch thick). Press the circle into a 9-inch deep-dish pie plate. Trim any excess dough to leave a 1-inch overhang over the edge of the pie plate. Place it in the fridge.4. Roll the other disk into a 12-inch circle. Cut the dough into ¾-inch-wide strips. There should be about 14 strips.5. Scoop the cranberry mixture into the bottom pie crust and smooth it into an even layer.6. Create a lattice pattern with the pie crust strips over the cranberries. Trim the lattice strips to have a ½-inch overhang (slightly shorter than the bottom crust). 7. Fold the bottom crust over the lattice strips and gently press down to create a flat edge. If desired, crimp the edges with your fingers. In a small bowl, beat the egg with 1 tablespoon of water.8. Use a pastry brush to apply the egg wash to the top crust, avoiding the filling. Then, place the pie on a rimmed baking sheet. Cover the edges of the pie with a pie shield or aluminum foil. Bake for 20 minutes, then reduce the oven temperature to 375°F and bake for 40-50 minutes or until the top is golden brown and the filling bubbles at the edges and in the center. Let the pie cool completely for about 4 hours before slicing.",
                             IsDeleted = false,
                             Title = "Cranberry Pie",
@@ -503,9 +492,9 @@ namespace RecipeApp.Data.Migrations
                         new
                         {
                             Id = -2,
-                            CreatedOn = new DateTime(2024, 11, 15, 11, 54, 42, 60, DateTimeKind.Local).AddTicks(5872),
+                            CreatedOn = new DateTime(2024, 11, 15, 11, 26, 5, 241, DateTimeKind.Local).AddTicks(3034),
                             Description = "Celebrate soup season with creamy Sweet Potato Soup! This comforting soup recipe is made with sweet potatoes, warm and smoky spices, and cream, and is one of my favorite ways to warm up on a chilly day.",
-                            ImageUrl = "/images/Recipe/Sweet-Potato-Soup.jpg",
+                            ImageUrl = "/images/Sweet-Potato-Soup.jpg",
                             Instructions = "1. In a large Dutch oven or large pot, heat the oil and butter over medium heat. Add the onion and cook, stirring occasionally, for about 5 minutes until softened. 2. Add the ginger, cumin, paprika, and garlic and cook for about 30 seconds until fragrant. 3. Add the sweet potatoes, vegetable stock, salt, and pepper. Bring to a boil over medium-high heat. Reduce the flame to medium-low heat, and simmer for 15 to 20 minutes until the sweet potatoes are very tender. 4. Ladle half of the soup into a blender. Place the lid on top, but remove the center insert to allow the steam to vent. Cover the opening loosely with a paper towel or clean dish towel and blend at medium speed for about 1 minute or smooth. Transfer the soup to a clean bowl and repeat with the remaining soup. 5. Return the soup to the pot and place over medium-low heat. 6. Stir in the heavy cream. Rewarm for 2 to 3 minutes, stirring occasionally. Garnish the soup with cream, olive oil, and freshly cracked black pepper before serving hot!",
                             IsDeleted = false,
                             Title = "Sweet Potato Soup",
