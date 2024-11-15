@@ -1,0 +1,9 @@
+﻿@using RecipeApp.Web.ViewModels.Recipe
+@model IEnumerable<CategoryViewModel>
+
+<div class="dropdown-menu">
+    @foreach (var category in Model)
+    {
+        <a class="dropdown-item" asp-controller="Recipe" asp-action="Category" asp-route-id="@category.Id">@category.Name</a>
+    }
+</div>

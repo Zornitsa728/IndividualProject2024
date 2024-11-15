@@ -1,0 +1,16 @@
+﻿@using RecipeApp.Web.ViewModels.Recipe
+@model CategoryViewModel
+
+<h2>Category</h2>
+
+<div class="row">
+        <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">@Model.Name</h5>
+                    <a asp-action="See more" asp-route-id="@Model.Id" class="btn btn-primary">View Recipes</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

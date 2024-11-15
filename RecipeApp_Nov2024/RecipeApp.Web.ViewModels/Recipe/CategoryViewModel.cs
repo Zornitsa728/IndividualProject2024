@@ -1,6 +1,6 @@
 ﻿namespace RecipeApp.Web.ViewModels.Recipe
 {
-    public class RecipeIndexViewModel
+    public class CategoryViewModel
     {
         public int Id { get; set; }
 
