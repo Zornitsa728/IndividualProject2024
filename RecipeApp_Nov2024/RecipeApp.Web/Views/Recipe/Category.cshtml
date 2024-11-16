@@ -1,14 +1,18 @@
 ﻿@using RecipeApp.Web.ViewModels.Recipe
-@model CategoryViewModel
+@model IEnumerable<RecipeViewModel>
 
-<h2>Category</h2>
+<h2>@ViewData["Title"]</h2>
 
 <div class="row">
+    @foreach (var recipe in Model)
+    {
         <div class="col-md-4">
             <div class="card mb-4 shadow-sm">
+                <img src="@recipe.ImageUrl" class="card-img-top" alt="@recipe.Title"
+                     style="height: 200px; object-fit: cover; border-radius: 10px;">
                 <div class="card-body">
-                    <h5 class="card-title">@Model.Name</h5>
-                    <a asp-action="See more" asp-route-id="@Model.Id" class="btn btn-primary">View Recipes</a>
+                    <h5 class="card-title">@recipe.Title</h5>
+                    <a asp-action="Details" asp-route-id="@recipe.Id" class="btn btn-primary">View Recipe</a>
                 </div>
             </div>
         </div>

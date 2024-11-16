@@ -20,3 +20,29 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.card {
+    border: none;
+    transition: transform 0.2s ease-in-out;
+}
+
+    .card:hover {
+        transform: scale(1.02); /* Slight zoom effect on hover */
+    }
+
+.card-title {
+    font-family: 'Arial', sans-serif;
+    color: #000000;
+}
+
+.btn {
+    color: #11217c;
+    background-color: #ffffff;
+}
+
+.pb-3, h2 {
+    color: #960b0b;
+    font-weight:600;
+    text-align:center;
+}
+

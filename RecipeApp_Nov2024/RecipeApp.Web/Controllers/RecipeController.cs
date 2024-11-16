@@ -35,15 +35,28 @@ namespace RecipeApp.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Category(int id)
         {
-            if (!dbContext.Categories.Any(c => c.Id == id))
+            Category? category = dbContext
+                .Categories
+                .FirstOrDefault(c => c.Id == id);
+
+            if (category == null)
             {
                 return RedirectToAction(nameof(Index));
             }
 
-            IEnumerable<Recipe> recipes = await dbContext.Recipes
-                .Where(r => r.RecipeCategories.All(r => r.CategoryId == id))
+            IEnumerable<RecipeViewModel> recipes = await dbContext
+                .Recipes
+                .Where(r => r.RecipeCategories.Any(rc => rc.CategoryId == id))
+                .Select(rc => new RecipeViewModel()
+                {
+                    Id = rc.Id,
+                    Title = rc.Title,
+                    ImageUrl = rc.ImageUrl,
+                })
                 .AsNoTracking()
                 .ToListAsync();
+
+            ViewData["Title"] = category.Name;
 
             return View(recipes);
         }
