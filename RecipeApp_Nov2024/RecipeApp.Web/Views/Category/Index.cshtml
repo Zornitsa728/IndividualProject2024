@@ -1,4 +1,4 @@
-﻿@using RecipeApp.Web.ViewModels.Recipe
+﻿@using RecipeApp.Web.ViewModels.Category
 @model IEnumerable<CategoryViewModel>
 
 <h2>Recipes Categories</h2>
@@ -11,7 +11,7 @@
                 <img src="@recipeCategory.ImageUrl" class="card-img-top" alt="Category Image" style="height: 200px; object-fit: cover;">
                 <div class="card-body">
                     <h5 class="card-title">@recipeCategory.Name</h5>
-                    <a asp-action="See more" asp-route-id="@recipeCategory.Id" class="btn btn-primary">View Recipes</a>
+                    <a asp-action="CategoryRecipes" asp-route-id="@recipeCategory.Id" class="btn btn-primary">View Recipes</a>
                 </div>
             </div>
         </div>

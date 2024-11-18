@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RecipeApp.Data;
-using RecipeApp.Web.ViewModels.Recipe;
+using RecipeApp.Web.ViewModels.Category;
 
 namespace RecipeApp.Web.Views.Shared.Components.CategoryDropdown
 {
@@ -25,6 +25,12 @@ namespace RecipeApp.Web.Views.Shared.Components.CategoryDropdown
                      ImageUrl = c.ImageUrl
                  })
                 .ToListAsync();
+
+            categories.Add(new CategoryViewModel()
+            {
+                Id = -1,
+                Name = "All Categories"
+            });
 
             return View(categories);
         }
