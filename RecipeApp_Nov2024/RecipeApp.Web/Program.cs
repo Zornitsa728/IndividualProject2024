@@ -1,7 +1,7 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using RecipeApp.Data;
 using RecipeApp.Data.Models;
-using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,11 +13,18 @@ builder.Services.AddDbContext<RecipeDbContext>(options =>
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
-    .AddEntityFrameworkStores<RecipeDbContext>();
+builder.Services
+    .AddIdentity<ApplicationUser, IdentityRole>(config =>
+       {
+           ConfigureIdentity(config);
+       })
+       .AddEntityFrameworkStores<RecipeDbContext>()
+       .AddRoles<IdentityRole>()
+       .AddSignInManager<SignInManager<ApplicationUser>>()
+       .AddUserManager<UserManager<ApplicationUser>>();
 
-builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
@@ -48,3 +55,22 @@ app.MapControllerRoute(
 app.MapRazorPages();
 
 app.Run();
+
+//in real project this should be in manage user secrets
+// private is not needed because methods are scoped to the file and behave as private by default
+static void ConfigureIdentity(IdentityOptions config)
+{
+    config.Password.RequireDigit = true;
+    config.Password.RequireLowercase = true;
+    config.Password.RequireUppercase = true;
+    config.Password.RequireNonAlphanumeric = false;
+    config.Password.RequiredLength = 3;
+    config.Password.RequiredUniqueChars = 0;
+
+    config.SignIn.RequireConfirmedAccount = false;
+    config.SignIn.RequireConfirmedEmail = false;
+    config.SignIn.RequireConfirmedPhoneNumber = false;
+
+    config.User.RequireUniqueEmail = true;
+}
+
