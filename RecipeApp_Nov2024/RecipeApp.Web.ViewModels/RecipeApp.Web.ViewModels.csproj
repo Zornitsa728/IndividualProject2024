@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Favorites\" />
+    <Folder Include="Recipe\" />
+  </ItemGroup>
+
 </Project>

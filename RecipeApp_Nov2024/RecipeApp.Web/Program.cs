@@ -67,6 +67,10 @@ static void ConfigureIdentity(IdentityOptions config)
     config.Password.RequiredLength = 3;
     config.Password.RequiredUniqueChars = 0;
 
+    config.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+    config.Lockout.MaxFailedAccessAttempts = 5;
+    config.Lockout.AllowedForNewUsers = true;
+
     config.SignIn.RequireConfirmedAccount = false;
     config.SignIn.RequireConfirmedEmail = false;
     config.SignIn.RequireConfirmedPhoneNumber = false;
