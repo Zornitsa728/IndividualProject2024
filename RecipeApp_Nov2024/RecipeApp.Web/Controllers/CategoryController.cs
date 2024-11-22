@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using RecipeApp.Data;
 using RecipeApp.Data.Models;
-using RecipeApp.Web.ViewModels.Category;
+using RecipeApp.Web.ViewModels.CategoryViewModels;
 
 namespace RecipeApp.Web.Controllers
 {
@@ -46,7 +46,7 @@ namespace RecipeApp.Web.Controllers
 
             IEnumerable<CategoryRecipeViewModel> recipes = await dbContext
                 .Recipes
-                .Where(r => r.RecipeCategories.Any(rc => rc.CategoryId == id))
+                .Where(r => r.CategoryId == id)
                 .Select(rc => new CategoryRecipeViewModel()
                 {
                     Id = rc.Id,

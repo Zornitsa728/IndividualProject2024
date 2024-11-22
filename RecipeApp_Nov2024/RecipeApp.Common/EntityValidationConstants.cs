@@ -17,6 +17,8 @@
             public const int DescriptionMaxLength = 2000;
 
             public const string CreatedOnDateFormat = "dd/MM/yyyy";
+
+            public const int ImageUrlMaxLength = 2100;
         }
 
         public static class Ingredient
@@ -25,7 +27,7 @@
 
             public const int NameMaxLength = 100;
 
-            public const int QuantityMinLength = 1;
+            public const double QuantityMinLength = 0.1;
 
             public const int QuantityMaxLength = 1000;
         }

@@ -16,11 +16,11 @@
     {
         public int Id { get; set; }
         public string Name { get; set; } = null!;
-        public double Quantity { get; set; }
         public UnitOfMeasurement Unit { get; set; }
         public ICollection<RecipeIngredient> RecipeIngredients { get; set; } =
             new HashSet<RecipeIngredient>();
 
-        // TODO: Soft Delete 
+        // Recipes using the ingredient won't break when an ingredient is "deleted."
+        public bool IsDeleted { get; set; }
     }
 }

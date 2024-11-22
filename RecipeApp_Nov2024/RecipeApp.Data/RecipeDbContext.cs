@@ -22,8 +22,6 @@ namespace RecipeApp.Data
 
         public DbSet<Rating> Ratings { get; set; } = null!;
 
-        public DbSet<RecipeCategory> RecipesCategories { get; set; } = null!;
-
         public DbSet<RecipeIngredient> RecipesIngredients { get; set; } = null!;
 
         public DbSet<RecipeCookbook> RecipesCookbooks { get; set; } = null!;

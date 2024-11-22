@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using RecipeApp.Data.Models;
 
+using static RecipeApp.Common.EntityValidationConstants.Ingredient;
+
 namespace RecipeApp.Data.Configuration
 {
     public class RecipeIngredientConfiguration : IEntityTypeConfiguration<RecipeIngredient>
@@ -19,6 +21,10 @@ namespace RecipeApp.Data.Configuration
                 .WithMany(i => i.RecipeIngredients)
                 .HasForeignKey(ri => ri.IngredientId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Property(ri => ri.Quantity)
+                .IsRequired(true)
+                .HasMaxLength(QuantityMaxLength);
         }
     }
 }

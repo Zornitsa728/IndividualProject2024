@@ -10,6 +10,8 @@
 
         public Ingredient Ingredient { get; set; } = null!;
 
+        public double Quantity { get; set; }
+
         public bool IsDeleted { get; set; }
     }
 }

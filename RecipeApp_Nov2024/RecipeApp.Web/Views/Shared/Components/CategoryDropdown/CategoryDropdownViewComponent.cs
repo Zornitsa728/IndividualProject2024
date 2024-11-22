@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RecipeApp.Data;
-using RecipeApp.Web.ViewModels.Category;
+using RecipeApp.Web.ViewModels.CategoryViewModels;
 
 namespace RecipeApp.Web.Views.Shared.Components.CategoryDropdown
 {

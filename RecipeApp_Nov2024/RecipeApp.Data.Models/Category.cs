@@ -6,9 +6,9 @@
 
         public string Name { get; set; } = null!;
 
-        public string ImageUrl { get; set; } = null!;
+        public string? ImageUrl { get; set; }
 
-        public ICollection<RecipeCategory> RecipeCategories { get; set; } =
-            new HashSet<RecipeCategory>();
+        public IEnumerable<Recipe> Recipes =
+            new HashSet<Recipe>();
     }
 }

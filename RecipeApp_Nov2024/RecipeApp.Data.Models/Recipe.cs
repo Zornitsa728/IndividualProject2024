@@ -22,8 +22,10 @@ namespace RecipeApp.Data.Models
         [ForeignKey(nameof(UserId))]
         public ApplicationUser User { get; set; } = null!;
 
-        public ICollection<RecipeCategory> RecipeCategories { get; set; } =
-            new HashSet<RecipeCategory>();
+        public int CategoryId { get; set; }
+
+        [ForeignKey(nameof(CategoryId))]
+        public Category Category { get; set; } = null!;
 
         public ICollection<RecipeIngredient> RecipeIngredients { get; set; } =
             new HashSet<RecipeIngredient>();

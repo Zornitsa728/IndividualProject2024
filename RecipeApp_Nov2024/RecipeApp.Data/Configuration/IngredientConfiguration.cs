@@ -14,10 +14,6 @@ namespace RecipeApp.Data.Configuration
             builder.Property(i => i.Name)
                 .IsRequired()
                 .HasMaxLength(NameMaxLength);
-
-            builder.Property(i => i.Quantity)
-                .IsRequired()
-                .HasMaxLength(QuantityMaxLength);
         }
     }
 }

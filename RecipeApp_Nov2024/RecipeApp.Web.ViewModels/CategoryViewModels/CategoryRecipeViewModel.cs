@@ -1,4 +1,4 @@
-﻿namespace RecipeApp.Web.ViewModels.Category
+﻿namespace RecipeApp.Web.ViewModels.CategoryViewModels
 {
     public class CategoryRecipeViewModel
     {
