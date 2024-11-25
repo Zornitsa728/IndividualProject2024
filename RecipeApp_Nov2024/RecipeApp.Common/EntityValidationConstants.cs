@@ -48,7 +48,7 @@
         public static class Rating
         {
             public const int ScoreMinValue = 1;
-            public const int ScoreMaxValue = 10;
+            public const int ScoreMaxValue = 5;
         }
 
         public static class User

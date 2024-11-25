@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecipeApp.Data", "RecipeApp
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{DB3B2D75-3676-4ED6-AA83-E5E101DEFB41}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecipeApp.Services.Data", "RecipeApp.Services.Data\RecipeApp.Services.Data.csproj", "{0BA24553-5A6A-457F-86C2-882073875B63}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecipeApp.Services.Data", "RecipeApp.Services.Data\RecipeApp.Services.Data.csproj", "{0BA24553-5A6A-457F-86C2-882073875B63}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using RecipeApp.Data.Models;
-using static RecipeApp.Common.ApplicationConstants;
 using static RecipeApp.Common.EntityValidationConstants.Recipe;
 
 namespace RecipeApp.Data.Configuration
@@ -36,8 +35,7 @@ namespace RecipeApp.Data.Configuration
             builder
                 .Property(r => r.ImageUrl)
                 .IsRequired(false)
-                .HasMaxLength(ImageUrlMaxLength)
-                .HasDefaultValue(NoImageUrl);
+                .HasMaxLength(ImageUrlMaxLength);
 
             builder.HasData(this.SeedRecipes());
 

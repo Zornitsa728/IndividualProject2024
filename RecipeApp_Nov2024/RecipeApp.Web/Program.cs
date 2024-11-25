@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using RecipeApp.Data;
 using RecipeApp.Data.Models;
+using RecipeApp.Services.Data;
+using RecipeApp.Services.Data.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,7 +28,20 @@ builder.Services
 builder.Services.AddRazorPages();
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddScoped<IRecipeService, RecipeService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IIngredientService, IngredientService>();
+
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<RecipeDbContext>();
+    context.Database.Migrate(); // Apply migrations first
+
+    // Seed the database from JSON
+    DatabaseSeeder.SeedIngredientsFromJson(context);
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

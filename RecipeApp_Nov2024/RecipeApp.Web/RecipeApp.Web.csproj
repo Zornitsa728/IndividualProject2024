@@ -27,7 +27,14 @@
   <ItemGroup>
     <ProjectReference Include="..\RecipeApp.Common\RecipeApp.Common.csproj" />
     <ProjectReference Include="..\RecipeApp.Data\RecipeApp.Data.csproj" />
+    <ProjectReference Include="..\RecipeApp.Services.Data\RecipeApp.Services.Data.csproj" />
     <ProjectReference Include="..\RecipeApp.Web.ViewModels\RecipeApp.Web.ViewModels.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\ingredients.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

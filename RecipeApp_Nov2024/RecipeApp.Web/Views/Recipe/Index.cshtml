@@ -1,0 +1,20 @@
+﻿@using RecipeApp.Data.Models
+@using RecipeApp.Web.ViewModels.RecipeViewModels
+@model IEnumerable<Recipe>
+
+<h2>All Recipes</h2>
+
+<div class="row">
+    @foreach (var recipe in Model)
+    {
+        <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+                <img src="@recipe.ImageUrl" class="card-img-top" alt="Category Image" style="height: 200px; object-fit: cover;">
+                <div class="card-body">
+                    <h5 class="card-title">@recipe.Title</h5>
+                    <a asp-action="Recipe" asp-route-id="@recipe.Id" class="btn btn-primary">View Recipe</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

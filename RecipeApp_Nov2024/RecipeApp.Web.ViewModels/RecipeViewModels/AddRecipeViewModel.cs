@@ -1,4 +1,5 @@
-﻿using RecipeApp.Data.Models;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using RecipeApp.Data.Models;
 using System.ComponentModel.DataAnnotations;
 using static RecipeApp.Common.EntityValidationConstants.Recipe;
 using static RecipeApp.Common.EntityValidationMessages.Recipe;
@@ -40,12 +41,21 @@ namespace RecipeApp.Web.ViewModels.RecipeViewModels
         public IEnumerable<Category> Categories { get; set; } =
             new HashSet<Category>();
 
-        //[Required(ErrorMessage = IngredientMessage)]
-        //public IList<IngredientInputModel> Ingredients =
-        //    new List<IngredientInputModel>();
+        //public int IngredientId { get; set; } // For selecting the ingredient
 
-        //public IList<SelectListItem> AvailableIngredients { get; set; } =
-        //    new List<SelectListItem>();
+        public IEnumerable<Ingredient> AvailableIngredients { get; set; } = new List<Ingredient>();
 
+        public double Quantity { get; set; } // For entering the quantity
+
+        //public UnitOfMeasurement Unit { get; set; } // Enum for units
+
+        [Required(ErrorMessage = IngredientMessage)]
+        //public List<IngredientViewModel> Ingredients { get; set; } = new List<IngredientViewModel>();
+
+        public IList<IngredientViewModel> Ingredients { get; set; } =
+            new List<IngredientViewModel>();
+
+        public IEnumerable<SelectListItem> UnitsOfMeasurement { get; set; } =
+           new List<SelectListItem>();
     }
 }
