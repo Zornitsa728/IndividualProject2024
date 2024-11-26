@@ -1,4 +1,7 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
-<h2>@ViewData["Title"]</h2>
+﻿<section class="home-section">
+    <div>
+        <h1 class="text-dark">Welcome to RecipeApp</h1>
+        <p>Discover and Share Delicious Recipes</p>
+        <a asp-controller="Recipe" asp-action="Index" class="btn-home-recipes">View all recipes</a>
+    </div>
+</section>

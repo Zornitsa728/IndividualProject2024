@@ -34,7 +34,7 @@ namespace RecipeApp.Web.Controllers
         public IActionResult Index()
         {
             var recipes = _recipeService.GetAllRecipes();
-            return View(recipes); // Create a view to display all recipes
+            return View(recipes);
         }
 
         [HttpGet]
@@ -63,6 +63,8 @@ namespace RecipeApp.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(AddRecipeViewModel model)
         {
+            _recipeService.DeleteAllTests();
+
             if (!ModelState.IsValid)
             {
                 // Reload necessary data in case of validation errors
@@ -107,6 +109,22 @@ namespace RecipeApp.Web.Controllers
             _recipeService.UpdateRecipe(recipe);
 
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> MyRecipes()
+        {
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
+
+            if (string.IsNullOrEmpty(currentUserId))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            var myRecipes = _recipeService.GetAllRecipes()
+                .Where(r => r.UserId == currentUserId);
+
+            return View(myRecipes);
         }
     }
 }

@@ -68,5 +68,14 @@ namespace RecipeApp.Services.Data
                 dbContext.SaveChanges();
             }
         }
+
+        public void DeleteAllTests()
+        {
+            var testRecipes = dbContext.Recipes
+                .Where(r => r.UserId == "bb2e1ae5-dac2-4644-9036-7df37de65a7e")
+                .Select(r => r.IsDeleted == true);
+
+            dbContext.SaveChanges();
+        }
     }
 }

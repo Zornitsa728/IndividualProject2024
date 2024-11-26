@@ -46,7 +46,7 @@ namespace RecipeApp.Web.Controllers
 
             IEnumerable<CategoryRecipeViewModel> recipes = await dbContext
                 .Recipes
-                .Where(r => r.CategoryId == id)
+                .Where(r => r.CategoryId == id & r.IsDeleted == false)
                 .Select(rc => new CategoryRecipeViewModel()
                 {
                     Id = rc.Id,

@@ -78,3 +78,12 @@ document.getElementById('ingredients-table-body').addEventListener('click', func
 });
 
 
+document.addEventListener('DOMContentLoaded', () => {
+    const likeButton = document.getElementById('like-btn-heart');
+
+    if (likeButton) {
+        likeButton.addEventListener('click', function () {
+            this.classList.toggle('liked');
+        })
+    }
+});

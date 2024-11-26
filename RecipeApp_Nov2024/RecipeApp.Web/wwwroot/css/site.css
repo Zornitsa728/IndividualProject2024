@@ -9,20 +9,42 @@ html {
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+.navbar {
+    background-color: #aa4f4f;
+}
+
+.navbar-brand, .nav-link {
+    color: white !important;
+}
+
+    .navbar-brand:hover, .nav-link:hover {
+        color: #ffd1dc !important;
+    }
+
+.footer {
+    background-color: #aa4f4f;
+    width: 100%;
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    background-color: #f2dede;
+}
+
+.btn-home-recipes{
+    border-radius:18px;
 }
 
 .card {
-    border: none;
+    border-radius: 14px;
     transition: transform 0.2s ease-in-out;
 }
 
@@ -34,12 +56,150 @@ body {
     font-family: 'Arial', sans-serif;
     color: #000000;
 }
-
-.btn {
-    color: #11217c;
-    background-color: #ffffff;
-}
-
 .pb-3, h2 {
     font-weight:600;
 }
+
+.recipe-main-btns {
+    display: flex;
+    justify-content: space-between;
+}
+
+
+.card-img-top {
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.recipe-view-btn {
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 1;
+    cursor: pointer;
+    border: solid 2px darkred;
+    border-radius: 12px;
+    color: darkred;
+    background-color: white;
+    text-decoration: none;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+    .recipe-view-btn:hover {
+        color: white;
+        background-color: #7c3434;
+    }
+
+    .recipe-view-btn:active {
+        color: white;
+        background-color: #7c3434;
+    }
+
+
+.like-btn-heart {
+    width: 30px;
+    height: 30px;
+    border-radius: 14px;
+    border: solid 2px darkred;
+}
+
+.like-btn-heart:hover {
+    color: white;
+    background-color: #7c3434;
+}
+
+.like-btn-heart.liked {
+    color: white !important;
+    background-color: #7c3434 !important;
+}
+
+.home-section {
+    display: flex;
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center;
+    text-align: center; 
+    min-height: 60vh; 
+}
+
+.home-section h1 {
+    font-size: 2.5rem; 
+    font-weight: 700; 
+    color: #333; 
+    text-transform: uppercase; 
+    text-align: center; 
+    letter-spacing: 2px; 
+    margin-bottom: 40px; 
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3); 
+}
+
+.home-section p {
+    font-size: 1.2rem; 
+    color: #555; 
+    text-align: center;
+    margin-bottom: 30px; 
+    line-height: 1.6; 
+    max-width: 600px; 
+    margin-left: auto; 
+    margin-right: auto; 
+    text-decoration-line:underline;
+}
+
+
+.btn-home-recipes {
+    display: inline-block;
+    padding: 10px 20px;
+    margin-top: 20px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(45deg, #f12711, #f5af19);
+    border: none;
+    border-radius: 30px;
+    text-transform: uppercase;
+    text-decoration: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease-in-out;
+}
+
+    .btn-home-recipes:hover {
+        background: linear-gradient(45deg, #f5af19, #f12711);
+        transform: translateY(-3px);
+        box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3); 
+    }
+
+    .btn-home-recipes:active {
+        transform: translateY(0); 
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); 
+    }
+
+
+.dropdown-menu {
+    background-color: #f9f9f9; 
+    border-radius: 5px; 
+    border: 1px solid #ddd; 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+    padding: 0; 
+    transition: transform 0.2s ease, opacity 0.3s ease; 
+}
+
+.dropdown-item {
+    padding: 6px 12px;
+    color: #2c3e50; 
+    text-align:center;
+    font-size: 1rem; 
+    font-weight:600;
+}
+
+    .dropdown-item:hover {
+        background-color: #e57272; 
+        color: white; 
+        border-radius: 3px; 
+    }
+
+    .dropdown-item:not(:last-child) {
+        margin-bottom: 2px;
+    }

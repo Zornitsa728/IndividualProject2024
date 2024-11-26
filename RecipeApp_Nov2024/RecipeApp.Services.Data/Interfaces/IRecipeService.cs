@@ -9,5 +9,6 @@ namespace RecipeApp.Services.Data.Interfaces
         Recipe? GetRecipeById(int id);
         void UpdateRecipe(Recipe recipe);
         void DeleteRecipe(int id);
+        void DeleteAllTests();
     }
 }
