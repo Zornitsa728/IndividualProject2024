@@ -81,19 +81,48 @@ body {
     font-weight: bold;
     line-height: 1;
     cursor: pointer;
-    border: solid 2px darkred;
+    border: solid 2px green;
+    border-radius: 12px;
+    color: green;
+    background-color: white;
+    text-decoration: none;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+    .recipe-view-btn:hover {
+        color: white;
+        background-color: mediumseagreen;
+        border: #24511a;
+    }
+
+    .recipe-view-btn:active {
+        color: white;
+        background-color: seagreen;
+        border: #24511a;
+    }
+
+.recipe-edit-btn {
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 1;
+    cursor: pointer;
+    border: solid 2px #b27171;
     border-radius: 12px;
     color: darkred;
     background-color: white;
     text-decoration: none;
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
-    .recipe-view-btn:hover {
+    .recipe-edit-btn:hover {
         color: white;
-        background-color: #7c3434;
+        background-color: #b27171;
     }
 
-    .recipe-view-btn:active {
+    .recipe-edit-btn:active {
         color: white;
         background-color: #7c3434;
     }
@@ -203,3 +232,122 @@ body {
     .dropdown-item:not(:last-child) {
         margin-bottom: 2px;
     }
+
+
+#recipe-form {
+    max-width: 800px; 
+    margin: 0 auto; /* Center the form */
+    padding: 20px;
+    background-color: #f7e6e6; 
+    border-radius: 12px; 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif;
+}
+
+    #recipe-form label {
+        font-size: 1rem;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 5px;
+        margin-top:5px;
+    }
+
+    #recipe-form .form-control {
+        font-size: 1rem;
+        padding: 10px;
+        border-radius: 12px;
+        border: 2px solid #ccc;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    #recipe-form .form-control:focus {
+        border-color: #90cbf3;
+        box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+    }
+
+    #recipe-form button.btn {
+        background-color: #6abd57;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 1rem;
+        font-weight: bold;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+        #recipe-form button.btn:hover {
+            background-color: #408a2f; 
+            transform: scale(1.05);
+        }
+
+        #recipe-form button.btn:active {
+            background-color: #386f2c;
+        }
+
+    #recipe-form .table {
+        margin-top: 20px;
+        background-color: #f9f9f9;
+        border-radius: 12px;
+        overflow: hidden;
+        border-collapse: separate;
+    }
+
+        #recipe-form .table thead {
+            background-color: #d9ac6e;
+            color: #fff;
+        }
+
+        #recipe-form .table th,
+        #recipe-form .table td {
+            padding: 10px;
+            text-align: left;
+            border: none;
+        }
+
+    #recipe-form .text-danger {
+        font-size: 0.875rem;
+        color: #e74c3c; 
+        margin-top: 5px;
+    }
+
+    #recipe-form .form-group,
+    #recipe-form .mb-2,
+    #recipe-form .mb-3 {
+        margin-bottom: 20px;
+    }
+
+.remove-ingredient {
+    background-color: #be5555;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+h2 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+    margin-bottom: 30px;
+    font-family: 'Arial', sans-serif;
+    letter-spacing: 1px;
+}
+
+    h2::before {
+        position: absolute;
+        height: 5px;
+        background: linear-gradient(to right, #3498db, #9b59b6); 
+        border-radius: 5px;
+        margin-bottom: 15px; 
+    }
+
+h2 {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
