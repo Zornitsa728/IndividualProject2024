@@ -398,7 +398,7 @@ body {
 
     #recipe-details p {
         color: #282424;
-        font-size: 1.1rem;
+        font-size: 1rem;
         line-height: 1.8;
         margin-bottom: 1.5rem;
     }
@@ -438,6 +438,8 @@ body {
 
 .instructions-section {
     margin: 1.5rem 0;
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    ;
 }
 
     .instructions-section label {
@@ -452,14 +454,15 @@ body {
     section h3 {
         font-size: 1.75rem;
         color: #983c3d;
-        margin-bottom: 1rem;
+        margin-top: 2rem;
+        margin-bottom: 0.5rem;
         text-align: center;
     }
 
 
 #ratings-section {
     text-align: center;
-    max-width: 700px;
+    max-width: 800px;
     margin: 1rem auto;
     background-color: #f5e0e2;
     padding: 1.5rem;
@@ -509,7 +512,7 @@ body {
 
 #comments-section {
     text-align: left;
-    max-width: 700px;
+    max-width: 800px;
     margin: 1rem auto;
     background-color: #f5e0e2;
     padding: 1.5rem;
@@ -520,17 +523,18 @@ body {
 
 .comment {
     border-bottom: 1px solid #f0b7b9;
-    padding: 1rem 0;
+    padding: 0.2rem 0;
 }
+
 
     .comment p {
         margin: 0.5rem 0;
         color: #6e4f4f;
     }
 
-    .comment strong {
-        color: #8a2b2d;
-    }
+.comment strong {
+    color: #8a2b2d;
+}
 
     .comment small {
         font-size: 0.9rem;
@@ -566,3 +570,17 @@ body {
         #add-comment-form button:hover {
             background-color: #e6554f;
         }
+
+
+#toggle-comments {
+    background-color: #6f4747;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+    #toggle-comments:hover {
+        background-color: #e6554f;
+    }

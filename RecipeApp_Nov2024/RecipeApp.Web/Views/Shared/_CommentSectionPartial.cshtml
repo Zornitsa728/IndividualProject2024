@@ -1,21 +1,37 @@
 ﻿@using RecipeApp.Web.ViewModels.CommentViewModels
 @model RecipeCommentsViewModel
 
-<section id="comments-section" asp-action="GetComments">
-    <h3>Comments</h3>
-    <div>
-        @foreach (var comment in Model.Comments)
-        {
-            <div class="comment">
-                <p><strong>User:</strong> @comment.UserName</p>
-                <p>@comment.Content</p>
-                <p><small>Posted on: @comment.DatePosted</small></p>
-            </div>
-        }
-    </div>
+<section id="comments-section">
+    <h4>Add your comment here</h4>
     <form id="add-comment-form" method="post" asp-controller="Comment" asp-action="PostComment">
-        <input type="hidden" name="RecipeId" value="@Model.RecipeId"/> 
+        <input type="hidden" name="RecipeId" value="@Model.RecipeId" />
         <textarea name="content" rows="4" placeholder="Write a comment..." required></textarea>
         <button type="submit">Post Comment</button>
     </form>
+    <h3>Comments</h3>
+    <div id="comments-container">
+        @*First 3 comments *@
+        @foreach (var comment in Model.Comments.Take(3))
+        {
+            <div class="comment">
+                <p><strong>User:</strong> @comment.UserName</p>
+                <p class="comment-content-text">@comment.Content</p>
+                <p><small>Posted on: @comment.DatePosted.ToString("g")</small></p>
+            </div>
+        }
+        @* Hidden comments *@
+        <div id="hidden-comments" style="display: none;">
+            @foreach (var comment in Model.Comments.Skip(3))
+            {
+                <div class="comment">
+                    <p><strong>User:</strong> @comment.UserName</p>
+                    <p>@comment.Content</p>
+                    <p><small>Posted on: @comment.DatePosted.ToString("g")</small></p>
+                </div>
+            }
+        </div>
+    </div>
+
+    @* Toggle button *@
+    <button id="toggle-comments" onclick="toggleComments()">Show All Comments</button>
 </section>

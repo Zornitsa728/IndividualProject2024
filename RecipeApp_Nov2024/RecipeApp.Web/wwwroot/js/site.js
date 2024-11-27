@@ -90,3 +90,16 @@ document.addEventListener('DOMContentLoaded', () => {
 //todo: not working coloring the button
 
 
+    function toggleComments() {
+        const hiddenComments = document.getElementById("hidden-comments");
+    const toggleButton = document.getElementById("toggle-comments");
+
+    if (hiddenComments.style.display === "none") {
+        hiddenComments.style.display = "block";
+    toggleButton.textContent = "Show Less Comments";
+        } else {
+        hiddenComments.style.display = "none";
+    toggleButton.textContent = "Show All Comments";
+        }
+    }
+
