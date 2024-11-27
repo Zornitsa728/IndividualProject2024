@@ -46,5 +46,29 @@ namespace RecipeApp.Services.Data
 
             return 0;
         }
+
+        public bool CheckRecipeUserRating(int recipeId, string userId)
+        {
+            var rating = dbContext.Ratings.FirstOrDefault(r => r.RecipeId == recipeId && r.UserId == userId);
+
+            if (rating != null)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public async Task<Rating> UpdateRatingAsync(int recipeId, int score, string userId)
+        {
+            var rating = dbContext.Ratings.First(r => r.RecipeId == recipeId && r.UserId == userId);
+
+            rating.Score = score;
+
+            dbContext.Ratings.Update(rating);
+            await dbContext.SaveChangesAsync();
+
+            return rating;
+        }
     }
 }

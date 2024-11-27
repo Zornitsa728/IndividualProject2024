@@ -1,5 +1,6 @@
 ﻿using RecipeApp.Data.Models;
 using RecipeApp.Web.ViewModels.CommentViewModels;
+using RecipeApp.Web.ViewModels.RatingViewModels;
 
 namespace RecipeApp.Web.ViewModels.RecipeViewModels
 {
@@ -7,7 +8,7 @@ namespace RecipeApp.Web.ViewModels.RecipeViewModels
     {
         public Recipe Recipe { get; set; } = null!;
         public RecipeCommentsViewModel Comments { get; set; } = null!;
-        public double AverageRating { get; set; }
+        public RatingViewModel Rating { get; set; } = null!;
     }
 
 }

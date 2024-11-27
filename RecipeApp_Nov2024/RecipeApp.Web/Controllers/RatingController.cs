@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RecipeApp.Data.Models;
 using RecipeApp.Services.Data.Interfaces;
 using System.Security.Claims;
 
@@ -23,12 +24,24 @@ namespace RecipeApp.Web.Controllers
         //}
 
         [HttpPost]
-        public async Task<ActionResult> PostRating(int recipeId, [FromBody] int score)
+        public async Task<ActionResult> PostRating(int recipeId, int score)
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
 
-            var rating = await _ratingService.AddRatingAsync(recipeId, score, userId);
-            return Ok(rating);
+            var isRatingValid = _ratingService.CheckRecipeUserRating(recipeId, userId);
+
+            Rating rating;
+
+            if (!isRatingValid)
+            {
+                rating = await _ratingService.UpdateRatingAsync(recipeId, score, userId);
+            }
+            else
+            {
+                rating = await _ratingService.AddRatingAsync(recipeId, score, userId);
+            }
+
+            return RedirectToAction("Details", "Recipe", new { id = rating.RecipeId });
         }
 
         [HttpGet]
@@ -36,6 +49,7 @@ namespace RecipeApp.Web.Controllers
         {
             double averageRating = await _ratingService.GetAverageRatingAsync(recipeId);
             return View(averageRating);//todo: return to partial view
+
         }
     }
 }

@@ -37,9 +37,4 @@
     </Content>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Views\Comment\" />
-    <Folder Include="Views\Rating\" />
-  </ItemGroup>
-
 </Project>

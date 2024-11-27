@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using RecipeApp.Data.Models;
 using RecipeApp.Services.Data.Interfaces;
 using RecipeApp.Web.ViewModels.CommentViewModels;
+using RecipeApp.Web.ViewModels.RatingViewModels;
 using RecipeApp.Web.ViewModels.RecipeViewModels;
 using System.Security.Claims;
 
@@ -151,13 +152,19 @@ namespace RecipeApp.Web.Controllers
                 Comments = commentModel
             };
 
+            RatingViewModel ratingModel = new RatingViewModel()
+            {
+                AverageRating = averageRating,
+                RecipeId = id
+            };
+
             //todo: check for null recipe
 
             var recipeModel = new RecipeDetailsViewModel
             {
                 Recipe = recipe,
                 Comments = recipeCommentsViewModel,
-                AverageRating = averageRating
+                Rating = ratingModel
             };
 
             return View(recipeModel);
