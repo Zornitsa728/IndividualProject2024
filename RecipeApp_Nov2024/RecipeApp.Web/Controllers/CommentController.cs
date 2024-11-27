@@ -21,23 +21,7 @@ namespace RecipeApp.Web.Controllers
         {
             var comments = await _commentService.GetCommentsAsync(recipeId);
 
-            List<CommentViewModel> model = comments
-                .Select(c => new CommentViewModel()
-                {
-                    Content = c.Content,
-                    UserId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty,
-                    RecipeId = c.RecipeId,
-                    DatePosted = c.DatePosted
-                })
-                .ToList();
-
-            //RecipeCommentsViewModel recipeCommentsViewModel = new RecipeCommentsViewModel()
-            //{
-            //    RecipeId = recipeId,
-            //    Comments = model,
-            //};
-
-            return View(comments); // todo: make comment view model and use it 
+            return View(comments);
         }
 
         [HttpPost]
@@ -46,7 +30,8 @@ namespace RecipeApp.Web.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
             //todo: if user is not loged
             var comment = await _commentService.AddCommentAsync(model, userId);
-            return RedirectToAction("Details", "Recipe");
+
+            return RedirectToAction("Details", "Recipe", new { id = model.RecipeId });
         }
 
         [HttpDelete("{commentId}")]

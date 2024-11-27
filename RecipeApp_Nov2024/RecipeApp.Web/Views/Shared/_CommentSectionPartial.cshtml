@@ -7,7 +7,7 @@
         @foreach (var comment in Model.Comments)
         {
             <div class="comment">
-                <p><strong>User:</strong> @comment.UserId</p>
+                <p><strong>User:</strong> @comment.UserName</p>
                 <p>@comment.Content</p>
                 <p><small>Posted on: @comment.DatePosted</small></p>
             </div>

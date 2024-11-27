@@ -15,26 +15,20 @@ namespace RecipeApp.Services.Data
             this.dbContext = context;
         }
 
-        public async Task<IEnumerable<CommentViewModel>> GetCommentsAsync(int recipeId)
+        public async Task<IEnumerable<Comment>> GetCommentsAsync(int recipeId)
         {
             if (await dbContext.Comments.AnyAsync(c => c.RecipeId == recipeId))
             {
                 var comments = await dbContext.Comments
+                    .Include(c => c.User)
                     .Where(c => c.RecipeId == recipeId && !c.IsDeleted)
                     .OrderByDescending(c => c.DatePosted)
                     .ToListAsync();
 
-                return comments
-                .Select(c => new CommentViewModel()
-                {
-                    Content = c.Content,
-                    RecipeId = c.RecipeId,
-                    DatePosted = c.DatePosted
-                })
-                .ToList();
+                return comments;
             }
 
-            return new List<CommentViewModel>();
+            return new List<Comment>();
         }
 
         public async Task<Comment> AddCommentAsync(CommentViewModel model, string userId)

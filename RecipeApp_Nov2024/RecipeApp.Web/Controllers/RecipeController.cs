@@ -134,20 +134,21 @@ namespace RecipeApp.Web.Controllers
             var averageRating = await _ratingService.GetAverageRatingAsync(id);
             var comments = await _commentService.GetCommentsAsync(id);
 
-            //List<CommentViewModel> commentModel = comments
-            //    .Select(c => new CommentViewModel()
-            //    {
-            //        Content = c.Content,
-            //        UserId = c.UserId,
-            //        RecipeId = c.RecipeId,
-            //        DatePosted = c.DatePosted
-            //    })
-            //    .ToList();
+            List<CommentViewModel> commentModel = comments
+                .Select(c => new CommentViewModel()
+                {
+                    Content = c.Content,
+                    UserId = c.UserId,
+                    UserName = c.User.UserName,
+                    RecipeId = c.RecipeId,
+                    DatePosted = c.DatePosted
+                })
+                .ToList();
 
             RecipeCommentsViewModel recipeCommentsViewModel = new RecipeCommentsViewModel()
             {
                 RecipeId = id,
-                Comments = comments
+                Comments = commentModel
             };
 
             //todo: check for null recipe
@@ -161,6 +162,5 @@ namespace RecipeApp.Web.Controllers
 
             return View(recipeModel);
         }
-
     }
 }
