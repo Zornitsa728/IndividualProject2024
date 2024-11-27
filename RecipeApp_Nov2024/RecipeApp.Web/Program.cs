@@ -31,15 +31,16 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IRecipeService, RecipeService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IIngredientService, IngredientService>();
+builder.Services.AddScoped<ICommentService, CommentService>();
+builder.Services.AddScoped<IRatingService, RatingService>();
+
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
+using (IServiceScope scope = app.Services.CreateScope())
 {
-    var context = scope.ServiceProvider.GetRequiredService<RecipeDbContext>();
-    context.Database.Migrate(); // Apply migrations first
+    RecipeDbContext context = scope.ServiceProvider.GetRequiredService<RecipeDbContext>();
 
-    // Seed the database from JSON
     DatabaseSeeder.SeedIngredientsFromJson(context);
 }
 

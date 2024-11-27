@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Favorites\" />
+    <Folder Include="FavoritesViewModels\" />
   </ItemGroup>
 
   <ItemGroup>

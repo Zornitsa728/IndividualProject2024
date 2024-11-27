@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RecipeApp.Data\RecipeApp.Data.csproj" />
+    <ProjectReference Include="..\RecipeApp.Web.ViewModels\RecipeApp.Web.ViewModels.csproj" />
   </ItemGroup>
 
 </Project>

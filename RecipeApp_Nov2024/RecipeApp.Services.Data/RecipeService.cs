@@ -1,4 +1,5 @@
-﻿using RecipeApp.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using RecipeApp.Data;
 using RecipeApp.Data.Models;
 using RecipeApp.Services.Data.Interfaces;
 
@@ -17,7 +18,7 @@ namespace RecipeApp.Services.Data
         /// Add a new recipe to the database.
         /// </summary>
         /// <param name="recipe">The recipe to add.</param>
-        public void AddRecipe(Recipe recipe)
+        public void AddRecipeAsync(Recipe recipe)
         {
             dbContext.Recipes.Add(recipe);
             dbContext.SaveChanges();
@@ -41,8 +42,13 @@ namespace RecipeApp.Services.Data
         /// <returns>A single recipe, or null if not found.</returns>
         public Recipe? GetRecipeById(int id)
         {
-            return dbContext.Recipes
-                .FirstOrDefault(r => r.Id == id && !r.IsDeleted);
+            var recipe = dbContext.Recipes
+               .Include(r => r.RecipeIngredients)
+               .ThenInclude(ri => ri.Ingredient)
+               .FirstOrDefault(r => r.Id == id && !r.IsDeleted);
+
+            return (recipe);
+
         }
 
         /// <summary>

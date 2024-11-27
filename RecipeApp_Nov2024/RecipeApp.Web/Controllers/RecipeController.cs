@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using RecipeApp.Data.Models;
 using RecipeApp.Services.Data.Interfaces;
+using RecipeApp.Web.ViewModels.CommentViewModels;
 using RecipeApp.Web.ViewModels.RecipeViewModels;
 using System.Security.Claims;
 
@@ -9,25 +10,24 @@ namespace RecipeApp.Web.Controllers
 {
     public class RecipeController : Controller
     {
-        //private RecipeDbContext dbContext;
-
-        //public RecipeController(RecipeDbContext dbContext)
-        //{
-        //    this.dbContext = dbContext;
-        //}
-
         private readonly IRecipeService _recipeService;
         private readonly ICategoryService _categoryService;
         private readonly IIngredientService _ingredientService;
+        private readonly IRatingService _ratingService;
+        private readonly ICommentService _commentService;
 
         public RecipeController(
            IRecipeService recipeService,
            ICategoryService categoryService,
-           IIngredientService ingredientService)
+           IIngredientService ingredientService,
+           IRatingService ratingService,
+           ICommentService commentService)
         {
             _recipeService = recipeService;
             _categoryService = categoryService;
             _ingredientService = ingredientService;
+            _ratingService = ratingService;
+            _commentService = commentService;
         }
 
         [HttpGet]
@@ -95,7 +95,7 @@ namespace RecipeApp.Web.Controllers
                 UserId = model.UserId
             };
 
-            _recipeService.AddRecipe(recipe);
+            _recipeService.AddRecipeAsync(recipe);
 
             recipe.RecipeIngredients = model.Ingredients
                 .Select(i => new RecipeIngredient
@@ -112,7 +112,7 @@ namespace RecipeApp.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> MyRecipes()
+        public IActionResult MyRecipes()
         {
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
 
@@ -126,5 +126,41 @@ namespace RecipeApp.Web.Controllers
 
             return View(myRecipes);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Details(int id)
+        {
+            var recipe = _recipeService.GetRecipeById(id);
+            var averageRating = await _ratingService.GetAverageRatingAsync(id);
+            var comments = await _commentService.GetCommentsAsync(id);
+
+            //List<CommentViewModel> commentModel = comments
+            //    .Select(c => new CommentViewModel()
+            //    {
+            //        Content = c.Content,
+            //        UserId = c.UserId,
+            //        RecipeId = c.RecipeId,
+            //        DatePosted = c.DatePosted
+            //    })
+            //    .ToList();
+
+            RecipeCommentsViewModel recipeCommentsViewModel = new RecipeCommentsViewModel()
+            {
+                RecipeId = id,
+                Comments = comments
+            };
+
+            //todo: check for null recipe
+
+            var recipeModel = new RecipeDetailsViewModel
+            {
+                Recipe = recipe,
+                Comments = recipeCommentsViewModel,
+                AverageRating = averageRating
+            };
+
+            return View(recipeModel);
+        }
+
     }
 }

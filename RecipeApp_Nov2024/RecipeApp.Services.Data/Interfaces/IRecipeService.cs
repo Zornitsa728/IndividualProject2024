@@ -4,7 +4,7 @@ namespace RecipeApp.Services.Data.Interfaces
 {
     public interface IRecipeService
     {
-        void AddRecipe(Recipe recipe);
+        void AddRecipeAsync(Recipe recipe);
         IEnumerable<Recipe> GetAllRecipes();
         Recipe? GetRecipeById(int id);
         void UpdateRecipe(Recipe recipe);

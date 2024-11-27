@@ -13,7 +13,8 @@ html {
 }
 
 .navbar {
-    background-color: #aa4f4f;
+    background-color: #6f4747;
+    width: 100%;
 }
 
 .navbar-brand, .nav-link {
@@ -26,6 +27,7 @@ html {
 
 .footer {
     background-color: #aa4f4f;
+    max-height: 100px;
     width: 100%;
 }
 
@@ -45,6 +47,8 @@ body {
 
 .card {
     border-radius: 14px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    border: 2px solid #d7a7a9;
     transition: transform 0.2s ease-in-out;
 }
 
@@ -129,21 +133,30 @@ body {
 
 
 .like-btn-heart {
-    width: 30px;
-    height: 30px;
-    border-radius: 14px;
-    border: solid 2px darkred;
+    width: 40px;
+    height: 40px;
+    border: none; 
+    background-color: transparent;
+    cursor: pointer;
+    display: inline-flex; 
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.2s ease;
 }
 
-.like-btn-heart:hover {
-    color: white;
-    background-color: #7c3434;
-}
+    .like-btn-heart .like-icon {
+        fill: rgba(0, 0, 0, 0.3);
+        transition: fill 0.3s ease;
+    }
 
-.like-btn-heart.liked {
-    color: white !important;
-    background-color: #7c3434 !important;
-}
+    .like-btn-heart .like-icon:hover {
+        fill: darkred;
+        transform: scale(1.1);
+    }
+
+    .like-btn-heart.liked .like-icon {
+        fill: #401212; /* Filled red heart for liked state */
+    }
 
 .home-section {
     display: flex;
@@ -224,9 +237,9 @@ body {
 }
 
     .dropdown-item:hover {
-        background-color: #e57272; 
-        color: white; 
-        border-radius: 3px; 
+        background-color: #6f4747;
+        color: white;
+        border-radius: 3px;
     }
 
     .dropdown-item:not(:last-child) {
@@ -351,3 +364,205 @@ h2 {
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
 }
 
+body {
+    background-color: #f5e6e8; 
+    font-family: 'Arial', sans-serif;
+}
+
+#recipe-details {
+    max-width: 1000px;
+    margin: 2rem auto;
+    background-color: #f2dddd;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    border: 2px solid #d7a7a9; 
+}
+
+    #recipe-details h1 {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #8a2b2d;
+        margin-bottom: 1.5rem;
+        text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    #recipe-details img {
+        max-width: 40%;
+        height: 300px;
+        border-radius: 12px;
+        margin: 1.5rem 0;
+        border: 2px solid #f0b7b9;
+    }
+
+    #recipe-details p {
+        color: #282424;
+        font-size: 1.1rem;
+        line-height: 1.8;
+        margin-bottom: 1.5rem;
+    }
+
+.ingredients-section label {
+    display: block;
+    font-weight: bold;
+    font-size: 1.25rem;
+    color: #8a2b2d;
+    margin-bottom: 0.5rem;
+    text-align: left;
+}
+
+.ingredients-section table {
+    width: 65%;
+    margin: 1rem 0;
+    border-collapse: collapse;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.10);
+    border: 2px solid #d7a7a9;
+}
+
+.ingredients-section th, .ingredients-section td {
+    border: 1px solid #f0b7b9;
+    padding: 0.75rem;
+    text-align: left;
+}
+
+.ingredients-section th {
+    background-color: #f5e0e2;
+    color: #8a2b2d;
+}
+
+.ingredients-section td {
+    background-color: #fff;
+    color: #6e4f4f;
+}
+
+.instructions-section {
+    margin: 1.5rem 0;
+}
+
+    .instructions-section label {
+        font-weight: bold;
+        font-size: 1.25rem;
+        color: #8a2b2d;
+        text-align: left;
+        margin-bottom: 0.7rem;
+        display: block;
+    }
+
+    section h3 {
+        font-size: 1.75rem;
+        color: #983c3d;
+        margin-bottom: 1rem;
+        text-align: center;
+    }
+
+
+#ratings-section {
+    text-align: center;
+    max-width: 700px;
+    margin: 1rem auto;
+    background-color: #f5e0e2;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.10);
+    border: 2px solid #d7a7a9;
+}
+
+    #ratings-section p {
+        font-size: 1.2rem;
+        color: #333;
+        margin-bottom: 1rem;
+    }
+
+    #ratings-section form {
+        margin-top: 1rem;
+    }
+
+    #ratings-section label {
+        font-weight: bold;
+        margin-right: 0.5rem;
+        color: #8a2b2d;
+    }
+
+    #ratings-section select {
+        padding: 0.5rem;
+        font-size: 1rem;
+        border: 2px solid #f0b7b9;
+        border-radius: 8px;
+    }
+
+    #ratings-section button {
+        padding: 0.6rem 1.5rem;
+        font-size: 1rem;
+        background-color: #6f4747;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+        #ratings-section button:hover {
+            background-color: #e6554f;
+        }
+
+
+#comments-section {
+    text-align: left;
+    max-width: 700px;
+    margin: 1rem auto;
+    background-color: #f5e0e2;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.10);
+    border: 2px solid #d7a7a9;
+}
+
+.comment {
+    border-bottom: 1px solid #f0b7b9;
+    padding: 1rem 0;
+}
+
+    .comment p {
+        margin: 0.5rem 0;
+        color: #6e4f4f;
+    }
+
+    .comment strong {
+        color: #8a2b2d;
+    }
+
+    .comment small {
+        font-size: 0.9rem;
+        color: #999;
+    }
+
+#add-comment-form {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+    #add-comment-form textarea {
+        padding: 1rem;
+        font-size: 1rem;
+        border: 2px solid #f0b7b9;
+        border-radius: 8px;
+        resize: none;
+        margin-bottom: 1rem;
+    }
+
+    #add-comment-form button {
+        padding: 0.6rem 1.5rem;
+        font-size: 1rem;
+        background-color: #6f4747;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+        #add-comment-form button:hover {
+            background-color: #e6554f;
+        }

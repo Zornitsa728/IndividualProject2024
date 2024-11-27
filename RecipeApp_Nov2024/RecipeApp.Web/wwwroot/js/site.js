@@ -79,11 +79,14 @@ document.getElementById('ingredients-table-body').addEventListener('click', func
 
 
 document.addEventListener('DOMContentLoaded', () => {
-    const likeButton = document.getElementById('like-btn-heart');
+    const likeButtons = document.querySelectorAll('.like-btn-heart'); 
 
-    if (likeButton) {
-        likeButton.addEventListener('click', function () {
+    likeButtons.forEach(button => {
+        button.addEventListener('click', function () {
             this.classList.toggle('liked');
-        })
-    }
+        });
+    });
 });
+//todo: not working coloring the button
+
+

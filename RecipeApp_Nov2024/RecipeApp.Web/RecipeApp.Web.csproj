@@ -33,7 +33,7 @@
 
   <ItemGroup>
     <Content Update="wwwroot\ingredients.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
