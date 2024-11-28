@@ -7,6 +7,7 @@
             DatePosted = DateTime.UtcNow;
         }
 
+        public int CommentId { get; set; }
         public string Content { get; set; } = null!;
         public DateTime DatePosted { get; set; }
 

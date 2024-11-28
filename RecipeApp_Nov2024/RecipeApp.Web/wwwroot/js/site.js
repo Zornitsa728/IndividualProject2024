@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 //todo: not working coloring the button
 
-
+//comments show all 
     function toggleComments() {
         const hiddenComments = document.getElementById("hidden-comments");
     const toggleButton = document.getElementById("toggle-comments");
@@ -102,4 +102,6 @@ document.addEventListener('DOMContentLoaded', () => {
     toggleButton.textContent = "Show All Comments";
         }
     }
+
+
 

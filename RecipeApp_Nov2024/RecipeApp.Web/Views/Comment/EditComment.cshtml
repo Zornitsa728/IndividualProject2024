@@ -1,0 +1,20 @@
+﻿@using RecipeApp.Web.ViewModels.CommentViewModels
+@model CommentViewModel
+
+<section id="edit-comment-section">
+    <h2>Edit Comment</h2>
+
+    <form method="get" asp-controller="Comment" asp-action="EditComment">
+        <input type="hidden" name="CommentId" value="@Model.CommentId" />
+        <input type="hidden" name="RecipeId" value="@Model.RecipeId" />
+        <input type="hidden" name="UserId" value="@Model.UserId" />
+        <div class="form-group">
+            <label for="content">Edit your comment:</label>
+            <textarea id="content" name="Content" rows="4" required>@Model.Content</textarea>
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="save-btn">Save Changes</button>
+            <a asp-controller="Comment" asp-action="EditComment"  asp-route-model="@Model" class="cancel-btn">Cancel</a>
+        </div>
+    </form>
+</section>

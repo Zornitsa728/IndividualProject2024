@@ -47,7 +47,7 @@ namespace RecipeApp.Services.Data
             return comment;
         }
 
-        public async Task<bool> DeleteCommentAsync(int recipeId, int commentId)
+        public async Task<bool> DeleteCommentAsync(int recipeId, int commentId, string userId)
         {
             var comment = await dbContext.Comments
                 .FirstOrDefaultAsync(c => c.Id == commentId && c.RecipeId == recipeId);
@@ -55,9 +55,23 @@ namespace RecipeApp.Services.Data
             if (comment == null)
                 return false;
 
+            if (comment.UserId != userId)
+                return false;
+
             comment.IsDeleted = true; // Soft delete
             await dbContext.SaveChangesAsync();
+
             return true;
+        }
+
+        public async Task EditCommentAsync(int commentId, string content)
+        {
+            var comment = await dbContext.Comments
+                .FirstOrDefaultAsync(c => c.Id == commentId);
+
+            comment.Content = content;
+
+            await dbContext.SaveChangesAsync();
         }
     }
 }

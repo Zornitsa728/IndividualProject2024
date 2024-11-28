@@ -109,7 +109,7 @@ namespace RecipeApp.Web.Controllers
 
             _recipeService.UpdateRecipe(recipe);
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(MyRecipes));
         }
 
         [HttpGet]
@@ -135,21 +135,20 @@ namespace RecipeApp.Web.Controllers
             var averageRating = await _ratingService.GetAverageRatingAsync(id);
             var comments = await _commentService.GetCommentsAsync(id);
 
-            List<CommentViewModel> commentModel = comments
+            RecipeCommentsViewModel recipeCommentsViewModel = new RecipeCommentsViewModel()
+            {
+                RecipeId = id,
+                Comments = comments
                 .Select(c => new CommentViewModel()
                 {
+                    CommentId = c.Id,
                     Content = c.Content,
                     UserId = c.UserId,
                     UserName = c.User.UserName,
                     RecipeId = c.RecipeId,
                     DatePosted = c.DatePosted
                 })
-                .ToList();
-
-            RecipeCommentsViewModel recipeCommentsViewModel = new RecipeCommentsViewModel()
-            {
-                RecipeId = id,
-                Comments = commentModel
+                .ToList()
             };
 
             RatingViewModel ratingModel = new RatingViewModel()
