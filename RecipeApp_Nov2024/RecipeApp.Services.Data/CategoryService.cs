@@ -1,4 +1,5 @@
-﻿using RecipeApp.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using RecipeApp.Data;
 using RecipeApp.Data.Models;
 using RecipeApp.Services.Data.Interfaces;
 
@@ -13,9 +14,20 @@ namespace RecipeApp.Services.Data
             this.dbContext = dbContext;
         }
 
-        public IEnumerable<Category> GetAllCategories()
+        public async Task<IEnumerable<Category>> GetAllCategories()
         {
-            return dbContext.Categories.ToList();
+            IEnumerable<Category> categories = await dbContext.Categories.ToListAsync();
+
+            return categories;
+        }
+
+        public async Task<Category> GetCategory(int id)
+        {
+            Category? category = dbContext
+                .Categories
+                .FirstOrDefault(c => c.Id == id);
+
+            return category;
         }
     }
 }

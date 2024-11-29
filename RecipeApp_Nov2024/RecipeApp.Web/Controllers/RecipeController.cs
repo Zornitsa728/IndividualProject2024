@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using RecipeApp.Data.Models;
 using RecipeApp.Services.Data.Interfaces;
 using RecipeApp.Web.ViewModels.CommentViewModels;
+using RecipeApp.Web.ViewModels.FavoritesViewModels;
 using RecipeApp.Web.ViewModels.RatingViewModels;
 using RecipeApp.Web.ViewModels.RecipeViewModels;
 using System.Security.Claims;
@@ -16,25 +17,41 @@ namespace RecipeApp.Web.Controllers
         private readonly IIngredientService _ingredientService;
         private readonly IRatingService _ratingService;
         private readonly ICommentService _commentService;
+        private readonly IFavoriteService _favoriteService;
 
         public RecipeController(
            IRecipeService recipeService,
            ICategoryService categoryService,
            IIngredientService ingredientService,
            IRatingService ratingService,
-           ICommentService commentService)
+           ICommentService commentService,
+           IFavoriteService favoriteService)
         {
             _recipeService = recipeService;
             _categoryService = categoryService;
             _ingredientService = ingredientService;
             _ratingService = ratingService;
             _commentService = commentService;
+            _favoriteService = favoriteService;
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             var recipes = _recipeService.GetAllRecipes();
+            var cookbooks = await _favoriteService.GetUserCookbooksAsync(userId);
+
+            // Map cookbooks to a strong-typed view model
+            ViewBag.Cookbooks = cookbooks
+                .Select(c => new CookbookDropdownViewModel
+                {
+                    Id = c.Id,
+                    Title = c.Title
+                })
+                .ToList();
+
             return View(recipes);
         }
 
@@ -43,7 +60,7 @@ namespace RecipeApp.Web.Controllers
         {
 
             AddRecipeViewModel model = new AddRecipeViewModel();
-            model.Categories = _categoryService.GetAllCategories();
+            model.Categories = await _categoryService.GetAllCategories();
             model.AvailableIngredients = _ingredientService.GetAllIngredients();
 
             model.UnitsOfMeasurement = Enum.GetValues(typeof(UnitOfMeasurement))
@@ -69,7 +86,7 @@ namespace RecipeApp.Web.Controllers
             if (!ModelState.IsValid)
             {
                 // Reload necessary data in case of validation errors
-                model.Categories = _categoryService.GetAllCategories();
+                model.Categories = await _categoryService.GetAllCategories();
 
                 model.AvailableIngredients = _ingredientService.GetAllIngredients();
 

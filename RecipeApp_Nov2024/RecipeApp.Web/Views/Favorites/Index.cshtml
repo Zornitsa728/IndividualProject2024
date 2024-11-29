@@ -1,0 +1,22 @@
+﻿@model List<RecipeApp.Web.ViewModels.FavoritesViewModels.CookbookViewModel>
+
+<h2>Your Cookbooks</h2>
+
+@if (!Model.Any())
+{
+    <p>You don't have any cookbooks yet.</p>
+    <a asp-controller="Favorites" asp-action="Create" class="btn btn-primary">Create New Cookbook</a>
+}
+else
+{
+    <div class="cookbooks-container">
+        @foreach (var cookbook in Model)
+        {
+            <div class="cookbook-card">
+                <h4>@cookbook.Title</h4>
+                <p>@cookbook.Description</p>
+                <a asp-action="ViewRecipes" asp-controller="Favorites" asp-route-id="@cookbook.Id" class="btn btn-secondary">View Recipes</a>
+            </div>
+        }
+    </div>
+}

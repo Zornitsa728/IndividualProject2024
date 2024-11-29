@@ -10,7 +10,7 @@
 
             public const int InstructionsMinLength = 10;
 
-            public const int InstructionsMaxLength = 2000;
+            public const int InstructionsMaxLength = 3500;
 
             public const int DescriptionMinLength = 20;
 
@@ -55,6 +55,17 @@
         {
             public const int NameMinLength = 1;
             public const int NameMaxLength = 747;
+        }
+
+        public static class Cookbook
+        {
+            public const int TitleMinLength = 1;
+
+            public const int TitleMaxLength = 100;
+
+            public const int DescriptionMinLength = 5;
+
+            public const int DescriptionMaxLength = 500;
         }
     }
 }

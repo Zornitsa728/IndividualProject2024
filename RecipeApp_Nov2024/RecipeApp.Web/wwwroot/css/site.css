@@ -39,7 +39,7 @@ html {
     }
 
 .footer {
-    background-color: #9d8b8b;
+    background-color: #763f3f;
     max-height: 100px;
     width: 100%;
 }
@@ -144,33 +144,6 @@ body {
         background-color: #7c3434;
     }
 
-
-.like-btn-heart {
-    width: 40px;
-    height: 40px;
-    border: none; 
-    background-color: transparent;
-    cursor: pointer;
-    display: inline-flex; 
-    justify-content: center;
-    align-items: center;
-    transition: transform 0.2s ease;
-}
-
-    .like-btn-heart .like-icon {
-        fill: rgba(0, 0, 0, 0.3);
-        transition: fill 0.3s ease;
-    }
-
-    .like-btn-heart .like-icon:hover {
-        fill: darkred;
-        transform: scale(1.1);
-    }
-
-    .like-btn-heart.liked .like-icon {
-        fill: #401212; /* Filled red heart for liked state */
-    }
-
 .home-section {
     display: flex;
     flex-direction: column; 
@@ -233,7 +206,7 @@ body {
 
 
 .dropdown-menu {
-    background-color: #f9f9f9; 
+    background-color: #f1e1e1; 
     border-radius: 5px; 
     border: 1px solid #ddd; 
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
@@ -292,7 +265,7 @@ body {
     }
 
     #recipe-form button.btn {
-        background-color: #6abd57;
+        background-color: #79b66b;
         color: #fff;
         border: none;
         padding: 10px 20px;
@@ -321,7 +294,7 @@ body {
     }
 
         #recipe-form .table thead {
-            background-color: #d9ac6e;
+            background-color: #d7b58b;
             color: #fff;
         }
 
@@ -699,3 +672,31 @@ textarea {
         color: white;
     }
 
+    .cookbooks-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.cookbook-card {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 1rem;
+    width: 300px;
+    background-color: #f9f9f9;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.cookbook-card h4 {
+    margin-bottom: 0.5rem;
+}
+
+.cookbook-card p {
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.cookbook-card .btn {
+    margin-top: 1rem;
+}

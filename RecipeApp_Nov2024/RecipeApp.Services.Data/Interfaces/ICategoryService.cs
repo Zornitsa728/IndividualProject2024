@@ -4,6 +4,7 @@ namespace RecipeApp.Services.Data.Interfaces
 {
     public interface ICategoryService
     {
-        IEnumerable<Category> GetAllCategories();
+        Task<IEnumerable<Category>> GetAllCategories();
+        Task<Category> GetCategory(int id);
     }
 }

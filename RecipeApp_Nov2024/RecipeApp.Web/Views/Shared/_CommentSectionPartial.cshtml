@@ -23,7 +23,7 @@
                     <form method="post" asp-controller="Comment" asp-action="EditComment" asp-route-commentId="@comment.CommentId" asp-route-recipeId="@Model.RecipeId">
                         <button type="submit" class="edit-btn">Edit</button>
                     </form>
-                    <form method="post" asp-controller="Comment" asp-action="DeleteComment" asp-route-commentId="@comment.CommentId" asp-route-recipeId="@comment.RecipeId">
+                    <form method="post" asp-controller="Comment" asp-action="DeleteComment" asp-route-commentId="@comment.CommentId" asp-route-recipeId="@Model.RecipeId">
                         <button type="submit" class="delete-btn">Delete</button>
                     </form>
                 </div>
@@ -34,21 +34,21 @@
             @foreach (var comment in Model.Comments.Skip(3))
             {
                 <div class="comment">
-                    <p><strong>User:</strong> @comment.UserName</p>
+                    <p><strong>User:</strong> @comment.UserName.Split('@')[0]</p>
                     <p>@comment.Content</p>
                     <p><small>Posted on: @comment.DatePosted.ToString("dd/MM/yyyy HH:mm")</small></p>
                     <div class="comment-actions">
                         <form method="post" asp-controller="Comment" asp-action="EditComment" asp-route-commentId="@comment.CommentId" asp-route-recipeId="@Model.RecipeId">
                             <button type="submit" class="edit-btn">Edit</button>
                         </form>
-                        <form method="post" asp-controller="Comment" asp-action="DeleteComment" asp-route-commentId="@comment.CommentId" asp-route-recipeId="@comment.RecipeId">
+                        <form method="post" asp-controller="Comment" asp-action="DeleteComment" asp-route-commentId="@comment.CommentId" asp-route-recipeId="@Model.RecipeId">
                             <button type="submit" class="delete-btn">Delete</button>
                         </form>
                     </div>
                 </div>
             }
         </div>
+        @* Toggle button *@
+        <button id="toggle-comments" asp-route-recipeId="@Model.RecipeId" onclick="toggleComments(event)">Show All Comments</button>
     </div>
-    @* Toggle button *@
-    <button id="toggle-comments" onclick="toggleComments()">Show All Comments</button>
 </section>

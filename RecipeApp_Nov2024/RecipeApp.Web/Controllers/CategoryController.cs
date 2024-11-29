@@ -1,51 +1,55 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using RecipeApp.Data;
 using RecipeApp.Data.Models;
+using RecipeApp.Services.Data.Interfaces;
 using RecipeApp.Web.ViewModels.CategoryViewModels;
+using RecipeApp.Web.ViewModels.FavoritesViewModels;
+using System.Security.Claims;
 
 namespace RecipeApp.Web.Controllers
 {
     public class CategoryController : Controller
     {
-        private RecipeDbContext dbContext;
+        private ICategoryService _categoryService;
+        private IRecipeService _recipeService;
+        private IFavoriteService _favoriteService;
 
-        public CategoryController(RecipeDbContext dbContext)
+        public CategoryController(ICategoryService categoryService, IRecipeService recipeService, IFavoriteService favoriteService)
         {
-            this.dbContext = dbContext;
+            _categoryService = categoryService;
+            _recipeService = recipeService;
+            _favoriteService = favoriteService;
         }
 
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            IEnumerable<CategoryViewModel> allCategories = await dbContext
-                .Categories
+            var allCategories = await _categoryService.GetAllCategories();
+
+            IEnumerable<CategoryViewModel> model = allCategories
                 .Select(c => new CategoryViewModel()
                 {
                     Id = c.Id,
                     Name = c.Name,
                     ImageUrl = c.ImageUrl
                 })
-            .AsNoTracking()
-            .ToListAsync();
+            .ToList();
 
-            return View(allCategories);
+            return View(model);
         }
 
         [HttpGet]
         public async Task<IActionResult> CategoryRecipes(int id)
         {
-            Category? category = dbContext
-                .Categories
-                .FirstOrDefault(c => c.Id == id);
+            Category? category = await _categoryService.GetCategory(id);
 
             if (category == null)
             {
                 return RedirectToAction(nameof(Index));
             }
 
-            IEnumerable<CategoryRecipeViewModel> recipes = await dbContext
-                .Recipes
+            var recipes = _recipeService.GetAllRecipes();
+
+            IEnumerable<CategoryRecipeViewModel> recipesModel = recipes
                 .Where(r => r.CategoryId == id & r.IsDeleted == false)
                 .Select(rc => new CategoryRecipeViewModel()
                 {
@@ -53,12 +57,24 @@ namespace RecipeApp.Web.Controllers
                     Title = rc.Title,
                     ImageUrl = rc.ImageUrl,
                 })
-                .AsNoTracking()
-                .ToListAsync();
+                .ToList();
 
             ViewData["Title"] = category.Name;
 
-            return View(recipes);
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var cookbooks = await _favoriteService.GetUserCookbooksAsync(userId);
+
+            // Map cookbooks to a strong-typed view model
+            ViewBag.Cookbooks = cookbooks
+                .Select(c => new CookbookDropdownViewModel
+                {
+                    Id = c.Id,
+                    Title = c.Title
+                })
+                .ToList();
+
+            return View(recipesModel);
         }
     }
 }

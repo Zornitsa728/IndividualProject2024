@@ -1,6 +1,8 @@
 ﻿@using RecipeApp.Web.ViewModels.RecipeViewModels
 @model RecipeDetailsViewModel
 
+
+<form controller="Recipe" action="Details" method="get">
 <div id="recipe-details">
     <h1>@Model.Recipe.Title</h1>
     <img src="@(!string.IsNullOrEmpty(@Model.Recipe.ImageUrl) ? Model.Recipe.ImageUrl : RecipeApp.Common.ApplicationConstants.NoImageUrl)" alt="@Model.Recipe.Title">
@@ -44,3 +46,5 @@
         </div>
     </div>
 </div>
+    </form>
+<script src="~/js/site.js"></script>

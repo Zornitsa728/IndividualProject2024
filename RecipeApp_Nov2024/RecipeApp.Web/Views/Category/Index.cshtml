@@ -3,6 +3,7 @@
 
 <h2>Recipes Categories</h2>
 
+<form id="category-form" controller="Category" action="Index" method="get">
 <div class="row">
     @foreach (var recipeCategory in Model)
     {
@@ -17,3 +18,4 @@
         </div>
     }
 </div>
+</form>
