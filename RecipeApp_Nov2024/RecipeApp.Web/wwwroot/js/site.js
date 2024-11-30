@@ -81,41 +81,55 @@
 
     });
 
-
-});
-    function toggleComments(event) {
-        event.preventDefault();
-            const hiddenComments = document.getElementById("hidden-comments");
-        const toggleButton = document.getElementById("toggle-comments");
-
-        if (hiddenComments.style.display === "none") {
-            hiddenComments.style.display = "block";
-        toggleButton.textContent = "Show Less Comments";
-            } else {
-            hiddenComments.style.display = "none";
-        toggleButton.textContent = "Show All Comments";
-            }
-        }
-
-// Listen for the modal show event
-const addToCookbookModal = document.getElementById('addToCookbookModal');
-addToCookbookModal.addEventListener('show.bs.modal', function (event) {
-    // Get the button that triggered the modal
-    const button = event.relatedTarget;
-
-    // Extract the recipe ID and return URL from the data attributes
-    const recipeId = button.getAttribute('data-recipe-id');
-    const returnUrl = button.getAttribute('data-return-url');
-
-    // Set the hidden input field in the modal
-    const modalRecipeIdInput = document.getElementById('modal-recipe-id');
-    modalRecipeIdInput.value = recipeId;
-
-    // Set the return URL in the hidden input field
-    const modalReturnUrlInput = document.getElementById('modal-return-url');
-    modalReturnUrlInput.value = returnUrl;
-});
-
     
+    const addToCookbookModal = document.getElementById('addToCookbookModal');
+    if (addToCookbookModal) {
+        addToCookbookModal.addEventListener('show.bs.modal', function (event) {
+            // Get the button that triggered the modal
+            const button = event.relatedTarget;
+    
+            // Extract the recipe ID and return URL from the data attributes
+            const recipeId = button.getAttribute('data-recipe-id');
+            const returnUrl = button.getAttribute('data-return-url');
+    
+            // Set the hidden input field in the modal
+            const modalRecipeIdInput = document.getElementById('modal-recipe-id');
+            modalRecipeIdInput.value = recipeId;
+    
+            // Set the return URL in the hidden input field
+            const modalReturnUrlInput = document.getElementById('modal-return-url');
+            modalReturnUrlInput.value = returnUrl;
+        });
+    }
 
+// Toggle Comments Functionality
+    const toggleComments = document.getElementById('toggle-comments');
+    if (toggleComments) {
+        toggleComments.addEventListener('click', function (event) {
+            event.preventDefault();
+            const hiddenComments = document.getElementById('hidden-comments');
+            if (hiddenComments.style.display === 'none') {
+                hiddenComments.style.display = 'block';
+                toggleComments.textContent = 'Show Less Comments';
+            } else {
+                hiddenComments.style.display = 'none';
+                toggleComments.textContent = 'Show All Comments';
+            }
+        });
+    }
+});
+    document.addEventListener('DOMContentLoaded', function () {
+        // Attach an event listener for the modal being shown
+        var removeCookbookModal = document.getElementById('removeCookbookModal');
+        removeCookbookModal.addEventListener('show.bs.modal', function (event) {
+            // Get the button that triggered the modal
+            var button = event.relatedTarget;
 
+            // Extract the cookbookId from the button's data attribute
+            var cookbookId = button.getAttribute('data-cookbookId');
+
+            // Find the hidden input in the modal and set its value
+            var modalCookbookIdInput = removeCookbookModal.querySelector('#modalCookbookId');
+            modalCookbookIdInput.value = cookbookId;
+        });
+    });

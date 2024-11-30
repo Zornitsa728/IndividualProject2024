@@ -1,19 +1,19 @@
 ﻿@using RecipeApp.Web.ViewModels.RatingViewModels
 @model RatingViewModel
 
-<section id="ratings-section">
-    <h3>Ratings</h3>
-    <p>Average Rating: @Model.AverageRating / 5</p>
-    <form id="add-rating-form" method="post">
-        <label for="rating">Your Rating:</label>
-        <select name="score" id="rating" required>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-        </select>
-        <input type="hidden" name="RecipeId" value="@Model.RecipeId" />
-        <button asp-controller="Rating" asp-action="PostRating" type="submit">Submit Rating</button>
-    </form>
-</section>
+<form id="add-rating-form" method="post" asp-controller="Rating" asp-action="PostRating">
+    <div>
+        <h3>Ratings</h3>
+        <p>Average Rating: @Model.AverageRating / 5</p>
+    </div>
+    <label for="rating">Your Rating:</label>
+    <select name="score" id="rating" required>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+    </select>
+    <input type="hidden" name="recipeId" value="@Model.RecipeId" />
+    <button type="submit">Submit Rating</button>
+</form>

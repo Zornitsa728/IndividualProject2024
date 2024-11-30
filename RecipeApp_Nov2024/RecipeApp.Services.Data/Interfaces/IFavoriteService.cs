@@ -10,6 +10,7 @@ namespace RecipeApp.Services.Data.Interfaces
         Task AddRecipeToCookbookAsync(int cookbookId, int recipeId);
         Task RemoveRecipeFromCookbookAsync(int cookbookId, int recipeId);
         Task<Cookbook> GetCookbookWithRecipesAsync(int cookbookId);
+        Task<bool> RemoveCookbookAsync(int cookbookId);
     }
 
 }

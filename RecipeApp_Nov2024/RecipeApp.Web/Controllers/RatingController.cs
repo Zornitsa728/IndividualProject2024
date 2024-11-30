@@ -16,12 +16,12 @@ namespace RecipeApp.Web.Controllers
             _ratingService = ratingService;
         }
 
-        //[HttpGet]
-        //public async Task<ActionResult> GetRatings(int recipeId)
-        //{
-        //    var ratings = await _ratingService.GetRatingsAsync(recipeId);
-        //    return Ok(ratings);
-        //}
+        [HttpGet]
+        public async Task<ActionResult> GetRatings(int recipeId)
+        {
+            var ratings = await _ratingService.GetRatingsAsync(recipeId);
+            return Ok(ratings);
+        }
 
         [HttpPost]
         public async Task<ActionResult> PostRating(int recipeId, int score)
@@ -41,7 +41,7 @@ namespace RecipeApp.Web.Controllers
                 rating = await _ratingService.AddRatingAsync(recipeId, score, userId);
             }
 
-            return RedirectToAction("Details", "Recipe", new { id = rating.RecipeId });
+            return RedirectToAction("Details", "Recipe", new { id = recipeId });
         }
 
         [HttpGet]

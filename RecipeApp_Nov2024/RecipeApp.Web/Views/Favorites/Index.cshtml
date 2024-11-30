@@ -1,4 +1,5 @@
-﻿@model List<RecipeApp.Web.ViewModels.FavoritesViewModels.CookbookViewModel>
+﻿@using RecipeApp.Web.ViewModels.FavoritesViewModels
+@model IEnumerable<CookbookViewModel>
 
 <h2>Your Cookbooks</h2>
 
@@ -9,14 +10,48 @@
 }
 else
 {
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>Manage Your Cookbooks</h3>
+        <div class="btn-group">
+            <a id="create-cookbook-btn" asp-controller="Favorites" asp-action="Create" class="btn btn-primary">Create new book</a>
+        </div>
+    </div>
     <div class="cookbooks-container">
         @foreach (var cookbook in Model)
         {
             <div class="cookbook-card">
                 <h4>@cookbook.Title</h4>
                 <p>@cookbook.Description</p>
-                <a asp-action="ViewRecipes" asp-controller="Favorites" asp-route-id="@cookbook.Id" class="btn btn-secondary">View Recipes</a>
+                <a asp-action="ViewRecipes" asp-controller="Favorites" asp-route-cookbookId="@cookbook.Id" class="btn btn-secondary recipe-view-btn">View Recipes</a>
+                <button type="button" class="btn btn-primary recipe-remove-btn" data-bs-toggle="modal" data-bs-target="#removeCookbookModal" data-cookbook-id="@cookbook.Id">
+                    Remove book
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
+                        <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
+                    </svg>
+                </button>
             </div>
         }
     </div>
 }
+
+<div class="modal fade" id="removeCookbookModal" tabindex="-1" aria-labelledby="removeCookbookModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="removeCookbookModalLabel">Confirm Removal</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to remove this cookbook?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form asp-action="RemoveCookbook" asp-controller="Favorites" method="post">
+                    <input type="hidden" name="CookbookId" id="modal-cookbook-id" />
+                    <button type="submit" class="btn btn-danger">Remove</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

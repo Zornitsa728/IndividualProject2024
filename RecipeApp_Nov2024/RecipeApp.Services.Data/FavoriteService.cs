@@ -80,5 +80,21 @@ namespace RecipeApp.Services.Data
 
             return cookbook;
         }
+
+        public async Task<bool> RemoveCookbookAsync(int cookbookId)
+        {
+            var cookbook = await dbContext.Cookbooks
+                .Include(r => r.RecipeCookbooks)
+               .FirstOrDefaultAsync(rc => rc.Id == cookbookId);
+
+            if (cookbook != null)
+            {
+                dbContext.Cookbooks.Remove(cookbook);
+                await dbContext.SaveChangesAsync();
+                return true;
+            }
+
+            return false;
+        }
     }
 }

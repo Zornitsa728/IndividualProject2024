@@ -22,4 +22,8 @@
     <ProjectReference Include="..\RecipeApp.Data.Models\RecipeApp.Data.Models.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Repository\" />
+  </ItemGroup>
+
 </Project>

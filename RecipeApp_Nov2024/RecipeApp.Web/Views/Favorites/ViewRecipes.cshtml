@@ -5,7 +5,13 @@
 
 <p>@Model.Description</p>
 
-<form controller="Recipe" action="Index" method="get">
+@if (!Model.Recipes.Any())
+{
+     <p>You don't have any recipes in that book.</p>
+     <a asp-controller="Recipe" asp-action="Index" class="btn btn-primary all-recipes">Choose recipes from here</a>
+}
+else
+{
     <div class="row">
         @foreach (var recipe in Model.Recipes)
         {
@@ -16,12 +22,12 @@
                         <h5 class="card-title">@recipe.Title</h5>
                         <div class="recipe-main-btns">
                             <a asp-controller="Recipe" asp-action="Details" asp-route-id="@recipe.Id" class="recipe-view-btn">View Recipe</a>
-                            @* Remove from Cookbook button  *@
-                            <form action="@Url.Action("RemoveFromCookbook", "Favorites")" method="post" style="display:inline;">
+                            @* Remove from Cookbook button *@
+                            <form asp-controller="Favorites" asp-action="RemoveFromCookbook" method="post">
                                 <input type="hidden" name="recipeId" value="@recipe.Id" />
                                 <input type="hidden" name="cookbookId" value="@Model.Id" />
-                                <button type="submit" class="btn btn-danger">
-                                    Remove from your book
+                                <button type="submit" class="btn btn-danger remove-from-book">
+                                    Remove from book
                                 </button>
                             </form>
                         </div>
@@ -30,4 +36,4 @@
             </div>
         }
     </div>
-</form>
+}

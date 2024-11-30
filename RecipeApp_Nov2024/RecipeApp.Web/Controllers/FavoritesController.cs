@@ -37,9 +37,9 @@ namespace RecipeApp.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ViewRecipes(int id)
+        public async Task<IActionResult> ViewRecipes(int cookbookId)
         {
-            var cookbook = await _favoriteService.GetCookbookWithRecipesAsync(id);
+            var cookbook = await _favoriteService.GetCookbookWithRecipesAsync(cookbookId);
 
             CookbookViewModel model = new CookbookViewModel
             {
@@ -90,15 +90,37 @@ namespace RecipeApp.Web.Controllers
         {
             await _favoriteService.AddRecipeToCookbookAsync(cookbookId, recipeId);
 
-            // Redirect to the original page the user was on
-            return Redirect(returnUrl);
+            // Redirect back to the return URL if provided, otherwise redirect to a default page
+            if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
+
+            return RedirectToAction("Index", "Favorites");
         }
 
         [HttpPost]
         public async Task<IActionResult> RemoveFromCookbook(int cookbookId, int recipeId)
         {
             await _favoriteService.RemoveRecipeFromCookbookAsync(cookbookId, recipeId);
-            return RedirectToAction("Index");
+
+            // Redirect back to the current cookbook's page
+            return RedirectToAction("ViewRecipes", "Favorites", new { cookbookId });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RemoveCookbook(int cookbookId)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (userId == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            await _favoriteService.RemoveCookbookAsync(cookbookId);
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }
