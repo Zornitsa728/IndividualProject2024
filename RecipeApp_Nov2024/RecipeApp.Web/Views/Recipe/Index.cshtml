@@ -16,9 +16,11 @@
                         <h5 class="card-title">@recipe.Title</h5>
                         <div class="recipe-main-btns">
                             <a asp-controller="Recipe" asp-action="Details" asp-route-id="@recipe.Id" class="recipe-view-btn">View Recipe</a>
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addToCookbookModal"
+                            <button type="button" class="btn btn-primary recipe-add-to-book-btn" data-bs-toggle="modal" data-bs-target="#addToCookbookModal"
                                     data-recipe-id="@recipe.Id" data-return-url="@Context.Request.Path">
-                                Add to your book
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314" />
+                                </svg>
                             </button>
                         </div>
                     </div>

@@ -31,7 +31,7 @@ html {
 }
 
     .add-recipe-btn .nav-link:hover {
-        background-color: #48803d;
+        background-color: #205a12;
     }
 
 .footer {
@@ -62,7 +62,7 @@ body {
 }
 
     .card:hover {
-        transform: scale(1.02); /* Slight zoom effect on hover */
+        transform: scale(1.02);  Slight zoom effect on hover 
     }
 
 .card-title {
@@ -74,6 +74,7 @@ body {
 }
 
 .recipe-main-btns {
+    gap: 0.5rem;
     display: flex;
     justify-content: space-between;
 }
@@ -114,7 +115,8 @@ body {
         border: #24511a;
     }
 
-.recipe-edit-btn {
+
+.my-recipe-edit-btn {
     display: inline-block;
     text-align: center;
     vertical-align: middle;
@@ -123,19 +125,46 @@ body {
     font-weight: bold;
     line-height: 1;
     cursor: pointer;
-    border: solid 2px #b27171;
+    border: solid 3px #b27171;
     border-radius: 12px;
     color: darkred;
     background-color: white;
     text-decoration: none;
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
-    .recipe-edit-btn:hover {
+
+    .my-recipe-edit-btn:hover {
         color: white;
-        background-color: #b27171;
+        background-color: #8a2b2d;
     }
 
-    .recipe-edit-btn:active {
+    .my-recipe-edit-btn:active {
+        color: white;
+        background-color: #7c3434;
+    }
+
+.recipe-add-to-book-btn {
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 1;
+    cursor: pointer;
+    border: solid 3px #b27171;
+    border-radius: 12px;
+    color: darkred;
+    background-color: white;
+    text-decoration: none;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+    .recipe-add-to-book-btn:hover {
+        color: white;
+        background-color: #8a2b2d;
+    }
+
+    .recipe-add-to-book-btn:active {
         color: white;
         background-color: #7c3434;
     }
@@ -231,7 +260,7 @@ body {
 
 #recipe-form {
     max-width: 800px; 
-    margin: 0 auto; /* Center the form */
+    margin: 0 auto;  Center the form 
     padding: 20px;
     background-color: #f7e6e6; 
     border-radius: 12px; 
@@ -261,7 +290,6 @@ body {
     }
 
     #recipe-form button.btn {
-        background-color: #79b66b;
         color: #fff;
         border: none;
         padding: 10px 20px;
@@ -271,15 +299,6 @@ body {
         cursor: pointer;
         transition: background-color 0.3s ease, transform 0.2s ease;
     }
-
-        #recipe-form button.btn:hover {
-            background-color: #408a2f; 
-            transform: scale(1.05);
-        }
-
-        #recipe-form button.btn:active {
-            background-color: #386f2c;
-        }
 
     #recipe-form .table {
         margin-top: 20px;
@@ -313,16 +332,32 @@ body {
         margin-bottom: 20px;
     }
 
-.remove-ingredient {
-    background-color: #be5555;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    font-size: 0.8rem;
-    font-weight: bold;
-    border-radius: 5px;
-    cursor: pointer;
+    .btn-danger .remove-ingredient {
+        background-color: #be5555;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+#add-ingredient-btn {
+    background-color: #79b66b;
 }
+
+#add-ingredient-btn:hover {
+    background-color: #4b8e3b;
+}
+
+.btn-primary {
+    background-color: #79b66b;
+}
+
+    .btn-primary:hover {
+        background-color: #4b8e3b;
+    }
 
 h2 {
     font-size: 2rem;
@@ -421,7 +456,6 @@ body {
 .instructions-section {
     margin: 1.5rem 0;
     text-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    ;
 }
 
     .instructions-section label {
@@ -582,13 +616,13 @@ body {
         background-color: #f44336;
         color: white;
         border: none;
-        padding: 5px 15px; /* Adjusted padding for consistent size */
+        padding: 5px 15px;  Adjusted padding for consistent size 
         margin-left: 5px;
         border-radius: 5px;
         cursor: pointer;
         font-size: 14px;
-        width: 80px; /* Set a fixed width */
-        text-align: center; /* Align text within buttons */
+        width: 80px;  Set a fixed width 
+        text-align: center;  Align text within buttons 
         transition: background-color 0.3s ease;
     }
 
@@ -761,8 +795,7 @@ allrecipes-btn {
 .remove-from-book {
     display: inline-block;
     text-align: center;
-    vertical-align: middle;
-    padding: 10px 20px;
+    padding: 10px 10px;
     font-size: 16px;
     font-weight: bold;
     line-height: 1;
@@ -780,4 +813,3 @@ allrecipes-btn {
         background-color: #a03134;
         border: solid 2px #8a2b2d;
     }
-

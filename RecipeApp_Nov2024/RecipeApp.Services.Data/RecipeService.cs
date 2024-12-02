@@ -14,74 +14,59 @@ namespace RecipeApp.Services.Data
             this.dbContext = dbContext;
         }
 
-        /// <summary>
-        /// Add a new recipe to the database.
-        /// </summary>
-        /// <param name="recipe">The recipe to add.</param>
-        public void AddRecipeAsync(Recipe recipe)
+        public async Task AddRecipeAsync(Recipe recipe)
         {
-            dbContext.Recipes.Add(recipe);
-            dbContext.SaveChanges();
+            await dbContext.Recipes.AddAsync(recipe);
+            await dbContext.SaveChangesAsync();
         }
 
-        /// <summary>
-        /// Get all recipes from the database.
-        /// </summary>
-        /// <returns>List of recipes.</returns>
-        public IEnumerable<Recipe> GetAllRecipes()
+        public async Task<IEnumerable<Recipe>> GetAllRecipesAsync()
         {
-            return dbContext.Recipes
+            return await dbContext.Recipes
                 .Where(r => !r.IsDeleted)
-                .ToList();
+                .ToListAsync();
         }
 
-        /// <summary>
-        /// Get a recipe by its ID.
-        /// </summary>
-        /// <param name="id">The recipe ID.</param>
-        /// <returns>A single recipe, or null if not found.</returns>
-        public Recipe? GetRecipeById(int id)
+        public async Task<Recipe?> GetRecipeByIdAsync(int id)
         {
-            var recipe = dbContext.Recipes
+            var recipe = await dbContext.Recipes
                .Include(r => r.RecipeIngredients)
                .ThenInclude(ri => ri.Ingredient)
-               .FirstOrDefault(r => r.Id == id && !r.IsDeleted);
+               .FirstOrDefaultAsync(r => r.Id == id && !r.IsDeleted);
 
             return (recipe);
 
         }
 
-        /// <summary>
-        /// Update an existing recipe.
-        /// </summary>
-        /// <param name="recipe">The updated recipe.</param>
-        public void UpdateRecipe(Recipe recipe)
+        public async Task UpdateRecipeAsync(Recipe recipe)
         {
             dbContext.Recipes.Update(recipe);
-            dbContext.SaveChanges();
+            await dbContext.SaveChangesAsync();
         }
 
-        /// <summary>
-        /// Delete a recipe by marking it as deleted.
-        /// </summary>
-        /// <param name="id">The recipe ID to delete.</param>
-        public void DeleteRecipe(int id)
+        public async Task DeleteRecipeAsync(int id)
         {
-            var recipe = dbContext.Recipes.FirstOrDefault(r => r.Id == id);
+            var recipe = await dbContext.Recipes.FirstOrDefaultAsync(r => r.Id == id);
+
             if (recipe != null)
             {
                 recipe.IsDeleted = true;
-                dbContext.SaveChanges();
+                await dbContext.SaveChangesAsync();
             }
         }
 
-        public void DeleteAllTests()
+        public async Task UpdateRecipeIngredientsAsync(int recipeId, List<RecipeIngredient> updatedIngredients)
         {
-            var testRecipes = dbContext.Recipes
-                .Where(r => r.UserId == "bb2e1ae5-dac2-4644-9036-7df37de65a7e")
-                .Select(r => r.IsDeleted == true);
+            var existingIngredients = dbContext.RecipesIngredients.Where(ri => ri.RecipeId == recipeId);
 
-            dbContext.SaveChanges();
+            // Remove existing ingredients
+            dbContext.RecipesIngredients.RemoveRange(existingIngredients);
+
+            // Add new ingredients
+            await dbContext.RecipesIngredients.AddRangeAsync(updatedIngredients);
+
+            await dbContext.SaveChangesAsync();
         }
+
     }
 }

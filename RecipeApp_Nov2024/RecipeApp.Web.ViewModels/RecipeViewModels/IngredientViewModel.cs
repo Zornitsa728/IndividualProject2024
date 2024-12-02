@@ -7,6 +7,8 @@ namespace RecipeApp.Web.ViewModels.RecipeViewModels
     {
         [Required]
         public int IngredientId { get; set; }
+
+        public string? Name { get; set; }
         public double Quantity { get; set; }
         public UnitOfMeasurement Unit { get; set; }
     }

@@ -47,7 +47,7 @@ namespace RecipeApp.Web.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            var recipes = _recipeService.GetAllRecipes();
+            var recipes = await _recipeService.GetAllRecipesAsync();
 
             IEnumerable<CategoryRecipeViewModel> recipesModel = recipes
                 .Where(r => r.CategoryId == id & r.IsDeleted == false)
@@ -62,6 +62,11 @@ namespace RecipeApp.Web.Controllers
             ViewData["Title"] = category.Name;
 
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (userId == null)
+            {
+                return View("Index");
+            }
 
             var cookbooks = await _favoriteService.GetUserCookbooksAsync(userId);
 

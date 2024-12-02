@@ -88,7 +88,16 @@ namespace RecipeApp.Services.Data
                .FirstOrDefaultAsync(rc => rc.Id == cookbookId);
 
             if (cookbook != null)
-            {
+            {    //if any recipes are in the book
+                if (cookbook.RecipeCookbooks.Any())
+                {
+                    var recipeCookbooks = dbContext.RecipesCookbooks
+                        .Where(rc => rc.CookbookId == cookbookId);
+
+                    dbContext.RecipesCookbooks.RemoveRange(recipeCookbooks);
+                    await dbContext.SaveChangesAsync();
+                }
+                // the empty book
                 dbContext.Cookbooks.Remove(cookbook);
                 await dbContext.SaveChangesAsync();
                 return true;

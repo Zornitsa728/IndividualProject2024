@@ -4,11 +4,11 @@ namespace RecipeApp.Services.Data.Interfaces
 {
     public interface IRecipeService
     {
-        void AddRecipeAsync(Recipe recipe);
-        IEnumerable<Recipe> GetAllRecipes();
-        Recipe? GetRecipeById(int id);
-        void UpdateRecipe(Recipe recipe);
-        void DeleteRecipe(int id);
-        void DeleteAllTests();
+        Task AddRecipeAsync(Recipe recipe);
+        Task<IEnumerable<Recipe>> GetAllRecipesAsync();
+        Task<Recipe?> GetRecipeByIdAsync(int id);
+        Task UpdateRecipeAsync(Recipe recipe);
+        Task DeleteRecipeAsync(int id);
+        Task UpdateRecipeIngredientsAsync(int recipeId, List<RecipeIngredient> updatedIngredients);
     }
 }

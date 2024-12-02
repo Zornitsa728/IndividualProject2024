@@ -40,7 +40,7 @@ namespace RecipeApp.Web.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var recipes = _recipeService.GetAllRecipes();
+            var recipes = await _recipeService.GetAllRecipesAsync();
             var cookbooks = await _favoriteService.GetUserCookbooksAsync(userId);
 
             // Map cookbooks to a strong-typed view model
@@ -81,8 +81,6 @@ namespace RecipeApp.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(AddRecipeViewModel model)
         {
-            _recipeService.DeleteAllTests();
-
             if (!ModelState.IsValid)
             {
                 // Reload necessary data in case of validation errors
@@ -113,7 +111,7 @@ namespace RecipeApp.Web.Controllers
                 UserId = model.UserId
             };
 
-            _recipeService.AddRecipeAsync(recipe);
+            await _recipeService.AddRecipeAsync(recipe);
 
             recipe.RecipeIngredients = model.Ingredients
                 .Select(i => new RecipeIngredient
@@ -124,13 +122,13 @@ namespace RecipeApp.Web.Controllers
                     RecipeId = recipe.Id
                 }).ToList();
 
-            _recipeService.UpdateRecipe(recipe);
+            await _recipeService.UpdateRecipeAsync(recipe);
 
             return RedirectToAction(nameof(MyRecipes));
         }
 
         [HttpGet]
-        public IActionResult MyRecipes()
+        public async Task<IActionResult> MyRecipes()
         {
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
 
@@ -139,8 +137,9 @@ namespace RecipeApp.Web.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            var myRecipes = _recipeService.GetAllRecipes()
-                .Where(r => r.UserId == currentUserId);
+            var allRecipes = await _recipeService.GetAllRecipesAsync();
+
+            var myRecipes = allRecipes.Where(r => r.UserId == currentUserId);
 
             return View(myRecipes);
         }
@@ -148,7 +147,7 @@ namespace RecipeApp.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
-            var recipe = _recipeService.GetRecipeById(id);
+            var recipe = await _recipeService.GetRecipeByIdAsync(id);
             var averageRating = await _ratingService.GetAverageRatingAsync(id);
             var comments = await _commentService.GetCommentsAsync(id);
 
@@ -184,6 +183,103 @@ namespace RecipeApp.Web.Controllers
             };
 
             return View(recipeModel);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
+            var recipe = await _recipeService.GetRecipeByIdAsync(id);
+
+            if (recipe == null)
+            {
+                return NotFound();
+            }
+
+            if (userId != recipe.UserId)
+            {
+                return NotFound();
+            }
+
+            var model = new EditRecipeViewModel
+            {
+                Title = recipe.Title,
+                Description = recipe.Description,
+                Instructions = recipe.Instructions,
+                ImageUrl = recipe.ImageUrl,
+                UserId = recipe.UserId,
+                CategoryId = recipe.CategoryId,
+                Categories = await _categoryService.GetAllCategories(),
+                AvailableIngredients = _ingredientService.GetAllIngredients(),
+                UnitsOfMeasurement = Enum.GetValues(typeof(UnitOfMeasurement))
+                    .Cast<UnitOfMeasurement>()
+                    .Select(u => new SelectListItem
+                    {
+                        Text = u.ToString(),
+                        Value = ((int)u).ToString()
+                    })
+                    .ToList(),
+                Ingredients = recipe.RecipeIngredients
+                    .Select(ri => new IngredientViewModel()
+                    {
+                        IngredientId = ri.IngredientId,
+                        Name = ri.Ingredient.Name,
+                        Quantity = ri.Quantity,
+                        Unit = ri.Unit
+                    })
+                    .ToList()
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(EditRecipeViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                model.Categories = await _categoryService.GetAllCategories();
+                model.AvailableIngredients = _ingredientService.GetAllIngredients();
+                model.UnitsOfMeasurement = Enum.GetValues(typeof(UnitOfMeasurement))
+                    .Cast<UnitOfMeasurement>()
+                    .Select(u => new SelectListItem
+                    {
+                        Text = u.ToString(),
+                        Value = ((int)u).ToString()
+                    })
+                    .ToList();
+                return View(model);
+            }
+
+            var recipe = await _recipeService.GetRecipeByIdAsync(model.Id);
+
+            if (recipe == null)
+            {
+                return NotFound();
+            }
+
+            // Update recipe details
+            recipe.Title = model.Title;
+            recipe.Description = model.Description;
+            recipe.Instructions = model.Instructions;
+            recipe.ImageUrl = model.ImageUrl;
+            recipe.CategoryId = model.CategoryId;
+
+            // Update ingredients
+            var updatedIngredients = model.Ingredients.Select(i => new RecipeIngredient()
+            {
+                IngredientId = i.IngredientId,
+                Quantity = i.Quantity,
+                Unit = i.Unit,
+                RecipeId = recipe.Id
+            }).ToList();
+
+            // Remove existing ingredients (if any) and add updated ones
+            await _recipeService.UpdateRecipeIngredientsAsync(recipe.Id, updatedIngredients);
+            await _recipeService.UpdateRecipeAsync(recipe);
+
+            return RedirectToAction(nameof(MyRecipes));
         }
     }
 }
