@@ -37,7 +37,7 @@ namespace RecipeApp.Web.Controllers
             return View(model);
         }
 
-        [HttpGet]
+        [HttpGet] //only recepies 
         public async Task<IActionResult> CategoryRecipes(int id)
         {
             Category? category = await _categoryService.GetCategory(id);
@@ -55,7 +55,7 @@ namespace RecipeApp.Web.Controllers
                 {
                     Id = rc.Id,
                     Title = rc.Title,
-                    ImageUrl = rc.ImageUrl,
+                    ImageUrl = rc.ImageUrl, //TODO: add recipecardviewmodel
                 })
                 .ToList();
 

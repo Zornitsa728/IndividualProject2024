@@ -1,80 +1,112 @@
 ﻿document.addEventListener('DOMContentLoaded', () => {
     let index = 0;
-    document.getElementById('add-ingredient-btn').addEventListener('click', function () {
+
+    // Add hidden inputs to the form
+    const form = document.getElementById('recipe-form');
+
+    const tableBody = document.getElementById('ingredients-table-body');
+
+    // Loop through all rows and add hidden inputs with updated indices
+    if (tableBody) {
+        Array.from(tableBody.children).forEach((row, newIndex) => {
+            const ingredientId = row.getAttribute('data-id');
+            const quantity = row.children[1].textContent;
+            const unit = row.children[2].textContent;
+
+            form.insertAdjacentHTML(
+                'beforeend',
+                `<input type="hidden" name="Ingredients[${newIndex}].IngredientId" value="${ingredientId}" class="ingredient-hidden">
+             <input type="hidden" name="Ingredients[${newIndex}].Quantity" value="${quantity}" class="ingredient-hidden">
+             <input type="hidden" name="Ingredients[${newIndex}].Unit" value="${unit}" class="ingredient-hidden">`
+            );
+        });
+    }
+
+    document.getElementById('add-ingredient-btn')?.addEventListener('click', function () {
         const nameDropdown = document.getElementById('ingredient-name');
-        const Name = nameDropdown.options[nameDropdown.selectedIndex].text;
+        const name = nameDropdown.options[nameDropdown.selectedIndex].text;
 
-        const IngredientId = document.getElementById('ingredient-name').value;
+        const ingredientId = document.getElementById('ingredient-name').value;
 
-        const Quantity = document.getElementById('ingredient-quantity').value;
+        const quantity = document.getElementById('ingredient-quantity').value;
 
         const unitDropdown = document.getElementById('ingredient-unit');
-        const Unit = unitDropdown.options[unitDropdown.selectedIndex].text; // Get the visible text
+        const checkUnit = unitDropdown.options[unitDropdown.selectedIndex].value; // Get the visible text
+        const unit = unitDropdown.options[unitDropdown.selectedIndex].text; // Get the visible text
 
-        if (!IngredientId || !Quantity || !Unit) {
+        if (!ingredientId || !quantity || !checkUnit) {
             alert('Please fill all fields.');
             return;
         }
 
         // Add row to the table
-        const tableBody = document.getElementById('ingredients-table-body');
         const row = document.createElement('tr');
+        row.setAttribute('data-id', ingredientId);
         row.innerHTML = `
-            <td>${Name}</td>
-            <td>${Quantity}</td>
-            <td>${Unit}</td>
-            <td><button type="button" class="remove-ingredient">Remove</button></td>
+            <td>${name}</td>
+            <td>${quantity}</td>
+            <td>${unit}</td>
+            <td><button type="button" class="btn btn-danger remove-ingredient">Remove</button></td>
         `;
-        tableBody.appendChild(row);
+        tableBody?.appendChild(row);
 
+        // First, remove all existing hidden inputs
+        form?.querySelectorAll('.ingredient-hidden').forEach(input => input.remove());
 
-        // Add hidden inputs to the form
-        const form = document.getElementById('recipe-form');
-        form.insertAdjacentHTML(
-            'beforeend',
-            `<input type="hidden" name="Ingredients[${index}].IngredientId" value="${IngredientId}" class="ingredient-hidden">
-             <input type="hidden" name="Ingredients[${index}].Quantity" value="${Quantity}" class="ingredient-hidden">
-             <input type="hidden" name="Ingredients[${index}].Unit" value="${Unit}" class="ingredient-hidden">`
-        );
+        // Loop through all rows and add hidden inputs with updated indices
+        if (tableBody) {
+            Array.from(tableBody.children).forEach((row, newIndex) => {
+                const ingredientId = row.getAttribute('data-id');
+                const quantity = row.children[1].textContent;
+                const unit = row.children[2].textContent;
+
+                form?.insertAdjacentHTML(
+                    'beforeend',
+                    `<input type="hidden" name="Ingredients[${newIndex}].IngredientId" value="${ingredientId}" class="ingredient-hidden">
+             <input type="hidden" name="Ingredients[${newIndex}].Quantity" value="${quantity}" class="ingredient-hidden">
+             <input type="hidden" name="Ingredients[${newIndex}].Unit" value="${unit}" class="ingredient-hidden">`
+                );
+            });
+
             index++
 
-        // Clear the input fields
-        document.getElementById('ingredient-name').value = '';
-        document.getElementById('ingredient-quantity').value = '';
-        document.getElementById('ingredient-unit').value = '';
+            // Clear the input fields
+            document.getElementById('ingredient-name').value = '';
+            document.getElementById('ingredient-quantity').value = '';
+            document.getElementById('ingredient-unit').value = '';
+        }
     });
 
     // Handle remove ingredient
-    document.getElementById('ingredients-table-body').addEventListener('click', function (e) {
+    document.getElementById('ingredients-table-body')?.addEventListener('click', function (e) {
         if (e.target.classList.contains('remove-ingredient')) {
             const row = e.target.closest('tr');
-            const indexToRemove = Array.from(row.parentNode.children).indexOf(row);
+            //const indexToRemove = Array.from(row.parentNode.children).indexOf(row);
 
-            // Remove hidden inputs
-            const form = document.getElementById('recipe-form');
-            form.querySelectorAll('.ingredient-hidden').forEach(input => input.remove());
+            form?.querySelectorAll('.ingredient-hidden').forEach(input => input.remove());
 
             // Remove table row
             row.remove();
 
             // Rebuild hidden inputs with updated indices
-            const tableBody = document.getElementById('ingredients-table-body');
-            Array.from(tableBody.children).forEach((row, newIndex) => {
-                const cells = row.children;
-                const ingredientId = cells[0].textContent;
-                const quantity = cells[1].textContent;
-                const unit = cells[2].textContent;
+            if (tableBody) {
+                Array.from(tableBody.children).forEach((row, newIndex) => {
+                    const cells = row.children;
+                    const ingredientId = row.getAttribute('data-id');
+                    const quantity = cells[1].textContent;
+                    const unit = cells[2].textContent;
 
-                form.insertAdjacentHTML(
-                    'beforeend',
-                    `<input type="hidden" name="Ingredients[${newIndex}].IngredientId" value="${ingredientId}" class="ingredient-hidden">
+                    form?.insertAdjacentHTML(
+                        'beforeend',
+                        `<input type="hidden" name="Ingredients[${newIndex}].IngredientId" value="${ingredientId}" class="ingredient-hidden">
                      <input type="hidden" name="Ingredients[${newIndex}].Quantity" value="${quantity}" class="ingredient-hidden">
                      <input type="hidden" name="Ingredients[${newIndex}].Unit" value="${unit}" class="ingredient-hidden">`
-                );
-            });
+                    );
+                });
 
-            // Update the global index
-            index = tableBody.children.length;
+                // Update the global index
+                index = tableBody.children.length;
+            }
         }
     });
 

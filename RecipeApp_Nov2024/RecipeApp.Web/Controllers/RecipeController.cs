@@ -41,18 +41,37 @@ namespace RecipeApp.Web.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             var recipes = await _recipeService.GetAllRecipesAsync();
-            var cookbooks = await _favoriteService.GetUserCookbooksAsync(userId);
 
-            // Map cookbooks to a strong-typed view model
-            ViewBag.Cookbooks = cookbooks
-                .Select(c => new CookbookDropdownViewModel
+            List<RecipeCardViewModel> model = new List<RecipeCardViewModel>();
+
+            if (userId != null)
+            {
+                var cookbooks = await _favoriteService.GetUserCookbooksAsync(userId);
+
+                List<int> favoriteRecipeIds = cookbooks
+                   .SelectMany(cb => cb.RecipeCookbooks)
+                   .Select(rc => rc.RecipeId)
+                   .ToList();
+
+                model = recipes.Select(r => new RecipeCardViewModel()
                 {
-                    Id = c.Id,
-                    Title = c.Title
-                })
-                .ToList();
+                    Id = r.Id,
+                    Title = r.Title,
+                    ImageUrl = r.ImageUrl,
+                    Liked = favoriteRecipeIds.Contains(r.Id)
+                }).ToList();
 
-            return View(recipes);
+                // Map cookbooks to a strong-typed view model
+                ViewBag.Cookbooks = cookbooks
+                    .Select(c => new CookbookDropdownViewModel
+                    {
+                        Id = c.Id,
+                        Title = c.Title
+                    })
+                    .ToList();
+            }
+
+            return View(model);
         }
 
         [HttpGet]
@@ -266,7 +285,7 @@ namespace RecipeApp.Web.Controllers
             recipe.ImageUrl = model.ImageUrl;
             recipe.CategoryId = model.CategoryId;
 
-            // Update ingredients
+            // Update ingredients if ingredients > 0
             var updatedIngredients = model.Ingredients.Select(i => new RecipeIngredient()
             {
                 IngredientId = i.IngredientId,

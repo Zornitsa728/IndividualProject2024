@@ -78,7 +78,7 @@
         <tbody id="ingredients-table-body">
             @foreach (var ingredient in Model.Ingredients)
             {
-                <tr>
+                <tr data-id="@ingredient.IngredientId">
                     <td>@ingredient.Name</td>
                     <td>@ingredient.Quantity</td>
                     <td>@ingredient.Unit</td>

@@ -29,6 +29,15 @@ namespace RecipeApp.Services.Data
             await dbContext.SaveChangesAsync();
         }
 
+        //public async Task<List<Cookbook>> GetUserFavouritesAsync(string userId)
+        //{
+        //    return await dbContext.Cookbooks
+        //        .Where(c => c.UserId == userId)
+        //        .Include(c => c.RecipeCookbooks)
+        //        .ThenInclude(rc => rc.Recipe)
+        //        .ToListAsync();
+        //}
+
         public async Task<List<Cookbook>> GetUserCookbooksAsync(string userId)
         {
             return await dbContext.Cookbooks

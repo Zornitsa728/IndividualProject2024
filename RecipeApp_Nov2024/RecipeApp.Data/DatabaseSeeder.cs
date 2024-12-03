@@ -9,8 +9,8 @@ namespace RecipeApp.Data
         {
 
             if (!context.Ingredients.Any())
-            {   //TODO: the path getter is not working so i need to fix this later 
-                var path = "D:\\C#\\Source\\repos\\IndividualProject2024\\RecipeApp_Nov2024\\RecipeApp.Web\\wwwroot\\ingredients.json";
+            {
+                var path = Path.Combine(AppContext.BaseDirectory, "wwwroot", "ingredients.json");
 
                 // Read the JSON file
                 var jsonData = File.ReadAllText(path);
