@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using RecipeApp.Data.Models;
 using RecipeApp.Services.Data.Interfaces;
@@ -10,29 +11,14 @@ using System.Security.Claims;
 
 namespace RecipeApp.Web.Controllers
 {
+    [Authorize]
     public class RecipeController : Controller
     {
-        private readonly IRecipeService _recipeService;
-        private readonly ICategoryService _categoryService;
-        private readonly IIngredientService _ingredientService;
-        private readonly IRatingService _ratingService;
-        private readonly ICommentService _commentService;
-        private readonly IFavoriteService _favoriteService;
+        private readonly IRecipeService recipeService;
 
-        public RecipeController(
-           IRecipeService recipeService,
-           ICategoryService categoryService,
-           IIngredientService ingredientService,
-           IRatingService ratingService,
-           ICommentService commentService,
-           IFavoriteService favoriteService)
+        public RecipeController(IRecipeService recipeService)
         {
-            _recipeService = recipeService;
-            _categoryService = categoryService;
-            _ingredientService = ingredientService;
-            _ratingService = ratingService;
-            _commentService = commentService;
-            _favoriteService = favoriteService;
+            this.recipeService = recipeService;
         }
 
         [HttpGet]
@@ -40,13 +26,13 @@ namespace RecipeApp.Web.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var recipes = await _recipeService.GetAllRecipesAsync();
+            var recipes = await recipeService.GetAllRecipesAsync();
 
             List<RecipeCardViewModel> model = new List<RecipeCardViewModel>();
 
             if (userId != null)
             {
-                var cookbooks = await _favoriteService.GetUserCookbooksAsync(userId);
+                var cookbooks = await recipeService.GetUserCookbooksAsync(userId);
 
                 List<int> favoriteRecipeIds = cookbooks
                    .SelectMany(cb => cb.RecipeCookbooks)
@@ -77,10 +63,15 @@ namespace RecipeApp.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Create()
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId))
+            {
+                return RedirectToAction("Login", "Account");
+            }
 
             AddRecipeViewModel model = new AddRecipeViewModel();
-            model.Categories = await _categoryService.GetAllCategories();
-            model.AvailableIngredients = _ingredientService.GetAllIngredients();
+            model.Categories = await recipeService.GetAllCategoriesAsync();
+            model.AvailableIngredients = await recipeService.GetAllIngredientsAsync();
 
             model.UnitsOfMeasurement = Enum.GetValues(typeof(UnitOfMeasurement))
                 .Cast<UnitOfMeasurement>()
@@ -91,8 +82,7 @@ namespace RecipeApp.Web.Controllers
                 })
                 .ToList();
 
-            //TODO: if user is not log in it should send him to login page and only loged in users can see add recipe
-            model.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
+            model.UserId = userId;
 
             return View(model);
         }
@@ -102,10 +92,8 @@ namespace RecipeApp.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                // Reload necessary data in case of validation errors
-                model.Categories = await _categoryService.GetAllCategories();
-
-                model.AvailableIngredients = _ingredientService.GetAllIngredients();
+                model.Categories = await recipeService.GetAllCategoriesAsync();
+                model.AvailableIngredients = await recipeService.GetAllIngredientsAsync();
 
                 model.UnitsOfMeasurement = Enum.GetValues(typeof(UnitOfMeasurement))
                     .Cast<UnitOfMeasurement>()
@@ -119,7 +107,6 @@ namespace RecipeApp.Web.Controllers
                 return View(model);
             }
 
-            // Map the AddRecipeViewModel to Recipe entity
             var recipe = new Recipe
             {
                 Title = model.Title,
@@ -130,9 +117,7 @@ namespace RecipeApp.Web.Controllers
                 UserId = model.UserId
             };
 
-            await _recipeService.AddRecipeAsync(recipe);
-
-            recipe.RecipeIngredients = model.Ingredients
+            var ingredients = model.Ingredients
                 .Select(i => new RecipeIngredient
                 {
                     IngredientId = i.IngredientId,
@@ -141,7 +126,7 @@ namespace RecipeApp.Web.Controllers
                     RecipeId = recipe.Id
                 }).ToList();
 
-            await _recipeService.UpdateRecipeAsync(recipe);
+            await recipeService.AddRecipeAsync(recipe, ingredients);
 
             return RedirectToAction(nameof(MyRecipes));
         }
@@ -156,7 +141,7 @@ namespace RecipeApp.Web.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            var allRecipes = await _recipeService.GetAllRecipesAsync();
+            var allRecipes = await recipeService.GetAllRecipesAsync();
 
             var myRecipes = allRecipes.Where(r => r.UserId == currentUserId);
 
@@ -166,9 +151,15 @@ namespace RecipeApp.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
-            var recipe = await _recipeService.GetRecipeByIdAsync(id);
-            var averageRating = await _ratingService.GetAverageRatingAsync(id);
-            var comments = await _commentService.GetCommentsAsync(id);
+            var recipe = await recipeService.GetRecipeByIdAsync(id);
+
+            if (recipe == null)
+            {
+                return NotFound();
+            }
+
+            var averageRating = await recipeService.GetAverageRatingAsync(id);
+            var comments = await recipeService.GetCommentsAsync(id);
 
             RecipeCommentsViewModel recipeCommentsViewModel = new RecipeCommentsViewModel()
             {
@@ -209,7 +200,7 @@ namespace RecipeApp.Web.Controllers
         {
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
-            var recipe = await _recipeService.GetRecipeByIdAsync(id);
+            var recipe = await recipeService.GetRecipeByIdAsync(id);
 
             if (recipe == null)
             {
@@ -229,8 +220,8 @@ namespace RecipeApp.Web.Controllers
                 ImageUrl = recipe.ImageUrl,
                 UserId = recipe.UserId,
                 CategoryId = recipe.CategoryId,
-                Categories = await _categoryService.GetAllCategories(),
-                AvailableIngredients = _ingredientService.GetAllIngredients(),
+                Categories = await recipeService.GetAllCategoriesAsync(),
+                AvailableIngredients = await recipeService.GetAllIngredientsAsync(),
                 UnitsOfMeasurement = Enum.GetValues(typeof(UnitOfMeasurement))
                     .Cast<UnitOfMeasurement>()
                     .Select(u => new SelectListItem
@@ -258,8 +249,8 @@ namespace RecipeApp.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                model.Categories = await _categoryService.GetAllCategories();
-                model.AvailableIngredients = _ingredientService.GetAllIngredients();
+                model.Categories = await recipeService.GetAllCategoriesAsync();
+                model.AvailableIngredients = await recipeService.GetAllIngredientsAsync();
                 model.UnitsOfMeasurement = Enum.GetValues(typeof(UnitOfMeasurement))
                     .Cast<UnitOfMeasurement>()
                     .Select(u => new SelectListItem
@@ -271,7 +262,7 @@ namespace RecipeApp.Web.Controllers
                 return View(model);
             }
 
-            var recipe = await _recipeService.GetRecipeByIdAsync(model.Id);
+            var recipe = await recipeService.GetRecipeByIdAsync(model.Id);
 
             if (recipe == null)
             {
@@ -295,8 +286,7 @@ namespace RecipeApp.Web.Controllers
             }).ToList();
 
             // Remove existing ingredients (if any) and add updated ones
-            await _recipeService.UpdateRecipeIngredientsAsync(recipe.Id, updatedIngredients);
-            await _recipeService.UpdateRecipeAsync(recipe);
+            await recipeService.UpdateRecipeAsync(recipe, updatedIngredients);
 
             return RedirectToAction(nameof(MyRecipes));
         }

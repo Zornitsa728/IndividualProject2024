@@ -4,6 +4,7 @@ using RecipeApp.Data;
 using RecipeApp.Data.Models;
 using RecipeApp.Services.Data;
 using RecipeApp.Services.Data.Interfaces;
+using RecipeApp.Web.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +28,15 @@ builder.Services
 
 builder.Services.AddRazorPages();
 builder.Services.AddControllersWithViews();
+
+//This ensures all models in the Data.Models are automatically configured with their corresponding repositories
+var modelsAssembly = typeof(Recipe).Assembly;
+// Create a scope to access the DbContext
+using (var serviceScope = builder.Services.BuildServiceProvider().CreateScope())
+{
+    var dbContext = serviceScope.ServiceProvider.GetRequiredService<RecipeDbContext>();
+    builder.Services.RegisterRepositories(modelsAssembly, dbContext);
+}
 
 builder.Services.AddScoped<IRecipeService, RecipeService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();

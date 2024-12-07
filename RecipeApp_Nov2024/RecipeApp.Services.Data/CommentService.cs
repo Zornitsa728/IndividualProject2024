@@ -1,6 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using RecipeApp.Data;
-using RecipeApp.Data.Models;
+﻿using RecipeApp.Data.Models;
+using RecipeApp.Data.Repository.Interfaces;
 using RecipeApp.Services.Data.Interfaces;
 using RecipeApp.Web.ViewModels.CommentViewModels;
 
@@ -8,24 +7,22 @@ namespace RecipeApp.Services.Data
 {
     public class CommentService : ICommentService
     {
-        private readonly RecipeDbContext dbContext;
+        private readonly IRepository<Comment, int> commentRepository;
 
-        public CommentService(RecipeDbContext context)
+        public CommentService(IRepository<Comment, int> commentRepository)
         {
-            this.dbContext = context;
+            this.commentRepository = commentRepository;
         }
 
         public async Task<IEnumerable<Comment>> GetCommentsAsync(int recipeId)
         {
-            if (await dbContext.Comments.AnyAsync(c => c.RecipeId == recipeId))
+            var comments = await commentRepository.GetAllAsync();
+            //TODO: check if they are no comments will be needed Any or it will return an empty array 
+            if (comments.Any(c => c.RecipeId == recipeId))
             {
-                var comments = await dbContext.Comments
-                    .Include(c => c.User)
-                    .Where(c => c.RecipeId == recipeId && !c.IsDeleted)
-                    .OrderByDescending(c => c.DatePosted)
-                    .ToListAsync();
-
-                return comments;
+                return comments.Where(c => c.RecipeId == recipeId && !c.IsDeleted)
+                          .OrderByDescending(c => c.DatePosted)
+                          .ToList();
             }
 
             return new List<Comment>();
@@ -42,36 +39,30 @@ namespace RecipeApp.Services.Data
                 IsDeleted = false
             };
 
-            dbContext.Comments.Add(comment);
-            await dbContext.SaveChangesAsync();
+            await commentRepository.AddAsync(comment);
             return comment;
         }
 
         public async Task<bool> DeleteCommentAsync(int recipeId, int commentId, string userId)
         {
-            var comment = await dbContext.Comments
-                .FirstOrDefaultAsync(c => c.Id == commentId && c.RecipeId == recipeId);
+            var comment = await commentRepository.GetByIdAsync(commentId);
 
-            if (comment == null)
-                return false;
-
-            if (comment.UserId != userId)
+            if (comment == null || comment.RecipeId != recipeId || comment.UserId != userId)
                 return false;
 
             comment.IsDeleted = true; // Soft delete
-            await dbContext.SaveChangesAsync();
-
+            await commentRepository.UpdateAsync(comment);
             return true;
         }
 
         public async Task EditCommentAsync(int commentId, string content)
         {
-            var comment = await dbContext.Comments
-                .FirstOrDefaultAsync(c => c.Id == commentId);
-
-            comment.Content = content;
-
-            await dbContext.SaveChangesAsync();
+            var comment = await commentRepository.GetByIdAsync(commentId);
+            if (comment != null)
+            {
+                comment.Content = content;
+                await commentRepository.UpdateAsync(comment);
+            }
         }
     }
 }

@@ -1,33 +1,27 @@
-﻿using Microsoft.EntityFrameworkCore;
-using RecipeApp.Data;
-using RecipeApp.Data.Models;
+﻿using RecipeApp.Data.Models;
+using RecipeApp.Data.Repository.Interfaces;
 using RecipeApp.Services.Data.Interfaces;
 
 namespace RecipeApp.Services.Data
 {
     public class CategoryService : ICategoryService
     {
-        private readonly RecipeDbContext dbContext;
+        private readonly IRepository<Category, int> categoryRepository;
 
-        public CategoryService(RecipeDbContext dbContext)
+        public CategoryService(IRepository<Category, int> categoryRepository)
         {
-            this.dbContext = dbContext;
+            this.categoryRepository = categoryRepository;
         }
 
         public async Task<IEnumerable<Category>> GetAllCategories()
         {
-            IEnumerable<Category> categories = await dbContext.Categories.ToListAsync();
-
-            return categories;
+            return await categoryRepository.GetAllAsync();
         }
 
         public async Task<Category> GetCategory(int id)
         {
-            Category? category = dbContext
-                .Categories
-                .FirstOrDefault(c => c.Id == id);
-
-            return category;
+            return await categoryRepository.GetByIdAsync(id);
         }
     }
 }
+

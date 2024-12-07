@@ -1,22 +1,22 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using RecipeApp.Data;
 using RecipeApp.Data.Models;
+using RecipeApp.Data.Repository.Interfaces;
 using RecipeApp.Services.Data.Interfaces;
 
 namespace RecipeApp.Services.Data
 {
     public class RatingService : IRatingService
     {
-        private readonly RecipeDbContext dbContext;
+        private readonly IRepository<Rating, int> ratingRepository;
 
-        public RatingService(RecipeDbContext context)
+        public RatingService(IRepository<Rating, int> ratingRepository)
         {
-            this.dbContext = context;
+            this.ratingRepository = ratingRepository;
         }
 
         public async Task<IEnumerable<Rating>> GetRatingsAsync(int recipeId)
         {
-            return await dbContext.Ratings
+            return await ratingRepository.GetAllAttached()
                 .Where(r => r.RecipeId == recipeId)
                 .ToListAsync();
         }
@@ -30,17 +30,19 @@ namespace RecipeApp.Services.Data
                 Score = score
             };
 
-            dbContext.Ratings.Add(rating);
-            await dbContext.SaveChangesAsync();
+            await ratingRepository.AddAsync(rating);
             return rating;
         }
 
         public async Task<double> GetAverageRatingAsync(int recipeId)
         {
-            if (await dbContext.Ratings.AnyAsync(r => r.RecipeId == recipeId))
+            IQueryable<Rating>? currRecipeRatings = ratingRepository
+                .GetAllAttached()
+                .Where(r => r.RecipeId == recipeId);
+
+            if (currRecipeRatings != null)
             {
-                return await dbContext.Ratings
-                .Where(r => r.RecipeId == recipeId)
+                return await currRecipeRatings
                 .AverageAsync(r => r.Score);
             }
 
@@ -49,7 +51,8 @@ namespace RecipeApp.Services.Data
 
         public bool CheckRecipeUserRating(int recipeId, string userId)
         {
-            var rating = dbContext.Ratings.FirstOrDefault(r => r.RecipeId == recipeId && r.UserId == userId);
+            var rating = ratingRepository.GetAllAttached()
+                .FirstOrDefault(r => r.RecipeId == recipeId && r.UserId == userId);
 
             if (rating != null)
             {
@@ -61,12 +64,13 @@ namespace RecipeApp.Services.Data
 
         public async Task<Rating> UpdateRatingAsync(int recipeId, int score, string userId)
         {
-            var rating = dbContext.Ratings.First(r => r.RecipeId == recipeId && r.UserId == userId);
+            var rating = ratingRepository
+                .GetAllAttached()
+                .First(r => r.RecipeId == recipeId && r.UserId == userId);
 
             rating.Score = score;
 
-            dbContext.Ratings.Update(rating);
-            await dbContext.SaveChangesAsync();
+            await ratingRepository.UpdateAsync(rating);
 
             return rating;
         }

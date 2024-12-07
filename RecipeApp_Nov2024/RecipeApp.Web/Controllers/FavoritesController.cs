@@ -41,6 +41,11 @@ namespace RecipeApp.Web.Controllers
         {
             var cookbook = await _favoriteService.GetCookbookWithRecipesAsync(cookbookId);
 
+            if (cookbook == null)
+            {
+                return RedirectToAction("Index");
+            }
+
             CookbookViewModel model = new CookbookViewModel
             {
                 Id = cookbook.Id,

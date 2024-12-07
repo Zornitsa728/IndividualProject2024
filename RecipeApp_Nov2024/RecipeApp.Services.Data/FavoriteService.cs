@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using RecipeApp.Data;
 using RecipeApp.Data.Models;
+using RecipeApp.Data.Repository.Interfaces;
 using RecipeApp.Services.Data.Interfaces;
 using RecipeApp.Web.ViewModels.FavoritesViewModels;
 
@@ -8,11 +8,13 @@ namespace RecipeApp.Services.Data
 {
     public class FavoriteService : IFavoriteService
     {
-        private readonly RecipeDbContext dbContext;
+        private readonly IRepository<Cookbook, int> cookbookRepository;
+        private readonly IRepository<RecipeCookbook, object> recipeCookbookRepository;
 
-        public FavoriteService(RecipeDbContext context)
+        public FavoriteService(IRepository<Cookbook, int> cookbookRepository, IRepository<RecipeCookbook, object> recipeCookbookRepository)
         {
-            dbContext = context;
+            this.cookbookRepository = cookbookRepository;
+            this.recipeCookbookRepository = recipeCookbookRepository;
         }
 
         public async Task CreateCookbookAsync(CookbookCreateViewModel model, string userId)
@@ -24,65 +26,48 @@ namespace RecipeApp.Services.Data
                 UserId = userId
             };
 
-            await dbContext.Cookbooks.AddAsync(cookbook);
-
-            await dbContext.SaveChangesAsync();
+            await cookbookRepository.AddAsync(cookbook);
         }
-
-        //public async Task<List<Cookbook>> GetUserFavouritesAsync(string userId)
-        //{
-        //    return await dbContext.Cookbooks
-        //        .Where(c => c.UserId == userId)
-        //        .Include(c => c.RecipeCookbooks)
-        //        .ThenInclude(rc => rc.Recipe)
-        //        .ToListAsync();
-        //}
 
         public async Task<List<Cookbook>> GetUserCookbooksAsync(string userId)
         {
-            return await dbContext.Cookbooks
-                .Where(c => c.UserId == userId)
-                .Include(c => c.RecipeCookbooks)
-                .ThenInclude(rc => rc.Recipe)
-                .ToListAsync();
+            var cookbooks = cookbookRepository.GetAllAttached();
+
+            return cookbooks.Where(c => c.UserId == userId)
+                            .Include(c => c.RecipeCookbooks)
+                            .ThenInclude(rc => rc.Recipe)
+                            .ToList();
         }
         public async Task AddRecipeToCookbookAsync(int cookbookId, int recipeId)
         {
-            var cookbook = await dbContext.Cookbooks
-                .Include(c => c.RecipeCookbooks)
-                .FirstOrDefaultAsync(c => c.Id == cookbookId);
+            var cookbook = await cookbookRepository.GetByIdAsync(cookbookId);
 
             if (cookbook != null && !cookbook.RecipeCookbooks.Any(rc => rc.RecipeId == recipeId))
             {
-                if (!cookbook.RecipeCookbooks.Any(r => r.RecipeId == recipeId))
+                var newRecipeCookbook = new RecipeCookbook
                 {
+                    CookbookId = cookbookId,
+                    RecipeId = recipeId
+                };
 
-                    cookbook.RecipeCookbooks.Add(new RecipeCookbook
-                    {
-                        CookbookId = cookbookId,
-                        RecipeId = recipeId
-                    });
-
-                    await dbContext.SaveChangesAsync();
-                }
+                await recipeCookbookRepository.AddAsync(newRecipeCookbook);
             }
         }
 
         public async Task RemoveRecipeFromCookbookAsync(int cookbookId, int recipeId)
         {
-            var recipeCookbook = await dbContext.RecipesCookbooks
-                .FirstOrDefaultAsync(rc => rc.CookbookId == cookbookId && rc.RecipeId == recipeId);
+            var recipeCookbook = (await recipeCookbookRepository
+                .GetByIdAsync(new object[] { recipeId, cookbookId }));
 
             if (recipeCookbook != null)
             {
-                dbContext.RecipesCookbooks.Remove(recipeCookbook);
-                await dbContext.SaveChangesAsync();
+                await recipeCookbookRepository.DeleteAsync(new object[] { recipeId, cookbookId });
             }
         }
 
         public async Task<Cookbook> GetCookbookWithRecipesAsync(int cookbookId)
         {
-            Cookbook? cookbook = await dbContext.Cookbooks
+            Cookbook? cookbook = await cookbookRepository.GetAllAttached()
                .Include(c => c.RecipeCookbooks)
                .ThenInclude(rc => rc.Recipe)
                .FirstOrDefaultAsync(c => c.Id == cookbookId);
@@ -92,23 +77,23 @@ namespace RecipeApp.Services.Data
 
         public async Task<bool> RemoveCookbookAsync(int cookbookId)
         {
-            var cookbook = await dbContext.Cookbooks
-                .Include(r => r.RecipeCookbooks)
+            var cookbook = await cookbookRepository
+                .GetAllAttached().Include(r => r.RecipeCookbooks)
                .FirstOrDefaultAsync(rc => rc.Id == cookbookId);
 
             if (cookbook != null)
-            {    //if any recipes are in the book
+            {
+                //if any recipes are in the book
                 if (cookbook.RecipeCookbooks.Any())
                 {
-                    var recipeCookbooks = dbContext.RecipesCookbooks
-                        .Where(rc => rc.CookbookId == cookbookId);
-
-                    dbContext.RecipesCookbooks.RemoveRange(recipeCookbooks);
-                    await dbContext.SaveChangesAsync();
+                    foreach (var recipe in cookbook.RecipeCookbooks)
+                    {
+                        await recipeCookbookRepository.DeleteAsync(new object[] { recipe.RecipeId, recipe.CookbookId });
+                    }
                 }
+
                 // the empty book
-                dbContext.Cookbooks.Remove(cookbook);
-                await dbContext.SaveChangesAsync();
+                await cookbookRepository.DeleteAsync(cookbookId);
                 return true;
             }
 

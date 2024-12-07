@@ -3,6 +3,7 @@ using RecipeApp.Data.Models;
 using RecipeApp.Services.Data.Interfaces;
 using RecipeApp.Web.ViewModels.CategoryViewModels;
 using RecipeApp.Web.ViewModels.FavoritesViewModels;
+using RecipeApp.Web.ViewModels.RecipeViewModels;
 using System.Security.Claims;
 
 namespace RecipeApp.Web.Controllers
@@ -49,19 +50,7 @@ namespace RecipeApp.Web.Controllers
 
             var recipes = await _recipeService.GetAllRecipesAsync();
 
-            IEnumerable<CategoryRecipeViewModel> recipesModel = recipes
-                .Where(r => r.CategoryId == id & r.IsDeleted == false)
-                .Select(rc => new CategoryRecipeViewModel()
-                {
-                    Id = rc.Id,
-                    Title = rc.Title,
-                    ImageUrl = rc.ImageUrl, //TODO: add recipecardviewmodel
-                })
-                .ToList();
-
-            ViewData["Title"] = category.Name;
-
-            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (userId == null)
             {
@@ -69,6 +58,24 @@ namespace RecipeApp.Web.Controllers
             }
 
             var cookbooks = await _favoriteService.GetUserCookbooksAsync(userId);
+
+            List<int> favoriteRecipeIds = cookbooks
+                  .SelectMany(cb => cb.RecipeCookbooks)
+                  .Select(rc => rc.RecipeId)
+                  .ToList();
+
+            IEnumerable<RecipeCardViewModel> recipesModel = recipes
+                .Where(r => r.CategoryId == id & r.IsDeleted == false)
+                .Select(rc => new RecipeCardViewModel()
+                {
+                    Id = rc.Id,
+                    Title = rc.Title,
+                    ImageUrl = rc.ImageUrl,
+                    Liked = favoriteRecipeIds.Contains(rc.Id)//TODO: add recipecardviewmodel
+                })
+                .ToList();
+
+            ViewData["Title"] = category.Name;
 
             // Map cookbooks to a strong-typed view model
             ViewBag.Cookbooks = cookbooks
