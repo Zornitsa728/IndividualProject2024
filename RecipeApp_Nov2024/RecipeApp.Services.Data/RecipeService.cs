@@ -8,26 +8,29 @@ namespace RecipeApp.Services.Data
     public class RecipeService : IRecipeService
     {
         private readonly IRepository<Recipe, int> recipeRepository;
-        private readonly IRepository<RecipeIngredient, object> recipeIngredientRepository;
+        private readonly IRepository<Ingredient, int> ingredientRepository;
         private readonly IRepository<Comment, int> commentRepository;
         private readonly IRepository<Rating, int> ratingRepository;
         private readonly IRepository<Cookbook, int> cookbookRepository;
         private readonly IRepository<Category, int> categoryRepository;
+        private readonly IRepository<RecipeIngredient, object> recipeIngredientRepository;
 
         public RecipeService(
             IRepository<Recipe, int> recipeRepository,
-            IRepository<RecipeIngredient, object> recipeIngredientRepository,
+            IRepository<Ingredient, int> ingredientRepository,
             IRepository<Comment, int> commentRepository,
             IRepository<Rating, int> ratingRepository,
             IRepository<Cookbook, int> cookbookRepository,
-            IRepository<Category, int> categoryRepository)
+            IRepository<Category, int> categoryRepository,
+            IRepository<RecipeIngredient, object> recipeIngredientRepository)
         {
             this.recipeRepository = recipeRepository;
-            this.recipeIngredientRepository = recipeIngredientRepository;
+            this.ingredientRepository = ingredientRepository;
             this.commentRepository = commentRepository;
             this.ratingRepository = ratingRepository;
             this.cookbookRepository = cookbookRepository;
             this.categoryRepository = categoryRepository;
+            this.recipeIngredientRepository = recipeIngredientRepository;
         }
 
         public async Task AddRecipeAsync(Recipe recipe, List<RecipeIngredient> ingredients)
@@ -50,10 +53,12 @@ namespace RecipeApp.Services.Data
 
         public async Task<Recipe?> GetRecipeByIdAsync(int id)
         {
-            return await recipeRepository.GetAllAttached()
+            var recipes = await recipeRepository.GetAllAttached()
                 .Include(r => r.RecipeIngredients)
                     .ThenInclude(ri => ri.Ingredient)
                 .FirstOrDefaultAsync(r => r.Id == id && !r.IsDeleted);
+
+            return recipes;
         }
 
         public async Task<IEnumerable<Cookbook>> GetUserCookbooksAsync(string userId)
@@ -74,15 +79,17 @@ namespace RecipeApp.Services.Data
                 .Where(ri => ri.RecipeId == recipe.Id)
                 .ToList();
 
+            //removing the old ingredients
             foreach (var ingredient in existingIngredients)
             {
-                await recipeIngredientRepository.DeleteAsync(ingredient.IngredientId);
+                await recipeIngredientRepository.DeleteAsync(new object[] { ingredient.RecipeId, ingredient.IngredientId });
             }
 
-            foreach (var ingredient in updatedIngredients)
+            //adding the new
+            foreach (var recipeIngredient in updatedIngredients)
             {
-                ingredient.RecipeId = recipe.Id;
-                await recipeIngredientRepository.AddAsync(ingredient);
+                recipeIngredient.RecipeId = recipe.Id; // only when creating recipe
+                await recipeIngredientRepository.AddAsync(recipeIngredient);
             }
         }
 
@@ -98,23 +105,36 @@ namespace RecipeApp.Services.Data
 
         public async Task<double> GetAverageRatingAsync(int recipeId)
         {
-            return await ratingRepository.GetAllAttached()
+            var avrgRatingForCurrRecipe = await ratingRepository
+                .GetAllAttached()
                 .Where(r => r.RecipeId == recipeId)
-                .AverageAsync(r => r.Score);
+                .ToListAsync();
+
+            if (avrgRatingForCurrRecipe.Count != 0)
+            {
+                return avrgRatingForCurrRecipe.Average(r => r.Score);
+            }
+
+            return 0;
         }
 
         public async Task<List<Comment>> GetCommentsAsync(int recipeId)
         {
-            return await commentRepository.GetAllAttached()
-                .Where(c => c.RecipeId == recipeId)
+            var comments = await commentRepository.GetAllAttached()
+                .Include(c => c.User)
+                .Where(c => c.RecipeId == recipeId && c.IsDeleted == false)
                 .ToListAsync();
+
+            return comments;
         }
 
         public async Task<IEnumerable<Ingredient>> GetAllIngredientsAsync()
         {
-            return await recipeIngredientRepository.GetAllAttached()
-                .Select(r => r.Ingredient)
-                .ToListAsync();
+            var ingredients = await ingredientRepository
+                .GetAllAsync();
+
+            return ingredients;
+
         }
 
         public async Task<IEnumerable<Category>> GetAllCategoriesAsync()

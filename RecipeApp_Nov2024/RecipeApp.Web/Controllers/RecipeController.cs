@@ -34,6 +34,7 @@ namespace RecipeApp.Web.Controllers
             {
                 var cookbooks = await recipeService.GetUserCookbooksAsync(userId);
 
+                //get all recipes from user cookbooks
                 List<int> favoriteRecipeIds = cookbooks
                    .SelectMany(cb => cb.RecipeCookbooks)
                    .Select(rc => rc.RecipeId)
@@ -44,7 +45,7 @@ namespace RecipeApp.Web.Controllers
                     Id = r.Id,
                     Title = r.Title,
                     ImageUrl = r.ImageUrl,
-                    Liked = favoriteRecipeIds.Contains(r.Id)
+                    Liked = favoriteRecipeIds.Contains(r.Id) //tag from all the liked ones (Liked - bool)
                 }).ToList();
 
                 // Map cookbooks to a strong-typed view model
@@ -183,8 +184,6 @@ namespace RecipeApp.Web.Controllers
                 RecipeId = id
             };
 
-            //todo: check for null recipe
-
             var recipeModel = new RecipeDetailsViewModel
             {
                 Recipe = recipe,
@@ -198,7 +197,6 @@ namespace RecipeApp.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
             var recipe = await recipeService.GetRecipeByIdAsync(id);
 

@@ -16,13 +16,13 @@ namespace RecipeApp.Web.Controllers
             _commentService = commentService;
         }
 
-        [HttpGet]
-        public async Task<ActionResult> GetComments(int recipeId)
-        {
-            var comments = await _commentService.GetCommentsAsync(recipeId);
+        //[HttpGet]
+        //public async Task<ActionResult> GetComments(int recipeId)
+        //{
+        //    var comments = await _commentService.GetCommentsAsync(recipeId);
 
-            return View(comments);
-        }
+        //    return View(comments);
+        //}
 
         [HttpPost]
         public async Task<ActionResult> PostComment(CommentViewModel model)

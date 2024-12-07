@@ -11,11 +11,11 @@ namespace RecipeApp.Web.Controllers
     [Authorize]
     public class FavoritesController : Controller
     {
-        private readonly IFavoriteService _favoriteService;
+        private readonly IFavoriteService favoriteService;
 
         public FavoritesController(IFavoriteService favoriteService)
         {
-            _favoriteService = favoriteService;
+            this.favoriteService = favoriteService;
         }
 
         [HttpGet]
@@ -23,7 +23,7 @@ namespace RecipeApp.Web.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
 
-            List<Cookbook> cookbooks = await _favoriteService.GetUserCookbooksAsync(userId);
+            List<Cookbook> cookbooks = await favoriteService.GetUserCookbooksAsync(userId);
 
             List<CookbookViewModel> model = cookbooks.Select(c => new CookbookViewModel
             {
@@ -39,7 +39,7 @@ namespace RecipeApp.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> ViewRecipes(int cookbookId)
         {
-            var cookbook = await _favoriteService.GetCookbookWithRecipesAsync(cookbookId);
+            var cookbook = await favoriteService.GetCookbookWithRecipesAsync(cookbookId);
 
             if (cookbook == null)
             {
@@ -84,7 +84,7 @@ namespace RecipeApp.Web.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            await _favoriteService.CreateCookbookAsync(model, userId);
+            await favoriteService.CreateCookbookAsync(model, userId);
 
             return RedirectToAction(nameof(Index));
         }
@@ -93,7 +93,7 @@ namespace RecipeApp.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> AddRecipe(int cookbookId, int recipeId, string returnUrl)
         {
-            await _favoriteService.AddRecipeToCookbookAsync(cookbookId, recipeId);
+            await favoriteService.AddRecipeToCookbookAsync(cookbookId, recipeId);
 
             // Redirect back to the return URL if provided, otherwise redirect to a default page
             if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
@@ -107,7 +107,7 @@ namespace RecipeApp.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> RemoveFromCookbook(int cookbookId, int recipeId)
         {
-            await _favoriteService.RemoveRecipeFromCookbookAsync(cookbookId, recipeId);
+            await favoriteService.RemoveRecipeFromCookbookAsync(cookbookId, recipeId);
 
             // Redirect back to the current cookbook's page
             return RedirectToAction("ViewRecipes", "Favorites", new { cookbookId });
@@ -123,7 +123,7 @@ namespace RecipeApp.Web.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            await _favoriteService.RemoveCookbookAsync(cookbookId);
+            await favoriteService.RemoveCookbookAsync(cookbookId);
 
             return RedirectToAction(nameof(Index));
         }

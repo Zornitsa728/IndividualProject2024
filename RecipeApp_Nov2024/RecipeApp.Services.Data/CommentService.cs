@@ -1,4 +1,5 @@
-﻿using RecipeApp.Data.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using RecipeApp.Data.Models;
 using RecipeApp.Data.Repository.Interfaces;
 using RecipeApp.Services.Data.Interfaces;
 using RecipeApp.Web.ViewModels.CommentViewModels;
@@ -16,8 +17,9 @@ namespace RecipeApp.Services.Data
 
         public async Task<IEnumerable<Comment>> GetCommentsAsync(int recipeId)
         {
-            var comments = await commentRepository.GetAllAsync();
-            //TODO: check if they are no comments will be needed Any or it will return an empty array 
+            var comments = await commentRepository.GetAllAttached()
+                .Include(c => c.User).ToListAsync();
+
             if (comments.Any(c => c.RecipeId == recipeId))
             {
                 return comments.Where(c => c.RecipeId == recipeId && !c.IsDeleted)
