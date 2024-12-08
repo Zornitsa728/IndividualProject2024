@@ -54,7 +54,25 @@ namespace RecipeApp.Data.Configuration
                     CreatedOn = DateTime.Now,
                     ImageUrl = "/images/Recipe/Cranberry-Pie.jpg",
                     UserId = "9ccd592c-f245-4344-b4ed-dde7df4677e1",
-                    CategoryId = 4
+                    //CategoryId = 4,
+                    //RecipeIngredients = new List<RecipeIngredient>()
+                    //{
+                    //    new RecipeIngredient()
+                    //    {
+                    //        IngredientId = 1,
+                    //        RecipeId = 1,
+                    //        Unit = UnitOfMeasurement.Milliliter,
+                    //        Quantity = 250
+                    //    },
+                    //    new RecipeIngredient()
+                    //    {
+                    //        IngredientId = 3,
+                    //        RecipeId = 1,
+                    //        Unit = UnitOfMeasurement.Gram,
+                    //        Quantity = 100
+                    //    }
+
+                    //}
                 },
                 new Recipe()
                 {
@@ -65,7 +83,25 @@ namespace RecipeApp.Data.Configuration
                     CreatedOn = DateTime.Now,
                     ImageUrl = "/images/Recipe/Sweet-Potato-Soup.jpg",
                     UserId = "6ca87836-1e87-4648-803f-c4c416c5d850",
-                    CategoryId = 10
+                    CategoryId = 10,
+                    //RecipeIngredients = new List<RecipeIngredient>()
+                    //{
+                    //    new RecipeIngredient()
+                    //    {
+                    //        IngredientId = 1,
+                    //        RecipeId = 2,
+                    //        Unit = UnitOfMeasurement.Milliliter,
+                    //        Quantity = 100
+                    //    },
+                    //    new RecipeIngredient()
+                    //    {
+                    //        IngredientId = 4,
+                    //        RecipeId = 2,
+                    //        Unit = UnitOfMeasurement.Gram,
+                    //        Quantity = 50
+                    //    }
+
+                    //}
                 }
             };
 

@@ -1,0 +1,54 @@
+﻿<div class="container mt-5">
+    <div class="text-center">
+        <h1 class="display-4 mb-4 text-primary text-dark">Welcome to the Admin Dashboard</h1>
+        <p class="lead mb-5 text-muted">Manage your application using the sections below:</p>
+    </div>
+
+<div class="container mt-5">
+    <div class="row">
+        <!-- User Management Section -->
+        <div class="col-md-4">
+            <div class="card shadow-sm text-center">
+                <div class="card-body">
+                    <h3 class="card-title">User Management</h3>
+                    <p class="card-text">
+                        View, edit, and manage all registered users.
+                    </p>
+                    <a asp-area="Admin" asp-controller="UserManagement" asp-action="Index" class="btn btn-primary">
+                        Manage Users
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recipe Management Section -->
+        <div class="col-md-4">
+            <div class="card shadow-sm text-center">
+                <div class="card-body">
+                    <h3 class="card-title">Recipe Management</h3>
+                    <p class="card-text">
+                        Add, edit, and delete recipes from the platform.
+                    </p>
+                    <a asp-area="Admin" asp-controller="RecipeManagement" asp-action="Index" class="btn btn-primary">
+                        Manage Recipes
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comment Management Section -->
+        <div class="col-md-4">
+            <div class="card shadow-sm text-center">
+                <div class="card-body">
+                    <h3 class="card-title">Comment Management</h3>
+                    <p class="card-text">
+                        Moderate and remove inappropriate comments.
+                    </p>
+                    <a asp-area="Admin" asp-controller="CommentManagement" asp-action="Index" class="btn btn-primary">
+                        Manage Comments
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

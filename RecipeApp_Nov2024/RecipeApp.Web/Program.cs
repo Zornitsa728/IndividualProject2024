@@ -45,14 +45,16 @@ builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<IRatingService, RatingService>();
 builder.Services.AddScoped<IFavoriteService, FavoriteService>();
 
-
 var app = builder.Build();
 
-using (IServiceScope scope = app.Services.CreateScope())
+using (var scope = app.Services.CreateScope())
 {
     RecipeDbContext context = scope.ServiceProvider.GetRequiredService<RecipeDbContext>();
+    var services = scope.ServiceProvider;
 
     DatabaseSeeder.SeedIngredientsFromJson(context);
+    DatabaseSeeder.SeedRoles(services);
+    DatabaseSeeder.AssignAdminRole(services);
 }
 
 // Configure the HTTP request pipeline.
@@ -74,7 +76,24 @@ app.UseRouting();
 
 app.UseAuthentication();
 
+app.Use((context, next) =>
+{
+    if (context.User.Identity?.IsAuthenticated == true && context.Request.Path == "/")
+    {
+        if (context.User.IsInRole("Admin"))
+        {
+            context.Response.Redirect("/Admin/Home/Index");
+            return Task.CompletedTask;
+        }
+    }
+    return next();
+});
+
 app.UseAuthorization();
+
+app.MapControllerRoute(
+    name: "areas",
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
 app.MapControllerRoute(
     name: "default",
