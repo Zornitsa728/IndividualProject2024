@@ -33,10 +33,10 @@ namespace RecipeApp.Services.Data
         {
             var cookbooks = cookbookRepository.GetAllAttached();
 
-            return cookbooks.Where(c => c.UserId == userId)
+            return await cookbooks.Where(c => c.UserId == userId)
                             .Include(c => c.RecipeCookbooks)
                             .ThenInclude(rc => rc.Recipe)
-                            .ToList();
+                            .ToListAsync();
         }
         public async Task AddRecipeToCookbookAsync(int cookbookId, int recipeId)
         {

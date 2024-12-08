@@ -824,3 +824,50 @@ allrecipes-btn {
         background-color: #a03134;
         border: solid 2px #8a2b2d;
     }
+
+/* General Error Page Styling */
+.error-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 80vh; /* Center content vertically */
+    text-align: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, Arial; 
+    color: #333; 
+}
+
+    .error-container h1 {
+        font-size: 4rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+        color: #ad3939;
+    }
+
+    .error-container p {
+        font-size: 1.5rem;
+        margin-bottom: 2rem;
+        color: #666;
+    }
+
+    .error-container a {
+        display: inline-block;
+        padding: 0.8rem 1.5rem;
+        font-size: 1.2rem;
+        font-weight: 600;
+        text-decoration: none;
+        color: #fff;
+        background-color: #44703b; 
+        border-radius: 8px;
+        transition: background-color 0.3s ease;
+    }
+
+        .error-container a:hover {
+            background-color: #27581d; 
+        }
+
+    .error-container .subtext {
+        margin-top: 1.5rem;
+        font-size: 1rem;
+        color: #626262;
+    }

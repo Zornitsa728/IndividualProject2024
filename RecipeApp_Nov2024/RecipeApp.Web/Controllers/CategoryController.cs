@@ -52,17 +52,26 @@ namespace RecipeApp.Web.Controllers
 
             string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            if (userId == null)
+            List<int> favoriteRecipeIds = new List<int>();
+
+            if (userId != null)
             {
-                return View("Index");
+                var cookbooks = await _favoriteService.GetUserCookbooksAsync(userId);
+
+                favoriteRecipeIds = cookbooks
+                      .SelectMany(cb => cb.RecipeCookbooks)
+                      .Select(rc => rc.RecipeId)
+                      .ToList();
+
+                // Map cookbooks to a strong-typed view model
+                ViewBag.Cookbooks = cookbooks
+                    .Select(c => new CookbookDropdownViewModel
+                    {
+                        Id = c.Id,
+                        Title = c.Title
+                    })
+                    .ToList();
             }
-
-            var cookbooks = await _favoriteService.GetUserCookbooksAsync(userId);
-
-            List<int> favoriteRecipeIds = cookbooks
-                  .SelectMany(cb => cb.RecipeCookbooks)
-                  .Select(rc => rc.RecipeId)
-                  .ToList();
 
             IEnumerable<RecipeCardViewModel> recipesModel = recipes
                 .Where(r => r.CategoryId == id & r.IsDeleted == false)
@@ -71,20 +80,11 @@ namespace RecipeApp.Web.Controllers
                     Id = rc.Id,
                     Title = rc.Title,
                     ImageUrl = rc.ImageUrl,
-                    Liked = favoriteRecipeIds.Contains(rc.Id)//TODO: add recipecardviewmodel
+                    Liked = favoriteRecipeIds.Contains(rc.Id)
                 })
                 .ToList();
 
             ViewData["Title"] = category.Name;
-
-            // Map cookbooks to a strong-typed view model
-            ViewBag.Cookbooks = cookbooks
-                .Select(c => new CookbookDropdownViewModel
-                {
-                    Id = c.Id,
-                    Title = c.Title
-                })
-                .ToList();
 
             return View(recipesModel);
         }

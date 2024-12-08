@@ -1,0 +1,13 @@
+﻿<div class="error-container">
+    <h1>403</h1>
+    <p>You don’t have permission to access this page.</p>
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+        <a href="/">Go to Homepage</a>
+    }
+    else
+    {
+        <a href="/Identity/Account/Login">Log in</a>
+    }
+    <p class="subtext">Please log in or contact support for assistance.</p>
+</div>

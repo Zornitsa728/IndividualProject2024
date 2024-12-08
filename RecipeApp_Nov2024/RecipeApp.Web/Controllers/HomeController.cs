@@ -1,6 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using RecipeApp.Web.ViewModels;
-using System.Diagnostics;
 
 namespace RecipeApp.Web.Controllers
 {
@@ -18,11 +16,24 @@ namespace RecipeApp.Web.Controllers
             return View();
         }
 
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        public IActionResult Error(int? statusCode = null)
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            //todo: add other pages
+            if (!statusCode.HasValue)
+            {
+                return this.View();
+            }
+
+            if (statusCode == 404)
+            {
+                return this.View("Error404");
+            }
+            else if (statusCode == 401 || statusCode == 403)
+            {
+                return this.View("Error403");
+            }
+
+            return this.View("Error500");
         }
     }
 }
