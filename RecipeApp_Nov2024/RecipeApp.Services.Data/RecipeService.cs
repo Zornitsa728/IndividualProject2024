@@ -47,6 +47,7 @@ namespace RecipeApp.Services.Data
         public async Task<IEnumerable<Recipe>> GetAllRecipesAsync()
         {
             return await recipeRepository.GetAllAttached()
+                .Include(r => r.Category)
                 .Where(r => !r.IsDeleted)
                 .ToListAsync();
         }

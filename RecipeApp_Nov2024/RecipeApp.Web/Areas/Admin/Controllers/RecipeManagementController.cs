@@ -3,157 +3,48 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using RecipeApp.Data.Models;
 using RecipeApp.Services.Data.Interfaces;
+using RecipeApp.Web.ViewModels.AdminViewModels.RecipeManagementViewModels;
 using RecipeApp.Web.ViewModels.CommentViewModels;
-using RecipeApp.Web.ViewModels.FavoritesViewModels;
 using RecipeApp.Web.ViewModels.RatingViewModels;
 using RecipeApp.Web.ViewModels.RecipeViewModels;
 using System.Security.Claims;
 
-namespace RecipeApp.Web.Controllers
+namespace RecipeApp.Web.Areas.Admin.Controllers
 {
-    [Authorize]
-    public class RecipeController : Controller
+    [Area("Admin")]
+    [Authorize(Roles = "Admin")]
+    public class RecipeManagementController : Controller
     {
         private readonly IRecipeService recipeService;
+        private readonly ICommentService commentService;
 
-        public RecipeController(IRecipeService recipeService)
+        public RecipeManagementController(IRecipeService recipeService, ICommentService commentService)
         {
             this.recipeService = recipeService;
+            this.commentService = commentService;
         }
 
-        [AllowAnonymous]
-        [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var recipes = await this.recipeService.GetAllRecipesAsync();
 
-            var recipes = await recipeService.GetAllRecipesAsync();
-
-            List<RecipeCardViewModel> model = new List<RecipeCardViewModel>();
-            List<int> favoriteRecipeIds = new List<int>();
-
-            if (userId != null)
-            {
-                var cookbooks = await recipeService.GetUserCookbooksAsync(userId);
-
-                //get all recipes from user cookbooks
-                favoriteRecipeIds = cookbooks
-                   .SelectMany(cb => cb.RecipeCookbooks)
-                   .Select(rc => rc.RecipeId)
-                   .ToList();
-
-                // Map cookbooks to a strong-typed view model
-                ViewBag.Cookbooks = cookbooks
-                    .Select(c => new CookbookDropdownViewModel
-                    {
-                        Id = c.Id,
-                        Title = c.Title
-                    })
-                    .ToList();
-            }
-
-            model = recipes.Select(r => new RecipeCardViewModel()
+            IEnumerable<RecipeViewModel> model = recipes.Select(r => new RecipeViewModel()
             {
                 Id = r.Id,
                 Title = r.Title,
+                Description = r.Description,
+                Instructions = r.Instructions,
+                CategoryId = r.CategoryId,
+                CategoryName = r.Category.Name,
                 ImageUrl = r.ImageUrl,
-                Liked = favoriteRecipeIds.Contains(r.Id) //tag from all the liked ones (Liked - bool)
-            }).ToList();
-
-            return View(model);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Create()
-        {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (string.IsNullOrEmpty(userId))
-            {
-                return RedirectToAction("Login", "Account");
-            }
-
-            AddRecipeViewModel model = new AddRecipeViewModel();
-            model.Categories = await recipeService.GetAllCategoriesAsync();
-            model.AvailableIngredients = await recipeService.GetAllIngredientsAsync();
-
-            model.UnitsOfMeasurement = Enum.GetValues(typeof(UnitOfMeasurement))
-                .Cast<UnitOfMeasurement>()
-                .Select(u => new SelectListItem
-                {
-                    Text = u.ToString(),
-                    Value = ((int)u).ToString()
-                })
+            })
                 .ToList();
 
-            model.UserId = userId;
-
             return View(model);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Create(AddRecipeViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                model.Categories = await recipeService.GetAllCategoriesAsync();
-                model.AvailableIngredients = await recipeService.GetAllIngredientsAsync();
-
-                model.UnitsOfMeasurement = Enum.GetValues(typeof(UnitOfMeasurement))
-                    .Cast<UnitOfMeasurement>()
-                    .Select(u => new SelectListItem
-                    {
-                        Text = u.ToString(),
-                        Value = ((int)u).ToString()
-                    })
-                    .ToList();
-
-                return View(model);
-            }
-
-            var recipe = new Recipe
-            {
-                Title = model.Title,
-                Description = model.Description,
-                Instructions = model.Instructions,
-                ImageUrl = model.ImageUrl,
-                CategoryId = model.CategoryId,
-                UserId = model.UserId
-            };
-
-            var ingredients = model.Ingredients
-                .Select(i => new RecipeIngredient
-                {
-                    IngredientId = i.IngredientId,
-                    Quantity = i.Quantity,
-                    Unit = i.Unit,
-                    RecipeId = recipe.Id
-                }).ToList();
-
-            await recipeService.AddRecipeAsync(recipe, ingredients);
-
-            return RedirectToAction(nameof(MyRecipes));
-        }
-
         [HttpGet]
-        public async Task<IActionResult> MyRecipes()
-        {
-            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
-
-            if (string.IsNullOrEmpty(currentUserId))
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
-            var allRecipes = await recipeService.GetAllRecipesAsync();
-
-            var myRecipes = allRecipes.Where(r => r.UserId == currentUserId);
-
-            return View(myRecipes);
-        }
-
-        [AllowAnonymous]
-        [HttpGet]
-        public async Task<IActionResult> Details(int id)
+        public async Task<IActionResult> ViewRecipe(int id)
         {
             var recipe = await recipeService.GetRecipeByIdAsync(id);
 
@@ -208,7 +99,7 @@ namespace RecipeApp.Web.Controllers
                 return NotFound();
             }
 
-            if (userId != recipe.UserId)
+            if (userId == null)
             {
                 return NotFound();
             }
@@ -289,7 +180,22 @@ namespace RecipeApp.Web.Controllers
             // Remove existing ingredients (if any) and add updated ones
             await recipeService.UpdateRecipeAsync(recipe, updatedIngredients);
 
-            return RedirectToAction(nameof(MyRecipes));
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> Delete(int id)
+        {
+            var recipe = await this.recipeService.GetRecipeByIdAsync(id);
+            if (recipe == null) return NotFound();
+
+            return View(recipe);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(RecipeViewModel model)
+        {
+            await this.recipeService.DeleteRecipeAsync(model.Id);
+            return RedirectToAction(nameof(Index));
         }
     }
 }

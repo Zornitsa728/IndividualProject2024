@@ -1,0 +1,34 @@
+﻿@using RecipeApp.Web.ViewModels.AdminViewModels.RecipeManagementViewModels
+@model IEnumerable<RecipeViewModel>
+
+@{
+    ViewData["Title"] = "Recipe Management";
+}
+
+<h2>Recipe Management</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Category</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var recipe in Model)
+        {
+            <tr>
+                <td>@recipe.Title</td>
+                <td>@recipe.Description</td>
+                <td>@recipe.CategoryName</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@recipe.Id" class="btn btn-warning btn-sm">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@recipe.Id" class="btn btn-danger btn-sm">Delete</a>
+                    <a asp-action="ViewRecipe" asp-route-id="@recipe.Id" class="btn btn-primary btn-sm">View</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

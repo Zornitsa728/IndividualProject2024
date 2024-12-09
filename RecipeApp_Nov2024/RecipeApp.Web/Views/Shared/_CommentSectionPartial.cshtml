@@ -2,12 +2,15 @@
 @model RecipeCommentsViewModel
 
 <section id="comments-section">
-    <h4>Add your comment here</h4>
-    <form id="add-comment-form" method="post" asp-controller="Comment" asp-action="PostComment">
-        <input type="hidden" name="RecipeId" value="@Model.RecipeId" />
-        <textarea name="content" rows="4" placeholder="Write a comment..." required></textarea>
-        <button type="submit">Post Comment</button>
-    </form>
+    @if (User?.Identity?.IsAuthenticated ?? false)
+    {
+        <h4>Add your comment here</h4>
+        <form id="add-comment-form" method="post" asp-controller="Comment" asp-action="PostComment">
+            <input type="hidden" name="RecipeId" value="@Model.RecipeId" />
+            <textarea name="content" rows="4" placeholder="Write a comment..." required></textarea>
+            <button type="submit">Post Comment</button>
+        </form>
+    }
     <h3>Comments</h3>
     <div id="comments-container">
         @*First 3 comments *@
@@ -17,16 +20,18 @@
                 <p><strong>User:</strong> @comment.UserName.Split('@')[0]</p>
                 <p class="comment-content-text">@comment.Content</p>
                 <p><small>Posted on: @comment.DatePosted.ToString("dd/MM/yyyy HH:mm")</small></p>
-
                 @* Edit and Delete buttons *@
-                <div class="comment-actions">
-                    <form method="post" asp-controller="Comment" asp-action="EditComment" asp-route-commentId="@comment.CommentId" asp-route-recipeId="@Model.RecipeId">
-                        <button type="submit" class="edit-btn">Edit</button>
-                    </form>
-                    <form method="post" asp-controller="Comment" asp-action="DeleteComment" asp-route-commentId="@comment.CommentId" asp-route-recipeId="@Model.RecipeId">
-                        <button type="submit" class="delete-btn">Delete</button>
-                    </form>
-                </div>
+                @if (User?.Identity?.IsAuthenticated ?? false)
+                {
+                    <div class="comment-actions">
+                        <form method="post" asp-controller="Comment" asp-action="EditComment" asp-route-commentId="@comment.CommentId" asp-route-recipeId="@Model.RecipeId">
+                            <button type="submit" class="edit-btn">Edit</button>
+                        </form>
+                        <form method="post" asp-controller="Comment" asp-action="DeleteComment" asp-route-commentId="@comment.CommentId" asp-route-recipeId="@Model.RecipeId">
+                            <button type="submit" class="delete-btn">Delete</button>
+                        </form>
+                    </div>
+                }
             </div>
         }
         @* Hidden comments *@
@@ -37,14 +42,17 @@
                     <p><strong>User:</strong> @comment.UserName.Split('@')[0]</p>
                     <p>@comment.Content</p>
                     <p><small>Posted on: @comment.DatePosted.ToString("dd/MM/yyyy HH:mm")</small></p>
-                    <div class="comment-actions">
-                        <form method="post" asp-controller="Comment" asp-action="EditComment" asp-route-commentId="@comment.CommentId" asp-route-recipeId="@Model.RecipeId">
-                            <button type="submit" class="edit-btn">Edit</button>
-                        </form>
-                        <form method="post" asp-controller="Comment" asp-action="DeleteComment" asp-route-commentId="@comment.CommentId" asp-route-recipeId="@Model.RecipeId">
-                            <button type="submit" class="delete-btn">Delete</button>
-                        </form>
-                    </div>
+                    @if (User?.Identity?.IsAuthenticated ?? false)
+                    {
+                        <div class="comment-actions">
+                            <form method="post" asp-controller="Comment" asp-action="EditComment" asp-route-commentId="@comment.CommentId" asp-route-recipeId="@Model.RecipeId">
+                                <button type="submit" class="edit-btn">Edit</button>
+                            </form>
+                            <form method="post" asp-controller="Comment" asp-action="DeleteComment" asp-route-commentId="@comment.CommentId" asp-route-recipeId="@Model.RecipeId">
+                                <button type="submit" class="delete-btn">Delete</button>
+                            </form>
+                        </div>
+                    }
                 </div>
             }
         </div>

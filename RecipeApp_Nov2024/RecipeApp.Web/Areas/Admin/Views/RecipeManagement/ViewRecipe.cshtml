@@ -1,0 +1,49 @@
+﻿@using RecipeApp.Web.ViewModels.RecipeViewModels
+@model RecipeDetailsViewModel
+
+
+<section asp-controller="Recipe" asp-action="Details" method="get">
+    <div id="recipe-details">
+        <h1>@Model.Recipe.Title</h1>
+        <img src="@(!string.IsNullOrEmpty(@Model.Recipe.ImageUrl) ? Model.Recipe.ImageUrl : RecipeApp.Common.ApplicationConstants.NoImageUrl)" alt="@Model.Recipe.Title">
+        <p>@Model.Recipe.Description</p>
+
+        <div class="ingredients-section">
+            <label>Ingredients</label>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Ingredient</th>
+                        <th>Quantity</th>
+                        <th>Unit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var ingredient in Model.Recipe.RecipeIngredients)
+                    {
+                        <tr>
+                            <td>@ingredient.Ingredient.Name</td>
+                            <td>@ingredient.Quantity</td>
+                            <td>@ingredient.Unit</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="instructions-section">
+            <label>Instructions</label>
+            <p>@Model.Recipe.Instructions</p>
+        </div>
+
+        <div class="rating-comments-section">
+            <label>Rating & Comments</label>
+            <div>
+                @await Html.PartialAsync("_RatingSectionPartial", Model.Rating)
+            </div>
+            <div>
+                @await Html.PartialAsync("_CommentSectionPartial", Model.Comments)
+            </div>
+        </div>
+    </div>
+    <section>

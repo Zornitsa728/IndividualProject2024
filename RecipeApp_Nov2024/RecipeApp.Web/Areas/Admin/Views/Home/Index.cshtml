@@ -5,9 +5,9 @@
     </div>
 
 <div class="container mt-5">
-    <div class="row">
+    <div class="row user-management-row">
         <!-- User Management Section -->
-        <div class="col-md-4">
+            <div class="col-md-4 management-card">
             <div class="card shadow-sm text-center">
                 <div class="card-body">
                     <h3 class="card-title">User Management</h3>
@@ -22,7 +22,7 @@
         </div>
 
         <!-- Recipe Management Section -->
-        <div class="col-md-4">
+        <div class="col-md-4 management-card">
             <div class="card shadow-sm text-center">
                 <div class="card-body">
                     <h3 class="card-title">Recipe Management</h3>
@@ -35,20 +35,3 @@
                 </div>
             </div>
         </div>
-
-        <!-- Comment Management Section -->
-        <div class="col-md-4">
-            <div class="card shadow-sm text-center">
-                <div class="card-body">
-                    <h3 class="card-title">Comment Management</h3>
-                    <p class="card-text">
-                        Moderate and remove inappropriate comments.
-                    </p>
-                    <a asp-area="Admin" asp-controller="CommentManagement" asp-action="Index" class="btn btn-primary">
-                        Manage Comments
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>

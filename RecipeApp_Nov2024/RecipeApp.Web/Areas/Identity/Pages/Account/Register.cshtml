@@ -4,9 +4,9 @@
     ViewData["Title"] = "Welcome to RecipeApp";
 }
 
-<h1>@ViewData["Title"]</h1>
+<h1 class="login-title">@ViewData["Title"]</h1>
 
-<div class="row">
+<div class="row register-row">
     <div class="col-md-4">
         <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
             <h2>Create a new account.</h2>
