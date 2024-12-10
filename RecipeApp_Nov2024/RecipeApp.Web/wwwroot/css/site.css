@@ -152,7 +152,7 @@ body {
     display: inline-block;
     text-align: center;
     vertical-align: middle;
-    padding: 10px 20px;
+    padding: 10px 10px;
     font-size: 16px;
     font-weight: bold;
     line-height: 1;
@@ -182,8 +182,35 @@ body {
     display: inline-block;
     text-align: center;
     vertical-align: middle;
-    padding: 10px 20px;
+    padding: 10px 10px;
     font-size: 16px;
+    font-weight: bold;
+    line-height: 1;
+    cursor: pointer;
+    border: solid 3px #c79d3a;
+    border-radius: 12px;
+    color: brown;
+    background-color: white;
+    text-decoration: none;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+    .my-recipe-edit-btn:hover {
+        color: white;
+        background-color: #e0bf66;
+    }
+
+    .my-recipe-edit-btn:active {
+        color: white;
+        background-color: #c49532;
+    }
+
+.recipe-delete-btn {
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    padding: 10px 20px;
+    font-size: 18px;
     font-weight: bold;
     line-height: 1;
     cursor: pointer;
@@ -195,14 +222,41 @@ body {
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-    .my-recipe-edit-btn:hover {
+    .recipe-delete-btn:hover {
         color: white;
         background-color: #8a2b2d;
     }
 
-    .my-recipe-edit-btn:active {
+    .recipe-delete-btn:active {
         color: white;
         background-color: #7c3434;
+    }
+
+.recipe-cancel-del-btn {
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    padding: 10px 20px;
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 1;
+    cursor: pointer;
+    border: solid 3px #4d4c4c;
+    border-radius: 12px;
+    color: dimgray;
+    background-color: white;
+    text-decoration: none;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+    .recipe-cancel-del-btn:hover {
+        color: white;
+        background-color: #5a5959;
+    }
+
+    .recipe-cancel-del-btn:active {
+        color: white;
+        background-color: #4a4545;
     }
 
 .recipe-add-to-book-btn {
@@ -1042,4 +1096,40 @@ div.login-btn {
 
 .liked svg {
     fill: rgba(255, 0, 0, 1);
+}
+
+.category-recipe-card{
+    margin-bottom:16px;
+}
+
+.recipe-del-adm-card {
+    max-width: 600px;
+}
+
+.no-recipes-container {
+    background-image: url('/images/Home/sweet-image.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    margin: 0;
+    padding: 0;
+    border-radius: 14px;
+    width: 100%;
+    max-width: none;
+    height: 60vh;
+}
+
+.myrecipe-h5 {
+    font-size: 3rem;
+    margin-top: 2rem;
+    font-weight: bold;
+    color: white;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 3.5);
+}
+
+.myrecipe-p {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: #2b2828;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0,5);
 }

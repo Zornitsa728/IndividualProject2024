@@ -183,19 +183,43 @@ namespace RecipeApp.Web.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
-            var recipe = await this.recipeService.GetRecipeByIdAsync(id);
-            if (recipe == null) return NotFound();
+            var recipe = await recipeService.GetRecipeByIdAsync(id);
 
-            return View(recipe);
+            if (recipe == null)
+            {
+                return NotFound();
+            }
+
+            var viewModel = new AdminDeleteRecipeViewModel
+            {
+                Id = recipe.Id,
+                Title = recipe.Title,
+                Description = recipe.Description,
+                ImageUrl = recipe.ImageUrl,
+                CreatedBy = recipe.User.UserName,
+                CreatedDate = recipe.CreatedOn
+            };
+
+            return View(viewModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Delete(RecipeViewModel model)
+        public async Task<IActionResult> Delete(AdminDeleteRecipeViewModel model)
         {
-            await this.recipeService.DeleteRecipeAsync(model.Id);
-            return RedirectToAction(nameof(Index));
+            bool result = await recipeService.DeleteRecipeAsync(model.Id);
+
+            if (!result)
+            {
+                TempData["ErrorMessage"] = "An error occurred while deleting the recipe.";
+                return this.RedirectToAction(nameof(Delete), new { id = model.Id });
+            }
+
+            TempData["SuccessMessage"] = "The recipe has been successfully deleted.";
+
+            return this.RedirectToAction(nameof(Index));
         }
     }
 }

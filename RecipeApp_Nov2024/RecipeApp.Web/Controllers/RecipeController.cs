@@ -355,5 +355,43 @@ namespace RecipeApp.Web.Controllers
 
             return View(searchResults);
         }
+
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var recipe = await recipeService.GetRecipeByIdAsync(id);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (recipe == null || recipe.UserId != userId)
+            {
+                return View(nameof(Index));
+            }
+
+            DeleteRecipeViewModel model = new DeleteRecipeViewModel()
+            {
+                Id = recipe.Id,
+                Title = recipe.Title,
+                Description = recipe.Description,
+                ImageUrl = recipe.ImageUrl
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(DeleteRecipeViewModel recipe)
+        {
+            bool isDeleted = await recipeService.DeleteRecipeAsync(recipe.Id);
+
+            if (!isDeleted)
+            {
+                TempData["ErrorMessage"] =
+                    "Unexpected error occurred while trying to delete the recipe! Please contact system administrator!";
+                return this.RedirectToAction(nameof(Delete), new { id = recipe.Id });
+            }
+
+            return this.RedirectToAction(nameof(MyRecipes));
+        }
     }
 }

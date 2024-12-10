@@ -56,6 +56,7 @@ namespace RecipeApp.Services.Data
         public async Task<Recipe?> GetRecipeByIdAsync(int id)
         {
             var recipes = await recipeRepository.GetAllAttached()
+                .Include(r => r.User)
                 .Include(r => r.RecipeIngredients)
                     .ThenInclude(ri => ri.Ingredient)
                 .FirstOrDefaultAsync(r => r.Id == id && !r.IsDeleted);
@@ -95,14 +96,18 @@ namespace RecipeApp.Services.Data
             }
         }
 
-        public async Task DeleteRecipeAsync(int id)
+        public async Task<bool> DeleteRecipeAsync(int id)
         {
             var recipe = await recipeRepository.GetByIdAsync(id);
+
             if (recipe != null)
             {
                 recipe.IsDeleted = true;
                 await recipeRepository.UpdateAsync(recipe);
+                return true;
             }
+
+            return false;
         }
 
         public async Task<double> GetAverageRatingAsync(int recipeId)
