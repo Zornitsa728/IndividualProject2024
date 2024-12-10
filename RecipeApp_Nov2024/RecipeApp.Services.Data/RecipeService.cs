@@ -45,12 +45,15 @@ namespace RecipeApp.Services.Data
             }
         }
 
-        public async Task<IEnumerable<Recipe>> GetAllRecipesAsync()
+        public IEnumerable<Recipe> GetRecipes()
         {
-            return await recipeRepository.GetAllAttached()
+            var recipes = recipeRepository.GetAllAttached()
                 .Include(r => r.Category)
                 .Where(r => !r.IsDeleted)
-                .ToListAsync();
+                .OrderBy(r => r.Title)
+                .ToList();
+
+            return recipes;
         }
 
         public async Task<Recipe?> GetRecipeByIdAsync(int id)

@@ -11,11 +11,11 @@
             <button type="submit">Post Comment</button>
         </form>
     }
-    <h3>Comments</h3>
     <div id="comments-container">
         @*First 3 comments *@
         @foreach (var comment in Model.Comments.Take(3))
         {
+            <h3>Comments</h3>
             <div class="comment">
                 <p><strong>User:</strong> @comment.UserName.Split('@')[0]</p>
                 <p class="comment-content-text">@comment.Content</p>

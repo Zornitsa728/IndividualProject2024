@@ -24,9 +24,9 @@ namespace RecipeApp.Web.Areas.Admin.Controllers
             this.commentService = commentService;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 6)
         {
-            var recipes = await this.recipeService.GetAllRecipesAsync();
+            var recipes = recipeService.GetRecipes();
 
             IEnumerable<RecipeViewModel> model = recipes.Select(r => new RecipeViewModel()
             {
@@ -40,7 +40,19 @@ namespace RecipeApp.Web.Areas.Admin.Controllers
             })
                 .ToList();
 
-            return View(model);
+            var currPageRecipes = model
+                .Skip((pageNumber - 1) * pageSize) // Skip records for previous pages
+                .Take(pageSize) // Take only the records for the current page
+                .ToList();
+
+            var totalPages = (int)Math.Ceiling(model.Count() / (double)pageSize);
+
+            // Set pagination data in ViewData
+            ViewData["CurrentPage"] = pageNumber;
+            ViewData["PageSize"] = pageSize;
+            ViewData["TotalPages"] = totalPages;
+
+            return View(currPageRecipes);
         }
 
         [HttpGet]
@@ -184,7 +196,7 @@ namespace RecipeApp.Web.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int id, int pageNumber)
         {
             var recipe = await recipeService.GetRecipeByIdAsync(id);
 
@@ -203,11 +215,13 @@ namespace RecipeApp.Web.Areas.Admin.Controllers
                 CreatedDate = recipe.CreatedOn
             };
 
+            ViewData["PageNumber"] = pageNumber; // Pass it to the view
+
             return View(viewModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Delete(AdminDeleteRecipeViewModel model)
+        public async Task<IActionResult> Delete(AdminDeleteRecipeViewModel model, int pageNumber)
         {
             bool result = await recipeService.DeleteRecipeAsync(model.Id);
 
@@ -219,7 +233,7 @@ namespace RecipeApp.Web.Areas.Admin.Controllers
 
             TempData["SuccessMessage"] = "The recipe has been successfully deleted.";
 
-            return this.RedirectToAction(nameof(Index));
+            return RedirectToAction("Index", new { pageNumber = pageNumber });
         }
     }
 }

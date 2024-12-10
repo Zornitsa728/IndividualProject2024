@@ -6,28 +6,73 @@
 <h2>All Recipes</h2>
 
 <form controller="Recipe" action="Index" method="get">
-    <div class="row">
-        @foreach (var recipe in Model)
-        {
-            <div class="col-md-4">
-                <div class="card mb-4 shadow-sm">
-                    <img src="@(!string.IsNullOrEmpty(recipe.ImageUrl) ? recipe.ImageUrl : RecipeApp.Common.ApplicationConstants.NoImageUrl)" class="card-img-top" alt="@recipe.Title">
-                    <div class="card-body">
-                        <h5 class="card-title">@recipe.Title</h5>
-                        <div class="recipe-main-btns">
-                            <a asp-controller="Recipe" asp-action="Details" asp-route-id="@recipe.Id" class="recipe-view-btn">View Recipe</a>
-                            @if (User?.Identity?.IsAuthenticated ?? false)
-                            {
-                                <button type="button" class="recipe-add-to-book-btn @(@* recipe.Liked.HasValue  && *@ recipe.Liked  ?      "liked" : "")" data-bs-toggle="modal" data-bs-target="#addToCookbookModal"
-                                        data-recipe-id="@recipe.Id" data-return-url="@Context.Request.Path">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi- heart-    fill" viewBox="0 0 16 16">
-                                        <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8      1.314" />
-                                    </svg>
-                                </button>
-                            }
+    <div class="body-container">
+        <div class="row content-wrapper">
+            @foreach (var recipe in Model)
+            {
+                <div class="col-md-4">
+                    <div class="card mb-4 shadow-sm">
+                        <img src="@(!string.IsNullOrEmpty(recipe.ImageUrl) ? recipe.ImageUrl : RecipeApp.Common.ApplicationConstants.NoImageUrl)" class="card-img-top" alt="@recipe.Title">
+                        <div class="card-body">
+                            <h5 class="card-title">@recipe.Title</h5>
+                            <div class="recipe-main-btns">
+                                <a asp-controller="Recipe" asp-action="Details" asp-route-id="@recipe.Id" class="recipe-view-btn">View Recipe</a>
+                                @if (User?.Identity?.IsAuthenticated ?? false)
+                                {
+                                    <button type="button" class="recipe-add-to-book-btn @(@* recipe.Liked.HasValue  && *@ recipe.Liked  ?      "liked" : "")" data-bs-toggle="modal" data-bs-target="#addToCookbookModal"
+                                            data-recipe-id="@recipe.Id" data-return-url="@Context.Request.Path">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi- heart-    fill" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8      1.314" />
+                                        </svg>
+                                    </button>
+                                }
+                            </div>
                         </div>
                     </div>
                 </div>
+            }
+        </div>
+
+        @* Pagination Navigation *@
+        @if ((int)ViewData["TotalPages"] > 1)
+        {
+            <div class="pagination-container">
+                <nav aria-label="Page navigation" class="mt-4">
+                    <ul class="pagination">
+                        @if ((int)ViewData["CurrentPage"] > 1)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" asp-controller="Recipe" asp-action="Index"
+                                   asp-route-pageNumber="@((int)ViewData["CurrentPage"] - 1)"
+                                   asp-route-pageSize="@ViewData["PageSize"]">
+                                    Previous
+                                </a>
+                            </li>
+                        }
+
+                        @for (int i = 1; i <= (int)ViewData["TotalPages"]; i++)
+                        {
+                            <li class="page-item @(i == (int)ViewData["CurrentPage"] ? "active" : "")">
+                                <a class="page-link" asp-controller="Recipe" asp-action="Index"
+                                   asp-route-pageNumber="@i"
+                                   asp-route-pageSize="@ViewData["PageSize"]">
+                                    @i
+                                </a>
+                            </li>
+                        }
+
+                        @if ((int)ViewData["CurrentPage"] < (int)ViewData["TotalPages"])
+                        {
+                            <li class="page-item">
+                                <a class="page-link" asp-controller="Recipe" asp-action="Index"
+                                   asp-route-pageNumber="@((int)ViewData["CurrentPage"] + 1)"
+                                   asp-route-pageSize="@ViewData["PageSize"]">
+                                    Next
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </nav>
             </div>
         }
     </div>

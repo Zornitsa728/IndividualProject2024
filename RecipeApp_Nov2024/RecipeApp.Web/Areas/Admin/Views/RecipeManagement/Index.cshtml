@@ -10,29 +10,61 @@
 }
 
 <h2>Recipe Management</h2>
+<div class="body-container">
+    @foreach (var recipe in Model)
+    {
+        <div class="recipe-card">
+            <h3>@recipe.Title</h3>
+            <p>@recipe.Description</p>
+            <span class="category">@recipe.CategoryName</span>
+            <div class="actions">
+                <a asp-action="Edit" asp-route-id="@recipe.Id" class="btn btn-warning btn-sm">Edit</a>
+                <a asp-action="Delete" asp-route-id="@recipe.Id" asp-route-pageNumber="@ViewData["CurrentPage"]" class="btn btn-danger btn-sm">Delete</a>
+                <a asp-action="ViewRecipe" asp-route-id="@recipe.Id" class="btn btn-primary btn-sm">View</a>
+            </div>
+        </div>
+    }
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Title</th>
-            <th>Description</th>
-            <th>Category</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var recipe in Model)
-        {
-            <tr>
-                <td>@recipe.Title</td>
-                <td>@recipe.Description</td>
-                <td>@recipe.CategoryName</td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@recipe.Id" class="btn btn-warning btn-sm">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@recipe.Id" class="btn btn-danger btn-sm">Delete</a>
-                    <a asp-action="ViewRecipe" asp-route-id="@recipe.Id" class="btn btn-primary btn-sm">View</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+    @* Pagination Navigation *@
+    @if ((int)ViewData["TotalPages"]! > 1)
+    {
+        <div class="pagination-container">
+            <nav aria-label="Page navigation" class="mt-4">
+                <ul class="pagination">
+                    @if ((int)ViewData["CurrentPage"]! > 1)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" asp-controller="RecipeManagement" asp-action="Index"
+                               asp-route-pageNumber="@((int)ViewData["CurrentPage"]! - 1)"
+                               asp-route-pageSize="@ViewData["PageSize"]">
+                                Previous
+                            </a>
+                        </li>
+                    }
+
+                    @for (int i = 1; i <= (int)ViewData["TotalPages"]!; i++)
+                    {
+                        <li class="page-item @(i == (int)ViewData["CurrentPage"]! ? "active" : "")">
+                            <a class="page-link" asp-controller="RecipeManagement" asp-action="Index"
+                               asp-route-pageNumber="@i"
+                               asp-route-pageSize="@ViewData["PageSize"]">
+                                @i
+                            </a>
+                        </li>
+                    }
+
+                    @if ((int)ViewData["CurrentPage"]! < (int)ViewData["TotalPages"]!)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" asp-controller="RecipeManagement" asp-action="Index"
+                               asp-route-pageNumber="@((int)ViewData["CurrentPage"]! + 1)"
+                               asp-route-pageSize="@ViewData["PageSize"]">
+                                Next
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        </div>
+    }
+</div>

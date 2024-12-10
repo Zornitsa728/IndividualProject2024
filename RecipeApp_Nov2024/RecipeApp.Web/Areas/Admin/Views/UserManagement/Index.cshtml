@@ -10,7 +10,7 @@
             .ToArray();
 }
 
-<div class="container mt-5">
+<div class="body-container container mt-5">
     <h1 class="text-center mb-4">User Management</h1>
 
     <table class="table table-bordered table-hover">
@@ -64,4 +64,47 @@
             }
         </tbody>
     </table>
+
+    @* Pagination Navigation *@
+    @if ((int)ViewData["TotalPages"]! > 1)
+    {
+        <div class="pagination-container">
+            <nav aria-label="Page navigation" class="mt-4">
+                <ul class="pagination">
+                    @if ((int)ViewData["CurrentPage"]! > 1)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" asp-controller="UserManagement" asp-action="Index"
+                               asp-route-pageNumber="@((int)ViewData["CurrentPage"]! - 1)"
+                               asp-route-pageSize="@ViewData["PageSize"]">
+                                Previous
+                            </a>
+                        </li>
+                    }
+
+                    @for (int i = 1; i <= (int)ViewData["TotalPages"]!; i++)
+                    {
+                        <li class="page-item @(i == (int)ViewData["CurrentPage"]! ? "active" : "")">
+                            <a class="page-link" asp-controller="UserManagement" asp-action="Index"
+                               asp-route-pageNumber="@i"
+                               asp-route-pageSize="@ViewData["PageSize"]">
+                                @i
+                            </a>
+                        </li>
+                    }
+
+                    @if ((int)ViewData["CurrentPage"]! < (int)ViewData["TotalPages"]!)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" asp-controller="UserManagement" asp-action="Index"
+                               asp-route-pageNumber="@((int)ViewData["CurrentPage"]! + 1)"
+                               asp-route-pageSize="@ViewData["PageSize"]">
+                                Next
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        </div>
+    }
 </div>

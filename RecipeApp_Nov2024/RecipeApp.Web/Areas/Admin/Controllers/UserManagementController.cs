@@ -19,7 +19,7 @@ namespace RecipeApp.Web.Areas.Admin.Controllers
             this.userManager = userManager;
             this.roleManager = roleManager;
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 8)
         {
             IEnumerable<ApplicationUser> allUsers = await this.userManager
                 .Users
@@ -38,7 +38,19 @@ namespace RecipeApp.Web.Areas.Admin.Controllers
                 });
             }
 
-            return View(userModel);
+            var currPageUsers = userModel
+            .Skip((pageNumber - 1) * pageSize) // Skip records for previous pages
+            .Take(pageSize) // Take only the records for the current page
+            .ToList();
+
+            var totalPages = (int)Math.Ceiling(userModel.Count() / (double)pageSize);
+
+            // Set pagination data in ViewData
+            ViewData["CurrentPage"] = pageNumber;
+            ViewData["PageSize"] = pageSize;
+            ViewData["TotalPages"] = totalPages;
+
+            return View(currPageUsers);
         }
 
         [HttpPost]
@@ -67,7 +79,6 @@ namespace RecipeApp.Web.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpPost]
         [HttpPost]
         public async Task<IActionResult> DeleteUser(string userId)
         {

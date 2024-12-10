@@ -39,7 +39,7 @@ namespace RecipeApp.Web.Controllers
         }
 
         [HttpGet] //only recepies 
-        public async Task<IActionResult> CategoryRecipes(int id)
+        public async Task<IActionResult> CategoryRecipes(int id, int pageNumber = 1, int pageSize = 9)
         {
             Category? category = await categoryService.GetCategoryAsync(id);
 
@@ -48,7 +48,7 @@ namespace RecipeApp.Web.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            var recipes = await recipeService.GetAllRecipesAsync();
+            var recipes = recipeService.GetRecipes();
 
             string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -84,9 +84,21 @@ namespace RecipeApp.Web.Controllers
                 })
                 .ToList();
 
+            var totalPages = (int)Math.Ceiling(recipesModel.Count() / (double)pageSize);
+
+            var currPageRecipes = recipesModel
+                .Skip((pageNumber - 1) * pageSize) // Skip records for previous pages
+                .Take(pageSize) // Take only the records for the current page
+                .ToList();
+
             ViewData["Title"] = category.Name;
 
-            return View(recipesModel);
+            // Set pagination data in ViewData
+            ViewData["CurrentPage"] = pageNumber;
+            ViewData["PageSize"] = pageSize;
+            ViewData["TotalPages"] = totalPages;
+
+            return View(currPageRecipes);
         }
     }
 }

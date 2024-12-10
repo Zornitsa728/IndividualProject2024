@@ -23,11 +23,11 @@ namespace RecipeApp.Web.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 9)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var recipes = await recipeService.GetAllRecipesAsync();
+            var recipes = recipeService.GetRecipes();
 
             List<RecipeCardViewModel> model = new List<RecipeCardViewModel>();
             List<int> favoriteRecipeIds = new List<int>();
@@ -60,7 +60,19 @@ namespace RecipeApp.Web.Controllers
                 Liked = favoriteRecipeIds.Contains(r.Id) //tag from all the liked ones (Liked - bool)
             }).ToList();
 
-            return View(model);
+            var currPageRecipes = model
+                .Skip((pageNumber - 1) * pageSize) // Skip records for previous pages
+                .Take(pageSize) // Take only the records for the current page
+                .ToList();
+
+            var totalPages = (int)Math.Ceiling(model.Count() / (double)pageSize);
+
+            // Set pagination data in ViewData
+            ViewData["CurrentPage"] = pageNumber;
+            ViewData["PageSize"] = pageSize;
+            ViewData["TotalPages"] = totalPages;
+
+            return View(currPageRecipes);
         }
 
         [HttpGet]
@@ -135,7 +147,7 @@ namespace RecipeApp.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> MyRecipes()
+        public async Task<IActionResult> MyRecipes(int pageNumber = 1, int pageSize = 9)
         {
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
 
@@ -144,11 +156,23 @@ namespace RecipeApp.Web.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            var allRecipes = await recipeService.GetAllRecipesAsync();
+            var recipes = recipeService.GetRecipes();
 
-            var myRecipes = allRecipes.Where(r => r.UserId == currentUserId);
+            var myRecipes = recipes.Where(r => r.UserId == currentUserId);
 
-            return View(myRecipes);
+            var currPageRecipes = myRecipes
+                .Skip((pageNumber - 1) * pageSize) // Skip records for previous pages
+                .Take(pageSize) // Take only the records for the current page
+                .ToList();
+
+            var totalPages = (int)Math.Ceiling(myRecipes.Count() / (double)pageSize);
+
+            // Set pagination data in ViewData
+            ViewData["CurrentPage"] = pageNumber;
+            ViewData["PageSize"] = pageSize;
+            ViewData["TotalPages"] = totalPages;
+
+            return View(currPageRecipes);
         }
 
         [AllowAnonymous]
@@ -320,7 +344,7 @@ namespace RecipeApp.Web.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public async Task<IActionResult> Search(string query)
+        public async Task<IActionResult> Search(string query, int pageNumber = 1, int pageSize = 9)
         {
             if (string.IsNullOrWhiteSpace(query))
             { //TODO: stay on the same page
@@ -353,12 +377,24 @@ namespace RecipeApp.Web.Controllers
 
             var searchResults = await recipeService.SearchRecipesAsync(query, favoriteRecipeIds);
 
-            return View(searchResults);
+            var currPageRecipes = searchResults
+                .Skip((pageNumber - 1) * pageSize) // Skip records for previous pages
+                .Take(pageSize) // Take only the records for the current page
+                .ToList();
+
+            var totalPages = (int)Math.Ceiling(searchResults.Count() / (double)pageSize);
+
+            // Set pagination data in ViewData
+            ViewData["CurrentPage"] = pageNumber;
+            ViewData["PageSize"] = pageSize;
+            ViewData["TotalPages"] = totalPages;
+
+            return View(currPageRecipes);
         }
 
 
         [HttpGet]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int id, int pageNumber)
         {
             var recipe = await recipeService.GetRecipeByIdAsync(id);
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -376,11 +412,13 @@ namespace RecipeApp.Web.Controllers
                 ImageUrl = recipe.ImageUrl
             };
 
+            ViewData["PageNumber"] = pageNumber; // Pass it to the view
+
             return View(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Delete(DeleteRecipeViewModel recipe)
+        public async Task<IActionResult> Delete(DeleteRecipeViewModel recipe, int pageNumber = 1)
         {
             bool isDeleted = await recipeService.DeleteRecipeAsync(recipe.Id);
 
@@ -391,7 +429,7 @@ namespace RecipeApp.Web.Controllers
                 return this.RedirectToAction(nameof(Delete), new { id = recipe.Id });
             }
 
-            return this.RedirectToAction(nameof(MyRecipes));
+            return RedirectToAction("MyRecipes", new { pageNumber });
         }
     }
 }

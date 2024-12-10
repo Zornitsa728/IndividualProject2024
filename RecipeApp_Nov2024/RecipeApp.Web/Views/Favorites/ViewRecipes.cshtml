@@ -20,7 +20,7 @@ else
                     <img src="@(!string.IsNullOrEmpty(recipe.ImageUrl) ? recipe.ImageUrl : RecipeApp.Common.ApplicationConstants.NoImageUrl)" class="card-img-top" alt="@recipe.Title">
                     <div class="card-body">
                         <h5 class="card-title">@recipe.Title</h5>
-                        <div class="recipe-main-btns">
+                        <div class="recipe-main-btns cookbook-recipe-main-btns">
                             <a asp-controller="Recipe" asp-action="Details" asp-route-id="@recipe.Id" class="recipe-view-btn">View Recipe</a>
                             @* Remove from Cookbook button *@
                             <form asp-controller="Favorites" asp-action="RemoveFromCookbook" method="post">
