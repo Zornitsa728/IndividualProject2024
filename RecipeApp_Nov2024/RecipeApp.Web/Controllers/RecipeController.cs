@@ -162,8 +162,32 @@ namespace RecipeApp.Web.Controllers
                 return NotFound();
             }
 
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             var averageRating = await recipeService.GetAverageRatingAsync(id);
             var comments = await recipeService.GetCommentsAsync(id);
+
+            List<int> favoriteRecipeIds = new List<int>();
+
+            if (userId != null)
+            {
+                var cookbooks = await recipeService.GetUserCookbooksAsync(userId);
+
+                //get all recipes from user cookbooks
+                favoriteRecipeIds = cookbooks
+                   .SelectMany(cb => cb.RecipeCookbooks)
+                   .Select(rc => rc.RecipeId)
+                   .ToList();
+
+                // Map cookbooks to a strong-typed view model
+                ViewBag.Cookbooks = cookbooks
+                    .Select(c => new CookbookDropdownViewModel
+                    {
+                        Id = c.Id,
+                        Title = c.Title
+                    })
+                    .ToList();
+            }
 
             RecipeCommentsViewModel recipeCommentsViewModel = new RecipeCommentsViewModel()
             {
@@ -176,7 +200,8 @@ namespace RecipeApp.Web.Controllers
                     UserId = c.UserId,
                     UserName = c.User.UserName,
                     RecipeId = c.RecipeId,
-                    DatePosted = c.DatePosted
+                    DatePosted = c.DatePosted,
+                    UserCommented = (c.UserId == userId)
                 })
                 .ToList()
             };
@@ -191,7 +216,8 @@ namespace RecipeApp.Web.Controllers
             {
                 Recipe = recipe,
                 Comments = recipeCommentsViewModel,
-                Rating = ratingModel
+                Rating = ratingModel,
+                Liked = favoriteRecipeIds.Contains(recipe.Id)
             };
 
             return View(recipeModel);
@@ -290,6 +316,44 @@ namespace RecipeApp.Web.Controllers
             await recipeService.UpdateRecipeAsync(recipe, updatedIngredients);
 
             return RedirectToAction(nameof(MyRecipes));
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task<IActionResult> Search(string query)
+        {
+            if (string.IsNullOrWhiteSpace(query))
+            { //TODO: stay on the same page
+                return RedirectToAction("Index", "Home");
+            }
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            List<int> favoriteRecipeIds = new List<int>();
+
+            if (userId != null)
+            {
+                var cookbooks = await recipeService.GetUserCookbooksAsync(userId);
+
+                //get all recipes from user cookbooks
+                favoriteRecipeIds = cookbooks
+                   .SelectMany(cb => cb.RecipeCookbooks)
+                   .Select(rc => rc.RecipeId)
+                   .ToList();
+
+                // Map cookbooks to a strong-typed view model
+                ViewBag.Cookbooks = cookbooks
+                    .Select(c => new CookbookDropdownViewModel
+                    {
+                        Id = c.Id,
+                        Title = c.Title
+                    })
+                    .ToList();
+            }
+
+            var searchResults = await recipeService.SearchRecipesAsync(query, favoriteRecipeIds);
+
+            return View(searchResults);
         }
     }
 }

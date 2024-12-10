@@ -16,5 +16,7 @@
         public string UserId { get; set; } = null!;
 
         public string? UserName { get; set; }
+
+        public bool UserCommented { get; set; }
     }
 }

@@ -2,6 +2,7 @@
 using RecipeApp.Data.Models;
 using RecipeApp.Data.Repository.Interfaces;
 using RecipeApp.Services.Data.Interfaces;
+using RecipeApp.Web.ViewModels.RecipeViewModels;
 
 namespace RecipeApp.Services.Data
 {
@@ -141,6 +142,25 @@ namespace RecipeApp.Services.Data
         public async Task<IEnumerable<Category>> GetAllCategoriesAsync()
         {
             return await categoryRepository.GetAllAsync();
+        }
+
+        public async Task<IEnumerable<RecipeCardViewModel>> SearchRecipesAsync(string query, List<int> favoriteRecipeIds)
+        {
+            var searchQuery = query.ToLower().Trim();
+
+            IEnumerable<RecipeCardViewModel> matches = await recipeRepository.GetAllAttached()
+                .Where(r => r.IsDeleted == false)
+                .Where(r => r.Title.ToLower().Contains(searchQuery) || r.Description.ToLower().Contains(searchQuery))
+                .Select(r => new RecipeCardViewModel
+                {
+                    Id = r.Id,
+                    Title = r.Title,
+                    ImageUrl = r.ImageUrl,
+                    Liked = favoriteRecipeIds.Contains(r.Id)
+                })
+                .ToListAsync();
+
+            return matches;
         }
     }
 }

@@ -1,0 +1,78 @@
+﻿@using RecipeApp.Web.ViewModels.FavoritesViewModels
+@using RecipeApp.Web.ViewModels.RecipeViewModels
+@model IEnumerable<RecipeCardViewModel>
+
+<h2>Search Results</h2>
+
+@if (Model == null || !Model.Any())
+{
+    <p>No recipes found for your search.</p>
+}
+else
+{
+        <div class="row">
+            @foreach (var recipe in Model)
+            {
+                <div class="col-md-4">
+                    <div class="card mb-4 shadow-sm">
+                        <img src="@(!string.IsNullOrEmpty(recipe.ImageUrl) ? recipe.ImageUrl : RecipeApp.Common.ApplicationConstants.NoImageUrl)" class="card-img-top" alt="@recipe.Title">
+                        <div class="card-body">
+                            <h5 class="card-title">@recipe.Title</h5>
+                            <div class="recipe-main-btns">
+                                <a asp-controller="Recipe" asp-action="Details" asp-route-id="@recipe.Id" class="recipe-view-btn">View Recipe</a>
+                                @if (User?.Identity?.IsAuthenticated ?? false)
+                                {
+                                    <button type="button" 
+                                        class="recipe-add-to-book-btn @(@* recipe.Liked.HasValue  && *@ recipe.Liked ?"liked":"")" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#addToCookbookModal"
+                                        data-recipe-id="@recipe.Id"
+                                        data-return-url="@($"{Context.Request.Path}?query={Context.Request.Query["query"]}")">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi       bi- heart-    fill" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736                   3.562-3.248 8      1.314" />
+                                        </svg>
+                                    </button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+    @* Add to Cookbook Modal *@
+    <div class="modal fade" id="addToCookbookModal" tabindex="-1" aria-labelledby="addToCookbookModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addToCookbookModalLabel">Add Recipe to Cookbook</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="add-to-cookbook-form" method="post" asp-controller="Favorites" asp-action="AddRecipe">
+                        <input type="hidden" name="RecipeId" id="modal-recipe-id" />
+                        <input type="hidden" name="ReturnUrl" id="modal-return-url" />
+                        <div class="mb-3">
+                            <label for="cookbook-select" class="form-label">Select Cookbook</label>
+                            <select class="form-select" name="CookbookId" id="cookbook-select">
+                                @if (ViewBag.Cookbooks != null && ((List<CookbookDropdownViewModel>)ViewBag.Cookbooks).Any())
+                                {
+                                    @foreach (var cookbook in (List<CookbookDropdownViewModel>)ViewBag.Cookbooks)
+                                    {
+                                        <option value="@cookbook.Id">@cookbook.Title</option>
+                                    }
+                                }
+                                else
+                                {
+                                    <option value="">No cookbooks available</option>
+                                }
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add to Cookbook</button>
+                        <a asp-controller="Favorites" asp-action="Create" class="btn btn-secondary">Create New Cookbook</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}

@@ -21,7 +21,7 @@
                 <p class="comment-content-text">@comment.Content</p>
                 <p><small>Posted on: @comment.DatePosted.ToString("dd/MM/yyyy HH:mm")</small></p>
                 @* Edit and Delete buttons *@
-                @if (User?.Identity?.IsAuthenticated ?? false)
+                @if ((User?.Identity?.IsAuthenticated ?? false) && comment.UserCommented)
                 {
                     <div class="comment-actions">
                         <form method="post" asp-controller="Comment" asp-action="EditComment" asp-route-commentId="@comment.CommentId" asp-route-recipeId="@Model.RecipeId">
@@ -42,7 +42,7 @@
                     <p><strong>User:</strong> @comment.UserName.Split('@')[0]</p>
                     <p>@comment.Content</p>
                     <p><small>Posted on: @comment.DatePosted.ToString("dd/MM/yyyy HH:mm")</small></p>
-                    @if (User?.Identity?.IsAuthenticated ?? false)
+                    @if ((User?.Identity?.IsAuthenticated ?? false) && comment.UserCommented)
                     {
                         <div class="comment-actions">
                             <form method="post" asp-controller="Comment" asp-action="EditComment" asp-route-commentId="@comment.CommentId" asp-route-recipeId="@Model.RecipeId">
@@ -57,6 +57,9 @@
             }
         </div>
         @* Toggle button *@
-        <button id="toggle-comments" asp-route-recipeId="@Model.RecipeId" onclick="toggleComments(event)">Show All Comments</button>
+        @if(Model.Comments.Count() > 3)
+        {
+            <button id="toggle-comments" asp-route-recipeId="@Model.RecipeId" onclick="toggleComments(event)">Show All Comments</button>
+        }
     </div>
 </section>

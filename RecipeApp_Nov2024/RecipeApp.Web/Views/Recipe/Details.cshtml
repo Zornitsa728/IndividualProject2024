@@ -1,49 +1,98 @@
-﻿@using RecipeApp.Web.ViewModels.RecipeViewModels
+﻿@using RecipeApp.Web.ViewModels.FavoritesViewModels
+@using RecipeApp.Web.ViewModels.RecipeViewModels
 @model RecipeDetailsViewModel
 
-
 <section asp-controller="Recipe" asp-action="Details" method="get">
-<div id="recipe-details">
-    <h1>@Model.Recipe.Title</h1>
-    <img src="@(!string.IsNullOrEmpty(@Model.Recipe.ImageUrl) ? Model.Recipe.ImageUrl : RecipeApp.Common.ApplicationConstants.NoImageUrl)" alt="@Model.Recipe.Title">
-    <p>@Model.Recipe.Description</p>
+    <div id="recipe-details">
+        <div class="header-container">
+            <h1>@Model.Recipe.Title</h1>
+            @if (User?.Identity?.IsAuthenticated ?? false)
+            {
+                <button type="button" class="recipe-add-to-book-details-btn @(Model.Liked ? "liked" : "")" data-bs-toggle="modal" data-bs-target="#addToCookbookModal"
+                        data-recipe-id="@Model.Recipe.Id" data-return-url="@Context.Request.Path">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi- heart-    fill" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8      1.314" />
+                    </svg>
+                </button>
+            }
+       </div>
+        <img src="@(!string.IsNullOrEmpty(@Model.Recipe.ImageUrl) ? Model.Recipe.ImageUrl : RecipeApp.Common.ApplicationConstants.NoImageUrl)" alt="@Model.Recipe.Title">
+        <p>@Model.Recipe.Description</p>
 
-    <div class="ingredients-section">
-        <label>Ingredients</label>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Ingredient</th>
-                    <th>Quantity</th>
-                    <th>Unit</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var ingredient in Model.Recipe.RecipeIngredients)
-                {
+        <div class="ingredients-section">
+            <label>Ingredients</label>
+            <table class="table">
+                <thead>
                     <tr>
-                        <td>@ingredient.Ingredient.Name</td>
-                        <td>@ingredient.Quantity</td>
-                        <td>@ingredient.Unit</td>
+                        <th>Ingredient</th>
+                        <th>Quantity</th>
+                        <th>Unit</th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach (var ingredient in Model.Recipe.RecipeIngredients)
+                    {
+                        <tr>
+                            <td>@ingredient.Ingredient.Name</td>
+                            <td>@ingredient.Quantity</td>
+                            <td>@ingredient.Unit</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="instructions-section">
+            <label>Instructions</label>
+            <p>@Model.Recipe.Instructions</p>
+        </div>
+
+        <div class="rating-comments-section">
+            <label>Rating & Comments</label>
+            <div>
+                @await Html.PartialAsync("_RatingSectionPartial", Model.Rating)
+            </div>
+            <div>
+                @await Html.PartialAsync("_CommentSectionPartial", Model.Comments)
+            </div>
+        </div>
     </div>
 
-    <div class="instructions-section">
-        <label>Instructions</label>
-        <p>@Model.Recipe.Instructions</p>
+    @* Add to Cookbook Modal *@
+    <div class="modal fade" id="addToCookbookModal" tabindex="-1" aria-labelledby="addToCookbookModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addToCookbookModalLabel">Add Recipe to Cookbook</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="add-to-cookbook-form" method="post" asp-controller="Favorites" asp-action="AddRecipe">
+                        <input type="hidden" name="RecipeId" value="@Model.Recipe.Id" />
+                        <input type="hidden" name="ReturnUrl" value="@Url.Action("Details", "Recipe", new { id = Model.Recipe.Id })" />
+                        <div class="mb-3">
+                            <label for="cookbook-select" class="form-label">Select Cookbook</label>
+                            <select class="form-select" name="CookbookId" id="cookbook-select">
+                                @if (ViewBag.Cookbooks != null && ((List<CookbookDropdownViewModel>)ViewBag.Cookbooks).Any())
+                                {
+                                    @foreach (var cookbook in (List<CookbookDropdownViewModel>)ViewBag.Cookbooks)
+                                    {
+                                        <option value="@cookbook.Id">@cookbook.Title</option>
+                                    }
+                                }
+                                else
+                                {
+                                    <option value="">No cookbooks available</option>
+                                }
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add to Cookbook</button>
+                        <a asp-controller="Favorites" asp-action="Create" class="btn btn-secondary">Create New Cookbook</a>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
+</section>
 
-    <div class="rating-comments-section">
-        <label>Rating & Comments</label>
-        <div>
-            @await Html.PartialAsync("_RatingSectionPartial", Model.Rating)
-        </div>
-        <div>
-            @await Html.PartialAsync("_CommentSectionPartial", Model.Comments)
-        </div>
-    </div>
-</div>
-    <section>
+ 

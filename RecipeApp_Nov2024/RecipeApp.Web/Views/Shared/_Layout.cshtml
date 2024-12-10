@@ -6,47 +6,59 @@
     <title>@ViewData["Title"] - RecipeApp.Web</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" /> 
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@300;500&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="~/RecipeApp.Web.styles.css" asp-append-version="true" />
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-lg navbar-light">
             <div class="container-fluid">
-                <a class="navbar-brand text-dark" asp-area="" asp-controller="Home" asp-action="Index">RecipeApp.Web</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                <!-- Brand/Logo -->
+               @*  <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    RecipeApp.Web
+                </a> *@
+                <!-- Toggle Button for Mobile -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1" id="navbarNavDropdown">
+                <div class="collapse navbar-collapse" id="navbarContent">
+                    <ul class="navbar-nav me-auto">
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link text-dark dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Categories</a>
+                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                                Categories
+                            </a>
                             @await Component.InvokeAsync("CategoryDropdown")
                         </li>
-                        <li class="nav-item">  
+                        <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Recipe" asp-action="Index">All Recipes</a>
                         </li>
                         @if (User?.Identity?.IsAuthenticated ?? false)
                         {
-                            <li class="nav-item">  
+                            <li class="nav-item">
                                 <a class="nav-link" asp-area="" asp-controller="Recipe" asp-action="MyRecipes">My Recipes</a>
-                            </li>                  
-                            <li class="nav-item">  
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link" asp-area="" asp-controller="Favorites" asp-action="Index">Favorites</a>
-                            </li>                  
+                            </li>
+                            <li class="nav-item add-recipe-btn">
+                                <a class="btn btn-primary nav-link text-white" asp-area="" asp-controller="Recipe" asp-action="Create">
+                                    Add Recipe
+                                </a>
+                            </li>
                         }
                     </ul>
-                    @if (User?.Identity?.IsAuthenticated ?? false)
-                    {
-                        <ul class="navbar-nav ms-auto">
-                            <li class="nav-item ms-3 add-recipe-btn">
-                                <a class="nav-link" asp-area="" asp-controller="Recipe" asp-action="Create">Add Recipe</a>
-                            </li>        
-                        </ul>
-                    }
+                    <form class="d-flex search-form" asp-action="Search" asp-controller="Recipe" method="get">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Search..." name="query" aria-label="Search">
+                            <button class="btn btn-dark" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </form>
                     <partial name="_LoginPartial" />
                 </div>
             </div>

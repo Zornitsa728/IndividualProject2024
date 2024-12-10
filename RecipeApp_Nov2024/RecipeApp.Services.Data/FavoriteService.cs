@@ -40,17 +40,25 @@ namespace RecipeApp.Services.Data
         }
         public async Task AddRecipeToCookbookAsync(int cookbookId, int recipeId)
         {
-            var cookbook = await cookbookRepository.GetByIdAsync(cookbookId);
+            List<Cookbook> cookbooks = await cookbookRepository.GetAllAttached()
+                            .Where(c => c.Id == cookbookId)
+                            .Include(c => c.RecipeCookbooks)
+                            .ToListAsync();
 
-            if (cookbook != null && !cookbook.RecipeCookbooks.Any(rc => rc.RecipeId == recipeId))
+            if (cookbooks.Count > 0)
             {
-                var newRecipeCookbook = new RecipeCookbook
-                {
-                    CookbookId = cookbookId,
-                    RecipeId = recipeId
-                };
+                var currCookbook = cookbooks[0];
 
-                await recipeCookbookRepository.AddAsync(newRecipeCookbook);
+                if (currCookbook != null && !currCookbook.RecipeCookbooks.Any(rc => rc.RecipeId == recipeId))
+                {
+                    var newRecipeCookbook = new RecipeCookbook
+                    {
+                        CookbookId = cookbookId,
+                        RecipeId = recipeId
+                    };
+
+                    await recipeCookbookRepository.AddAsync(newRecipeCookbook);
+                }
             }
         }
 

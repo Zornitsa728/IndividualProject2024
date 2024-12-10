@@ -9,6 +9,7 @@ namespace RecipeApp.Web.ViewModels.RecipeViewModels
         public Recipe Recipe { get; set; } = null!;
         public RecipeCommentsViewModel Comments { get; set; } = null!;
         public RatingViewModel Rating { get; set; } = null!;
+        public bool Liked { get; set; }
     }
 
 }
