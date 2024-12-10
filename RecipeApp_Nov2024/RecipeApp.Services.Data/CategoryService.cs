@@ -13,12 +13,12 @@ namespace RecipeApp.Services.Data
             this.categoryRepository = categoryRepository;
         }
 
-        public async Task<IEnumerable<Category>> GetAllCategories()
+        public async Task<IEnumerable<Category>> GetAllCategoriesAsync()
         {
             return await categoryRepository.GetAllAsync();
         }
 
-        public async Task<Category> GetCategory(int id)
+        public async Task<Category> GetCategoryAsync(int id)
         {
             return await categoryRepository.GetByIdAsync(id);
         }

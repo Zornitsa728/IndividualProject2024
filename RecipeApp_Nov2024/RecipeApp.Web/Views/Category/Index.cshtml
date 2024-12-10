@@ -9,7 +9,7 @@
     {
         <div class="col-md-4">
             <div class="card mb-4 shadow-sm">
-                <img src="@recipeCategory.ImageUrl" class="card-img-top" alt="Category Image" style="height: 200px; object-fit: cover;">
+                    <img src="@recipeCategory.ImageUrl" class="card-img-top" loading="lazy" alt="Category Image" style="height: 200px; object-fit: cover;">
                 <div class="card-body">
                     <h5 class="card-title">@recipeCategory.Name</h5>
                     <a asp-action="CategoryRecipes" asp-route-id="@recipeCategory.Id" class="btn btn-primary">View Recipes</a>

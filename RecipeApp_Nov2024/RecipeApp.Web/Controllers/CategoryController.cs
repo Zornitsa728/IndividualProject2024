@@ -10,21 +10,21 @@ namespace RecipeApp.Web.Controllers
 {
     public class CategoryController : Controller
     {
-        private ICategoryService _categoryService;
-        private IRecipeService _recipeService;
-        private IFavoriteService _favoriteService;
+        private ICategoryService categoryService;
+        private IRecipeService recipeService;
+        private IFavoriteService favoriteService;
 
         public CategoryController(ICategoryService categoryService, IRecipeService recipeService, IFavoriteService favoriteService)
         {
-            _categoryService = categoryService;
-            _recipeService = recipeService;
-            _favoriteService = favoriteService;
+            this.categoryService = categoryService;
+            this.recipeService = recipeService;
+            this.favoriteService = favoriteService;
         }
 
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var allCategories = await _categoryService.GetAllCategories();
+            var allCategories = await categoryService.GetAllCategoriesAsync();
 
             IEnumerable<CategoryViewModel> model = allCategories
                 .Select(c => new CategoryViewModel()
@@ -41,14 +41,14 @@ namespace RecipeApp.Web.Controllers
         [HttpGet] //only recepies 
         public async Task<IActionResult> CategoryRecipes(int id)
         {
-            Category? category = await _categoryService.GetCategory(id);
+            Category? category = await categoryService.GetCategoryAsync(id);
 
             if (category == null)
             {
                 return RedirectToAction(nameof(Index));
             }
 
-            var recipes = await _recipeService.GetAllRecipesAsync();
+            var recipes = await recipeService.GetAllRecipesAsync();
 
             string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -56,7 +56,7 @@ namespace RecipeApp.Web.Controllers
 
             if (userId != null)
             {
-                var cookbooks = await _favoriteService.GetUserCookbooksAsync(userId);
+                var cookbooks = await favoriteService.GetUserCookbooksAsync(userId);
 
                 favoriteRecipeIds = cookbooks
                       .SelectMany(cb => cb.RecipeCookbooks)

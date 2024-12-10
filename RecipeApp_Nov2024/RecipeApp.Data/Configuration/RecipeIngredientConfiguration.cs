@@ -28,6 +28,45 @@ namespace RecipeApp.Data.Configuration
 
             builder.Property(ri => ri.Unit)
                 .IsRequired(true);
+
+            builder.HasData(this.SeedRecipeIngredients());
+        }
+
+        private List<RecipeIngredient> SeedRecipeIngredients()
+        {
+            List<RecipeIngredient> recipeIngredients = new List<RecipeIngredient>()
+            {
+                 new RecipeIngredient()
+                 {
+                     IngredientId = 1,
+                     RecipeId = 1,
+                     Unit = UnitOfMeasurement.Milliliter,
+                     Quantity = 250
+                 },
+                new RecipeIngredient()
+                {
+                    IngredientId = 3,
+                    RecipeId = 1,
+                    Unit = UnitOfMeasurement.Gram,
+                    Quantity = 100
+                },
+                new RecipeIngredient()
+                {
+                    IngredientId = 1,
+                    RecipeId = 2,
+                    Unit = UnitOfMeasurement.Milliliter,
+                    Quantity = 100
+                },
+                new RecipeIngredient()
+                {
+                    IngredientId = 4,
+                    RecipeId = 2,
+                    Unit = UnitOfMeasurement.Gram,
+                    Quantity = 50
+                }
+            };
+
+            return recipeIngredients;
         }
     }
 }

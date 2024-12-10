@@ -20,61 +20,61 @@ namespace RecipeApp.Data.Configuration
                 {
                     Id = 1,
                     Name = "Appetizers",
-                    ImageUrl = "/images/Category/default.jpg"
+                    ImageUrl = "/images/Category/appetizers.jpg"
                 },
                 new Category
                 {
                     Id = 2,
                     Name = "Bread Recipes",
-                    ImageUrl = "/images/Category/default.jpg"
+                    ImageUrl = "/images/Category/breadRecipes.jpg"
                 },
                 new Category
                 {
                     Id = 3,
                     Name = "Breakfast",
-                    ImageUrl = "/images/Category/default.jpg"
+                    ImageUrl = "/images/Category/breakfast.jpg"
                 },
                 new Category
                 {
                     Id = 4,
                     Name = "Desserts",
-                    ImageUrl = "/images/Category/default.jpg"
+                    ImageUrl = "/images/Category/desserts.jpg"
                 },
                 new Category
                 {
                     Id = 5,
                     Name = "Drinks",
-                    ImageUrl = "/images/Category/default.jpg"
+                    ImageUrl = "/images/Category/drinks.jpg"
                 },
                 new Category
                 {
                     Id = 6,
                     Name = "Main Dishes",
-                    ImageUrl = "/images/Category/default.jpg"
+                    ImageUrl = "/images/Category/mainDishes.jpg"
                 },
                 new Category
                 {
                     Id = 7,
                     Name = "Salads",
-                    ImageUrl = "/images/Category/default.jpg"
+                    ImageUrl = "/images/Category/salads.jpg"
                 },
                 new Category
                 {
                     Id = 8,
                     Name = "Sandwiches",
-                    ImageUrl = "/images/Category/default.jpg"
+                    ImageUrl = "/images/Category/sandwiches.jpg"
                 },
                 new Category
                 {
                     Id = 9,
                     Name = "Side Dishes",
-                    ImageUrl = "/images/Category/default.jpg"
+                    ImageUrl = "/images/Category/sideDishes.jpg"
                 },
                 new Category
                 {
                     Id = 10,
                     Name = "Soups",
-                    ImageUrl = "/images/Category/default.jpg"
+                    ImageUrl = "/images/Category/soups.jpg"
                 });
 
         }
