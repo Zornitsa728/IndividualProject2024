@@ -49,16 +49,10 @@ namespace RecipeApp.Services.Tests
             var userId = "123";
 
             // Act
-            Rating? result = await ratingService.AddRatingAsync(recipeId, score, userId);
+            await ratingService.AddRatingAsync(recipeId, score, userId);
 
             // Assert
             ratingRepository.Verify(r => r.AddAsync(It.IsAny<Rating>()), Times.Once);
-
-            Assert.Multiple(() =>
-            {
-                Assert.That(result.Score, Is.EqualTo(score));
-                Assert.That(result.UserId, Is.EqualTo(userId));
-            });
         }
 
         [Test]
@@ -122,10 +116,9 @@ namespace RecipeApp.Services.Tests
             ratingRepository.Setup(r => r.GetAllAttached()).Returns(ratings);
 
             // Act
-            Rating? result = await ratingService.UpdateRatingAsync(recipeId, score, userId);
+            await ratingService.UpdateRatingAsync(recipeId, score, userId);
 
             // Assert
-            Assert.That(result.Score, Is.EqualTo(score));
             ratingRepository.Verify(r => r.UpdateAsync(It.IsAny<Rating>()), Times.Once);
         }
     }

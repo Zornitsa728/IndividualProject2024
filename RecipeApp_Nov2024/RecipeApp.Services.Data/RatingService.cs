@@ -21,7 +21,7 @@ namespace RecipeApp.Services.Data
                 .ToListAsync();
         }
 
-        public async Task<Rating> AddRatingAsync(int recipeId, int score, string userId)
+        public async Task AddRatingAsync(int recipeId, int score, string userId)
         {
             var rating = new Rating
             {
@@ -31,7 +31,6 @@ namespace RecipeApp.Services.Data
             };
 
             await ratingRepository.AddAsync(rating);
-            return rating;
         }
 
         public async Task<double> GetAverageRatingAsync(int recipeId)
@@ -62,7 +61,7 @@ namespace RecipeApp.Services.Data
             return true;
         }
 
-        public async Task<Rating> UpdateRatingAsync(int recipeId, int score, string userId)
+        public async Task UpdateRatingAsync(int recipeId, int score, string userId)
         {
             var rating = ratingRepository
                 .GetAllAttached()
@@ -71,8 +70,6 @@ namespace RecipeApp.Services.Data
             rating.Score = score;
 
             await ratingRepository.UpdateAsync(rating);
-
-            return rating;
         }
     }
 }
