@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using RecipeApp.Data;
 using RecipeApp.Data.Models;
+using RecipeApp.Data.Repository;
 using RecipeApp.Data.Repository.Interfaces;
 using System.Reflection;
 

@@ -3,7 +3,7 @@
     <p>You don’t have permission to access this page.</p>
     @if (User.Identity?.IsAuthenticated == true)
     {
-        <a href="/">Go to Homepage</a>
+        <a class="return-to-home-btn" href="/">Go to Homepage</a>
     }
     else
     {

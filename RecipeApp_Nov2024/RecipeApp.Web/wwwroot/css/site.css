@@ -1146,15 +1146,11 @@ div.login-btn {
     min-height: 100vh; 
 }
 
-.content-wrapper {
-    flex: 1; /* Allows the content to grow and push the pagination down */
-}
-
 .pagination-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 20px; /* Adds spacing between content and pagination */
+    margin-top: auto; /* Adds spacing between content and pagination */
 }
 
 .pagination {
@@ -1239,3 +1235,11 @@ div.login-btn {
         transform: translateY(-5px);
         box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
     }
+
+.btns-view-and-like{
+    display:flex;
+}
+
+.return-to-home-btn:hover{
+    color:white;
+}

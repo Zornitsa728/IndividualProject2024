@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RecipeApp.Data;
 using RecipeApp.Data.Models;
@@ -27,7 +28,10 @@ builder.Services
        .AddUserManager<UserManager<ApplicationUser>>();
 
 builder.Services.AddRazorPages();
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(cfg =>
+{   //preventing csrf attacks (Cross-Site Request Forgery Attacks)
+    cfg.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+});
 
 //This ensures all models in the Data.Models are automatically configured with their corresponding repositories
 var modelsAssembly = typeof(Recipe).Assembly;

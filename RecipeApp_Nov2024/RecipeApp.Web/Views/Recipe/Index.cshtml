@@ -15,7 +15,7 @@
                         <img src="@(!string.IsNullOrEmpty(recipe.ImageUrl) ? recipe.ImageUrl : RecipeApp.Common.ApplicationConstants.NoImageUrl)" class="card-img-top" alt="@recipe.Title">
                         <div class="card-body">
                             <h5 class="card-title">@recipe.Title</h5>
-                            <div class="recipe-main-btns">
+                            <div class="recipe-main-btns btns-view-and-like">
                                 <a asp-controller="Recipe" asp-action="Details" asp-route-id="@recipe.Id" class="recipe-view-btn">View Recipe</a>
                                 @if (User?.Identity?.IsAuthenticated ?? false)
                                 {
@@ -37,7 +37,7 @@
         @if ((int)ViewData["TotalPages"] > 1)
         {
             <div class="pagination-container">
-                <nav aria-label="Page navigation" class="mt-4">
+                <nav aria-label="Page navigation">
                     <ul class="pagination">
                         @if ((int)ViewData["CurrentPage"] > 1)
                         {

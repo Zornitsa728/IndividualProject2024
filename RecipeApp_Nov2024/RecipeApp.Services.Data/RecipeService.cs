@@ -69,10 +69,12 @@ namespace RecipeApp.Services.Data
 
         public async Task<IEnumerable<Cookbook>> GetUserCookbooksAsync(string userId)
         {
-            return await cookbookRepository.GetAllAttached()
+            List<Cookbook>? userCookbooks = await cookbookRepository.GetAllAttached()
                 .Where(cb => cb.UserId == userId)
                 .Include(cb => cb.RecipeCookbooks)
                 .ToListAsync();
+
+            return userCookbooks;
         }
 
         public async Task UpdateRecipeAsync(Recipe recipe, List<RecipeIngredient> updatedIngredients)
@@ -80,7 +82,7 @@ namespace RecipeApp.Services.Data
             // Update recipe details
             await recipeRepository.UpdateAsync(recipe);
 
-            // Replace ingredients
+            // Old ingredients
             var existingIngredients = recipeIngredientRepository.GetAllAttached()
                 .Where(ri => ri.RecipeId == recipe.Id)
                 .ToList();
@@ -94,7 +96,7 @@ namespace RecipeApp.Services.Data
             //adding the new
             foreach (var recipeIngredient in updatedIngredients)
             {
-                recipeIngredient.RecipeId = recipe.Id; // only when creating recipe
+                recipeIngredient.RecipeId = recipe.Id;
                 await recipeIngredientRepository.AddAsync(recipeIngredient);
             }
         }

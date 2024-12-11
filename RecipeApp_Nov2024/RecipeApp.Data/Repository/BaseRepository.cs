@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using RecipeApp.Data.Repository.Interfaces;
 
-namespace RecipeApp.Data.Repository.Interfaces
+namespace RecipeApp.Data.Repository
 {
     public class BaseRepository<TType, TId> : IRepository<TType, TId>
          where TType : class
@@ -10,7 +11,7 @@ namespace RecipeApp.Data.Repository.Interfaces
         public BaseRepository(RecipeDbContext dbContext)
         {
             this.dbContext = dbContext;
-            this.dbSet = this.dbContext.Set<TType>();
+            dbSet = this.dbContext.Set<TType>();
         }
         public TType GetById(TId id)
         {
@@ -34,25 +35,25 @@ namespace RecipeApp.Data.Repository.Interfaces
         }
         public IEnumerable<TType> GetAll()
         {
-            return this.dbSet.ToArray();
+            return dbSet.ToArray();
         }
         public async Task<IEnumerable<TType>> GetAllAsync()
         {
-            return await this.dbSet.ToArrayAsync();
+            return await dbSet.ToArrayAsync();
         }
         public IQueryable<TType> GetAllAttached()
         {
-            return this.dbSet.AsQueryable();
+            return dbSet.AsQueryable();
         }
         public void Add(TType item)
         {
-            this.dbSet.Add(item);
-            this.dbContext.SaveChanges();
+            dbSet.Add(item);
+            dbContext.SaveChanges();
         }
         public async Task AddAsync(TType item)
         {
-            await this.dbSet.AddAsync(item);
-            await this.dbContext.SaveChangesAsync();
+            await dbSet.AddAsync(item);
+            await dbContext.SaveChangesAsync();
         }
         public bool Delete(TId id)
         {
@@ -88,9 +89,9 @@ namespace RecipeApp.Data.Repository.Interfaces
         {
             try
             {
-                this.dbSet.Attach(item);
-                this.dbContext.Entry(item).State = EntityState.Modified;
-                this.dbContext.SaveChanges();
+                dbSet.Attach(item);
+                dbContext.Entry(item).State = EntityState.Modified;
+                dbContext.SaveChanges();
                 return true;
             }
             catch (Exception e)
@@ -102,9 +103,9 @@ namespace RecipeApp.Data.Repository.Interfaces
         {
             try
             {
-                this.dbSet.Attach(item);
-                this.dbContext.Entry(item).State = EntityState.Modified;
-                await this.dbContext.SaveChangesAsync();
+                dbSet.Attach(item);
+                dbContext.Entry(item).State = EntityState.Modified;
+                await dbContext.SaveChangesAsync();
                 return true;
             }
             catch (Exception e)

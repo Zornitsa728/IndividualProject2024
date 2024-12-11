@@ -9,17 +9,18 @@ namespace RecipeApp.Web.Controllers
     [Authorize]
     public class RatingController : Controller
     {
-        private readonly IRatingService _ratingService;
+        private readonly IRatingService ratingService;
 
         public RatingController(IRatingService ratingService)
         {
-            _ratingService = ratingService;
+            this.ratingService = ratingService;
         }
 
         [HttpGet]
         public async Task<ActionResult> GetRatings(int recipeId)
         {
-            var ratings = await _ratingService.GetRatingsAsync(recipeId);
+            IEnumerable<Rating>? ratings = await ratingService.GetRatingsAsync(recipeId);
+
             return Ok(ratings);
         }
 
@@ -28,17 +29,17 @@ namespace RecipeApp.Web.Controllers
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
 
-            var isRatingValid = _ratingService.CheckRecipeUserRating(recipeId, userId);
+            var isRatingValid = ratingService.CheckRecipeUserRating(recipeId, userId);
 
             Rating rating;
 
             if (!isRatingValid)
             {
-                rating = await _ratingService.UpdateRatingAsync(recipeId, score, userId);
+                rating = await ratingService.UpdateRatingAsync(recipeId, score, userId);
             }
             else
             {
-                rating = await _ratingService.AddRatingAsync(recipeId, score, userId);
+                rating = await ratingService.AddRatingAsync(recipeId, score, userId);
             }
 
             return RedirectToAction("Details", "Recipe", new { id = recipeId });
@@ -47,7 +48,7 @@ namespace RecipeApp.Web.Controllers
         [HttpGet]
         public async Task<ActionResult> GetAverageRating(int recipeId)
         {
-            double averageRating = await _ratingService.GetAverageRatingAsync(recipeId);
+            double averageRating = await ratingService.GetAverageRatingAsync(recipeId);
             return View(averageRating);//todo: return to partial view
 
         }
