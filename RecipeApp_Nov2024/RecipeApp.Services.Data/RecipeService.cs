@@ -38,7 +38,11 @@ namespace RecipeApp.Services.Data
         {
             await recipeRepository.AddAsync(recipe);
 
-            foreach (var ingredient in ingredients)
+            //avoid duplication
+            var uniqueIngredients = ingredients.GroupBy(i => i.IngredientId).Select(i => i.Last());
+
+            //adding only the last unique ingredient
+            foreach (var ingredient in uniqueIngredients)
             {
                 ingredient.RecipeId = recipe.Id;
                 await recipeIngredientRepository.AddAsync(ingredient);
@@ -93,11 +97,16 @@ namespace RecipeApp.Services.Data
                 await recipeIngredientRepository.DeleteAsync(new object[] { ingredient.RecipeId, ingredient.IngredientId });
             }
 
-            //adding the new
-            foreach (var recipeIngredient in updatedIngredients)
+            //prevent ingredient duplication
+            var uniqueIngredients = updatedIngredients
+                .GroupBy(i => i.IngredientId)
+                .Select(i => i.Last());
+
+            //adding new ingredients
+            foreach (var ingredient in uniqueIngredients)
             {
-                recipeIngredient.RecipeId = recipe.Id;
-                await recipeIngredientRepository.AddAsync(recipeIngredient);
+                ingredient.RecipeId = recipe.Id;
+                await recipeIngredientRepository.AddAsync(ingredient);
             }
         }
 
