@@ -262,7 +262,7 @@ namespace RecipeApp.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
 
                     b.HasData(
                         new
@@ -359,7 +359,7 @@ namespace RecipeApp.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Comments");
+                    b.ToTable("Comments", (string)null);
                 });
 
             modelBuilder.Entity("RecipeApp.Data.Models.Cookbook", b =>
@@ -385,7 +385,7 @@ namespace RecipeApp.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Cookbooks");
+                    b.ToTable("Cookbooks", (string)null);
                 });
 
             modelBuilder.Entity("RecipeApp.Data.Models.Ingredient", b =>
@@ -406,7 +406,7 @@ namespace RecipeApp.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Ingredients");
+                    b.ToTable("Ingredients", (string)null);
                 });
 
             modelBuilder.Entity("RecipeApp.Data.Models.Rating", b =>
@@ -434,7 +434,7 @@ namespace RecipeApp.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Ratings");
+                    b.ToTable("Ratings", (string)null);
                 });
 
             modelBuilder.Entity("RecipeApp.Data.Models.Recipe", b =>
@@ -483,7 +483,7 @@ namespace RecipeApp.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Recipes");
+                    b.ToTable("Recipes", (string)null);
 
                     b.HasData(
                         new
@@ -524,7 +524,7 @@ namespace RecipeApp.Data.Migrations
 
                     b.HasIndex("CookbookId");
 
-                    b.ToTable("RecipesCookbooks");
+                    b.ToTable("RecipesCookbooks", (string)null);
                 });
 
             modelBuilder.Entity("RecipeApp.Data.Models.RecipeIngredient", b =>
@@ -549,7 +549,7 @@ namespace RecipeApp.Data.Migrations
 
                     b.HasIndex("IngredientId");
 
-                    b.ToTable("RecipesIngredients");
+                    b.ToTable("RecipesIngredients", (string)null);
 
                     b.HasData(
                         new

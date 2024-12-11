@@ -27,7 +27,7 @@ namespace RecipeApp.Web.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var recipes = recipeService.GetRecipes();
+            var recipes = await recipeService.GetRecipesAsync();
 
             List<RecipeCardViewModel> model = new List<RecipeCardViewModel>();
             List<int> favoriteRecipeIds = new List<int>();
@@ -109,7 +109,6 @@ namespace RecipeApp.Web.Controllers
             {
                 model.Categories = await recipeService.GetAllCategoriesAsync();
                 model.AvailableIngredients = await recipeService.GetAllIngredientsAsync();
-
                 model.UnitsOfMeasurement = Enum.GetValues(typeof(UnitOfMeasurement))
                     .Cast<UnitOfMeasurement>()
                     .Select(u => new SelectListItem
@@ -156,7 +155,7 @@ namespace RecipeApp.Web.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            var recipes = recipeService.GetRecipes();
+            var recipes = await recipeService.GetRecipesAsync();
 
             var myRecipes = recipes.Where(r => r.UserId == currentUserId);
 

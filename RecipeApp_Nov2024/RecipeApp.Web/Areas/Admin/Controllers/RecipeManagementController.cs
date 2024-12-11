@@ -26,7 +26,7 @@ namespace RecipeApp.Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 6)
         {
-            var recipes = recipeService.GetRecipes();
+            var recipes = await recipeService.GetRecipesAsync();
 
             IEnumerable<RecipeViewModel> model = recipes.Select(r => new RecipeViewModel()
             {
@@ -96,6 +96,7 @@ namespace RecipeApp.Web.Areas.Admin.Controllers
                 Comments = recipeCommentsViewModel,
                 Rating = ratingModel
             };
+
 
             return View(recipeModel);
         }
@@ -211,7 +212,7 @@ namespace RecipeApp.Web.Areas.Admin.Controllers
                 Title = recipe.Title,
                 Description = recipe.Description,
                 ImageUrl = recipe.ImageUrl,
-                CreatedBy = recipe.User.UserName,
+                CreatedBy = recipe.User.UserName!,
                 CreatedDate = recipe.CreatedOn
             };
 
@@ -233,7 +234,7 @@ namespace RecipeApp.Web.Areas.Admin.Controllers
 
             TempData["SuccessMessage"] = "The recipe has been successfully deleted.";
 
-            return RedirectToAction("Index", new { pageNumber = pageNumber });
+            return RedirectToAction("Index", new { pageNumber });
         }
     }
 }

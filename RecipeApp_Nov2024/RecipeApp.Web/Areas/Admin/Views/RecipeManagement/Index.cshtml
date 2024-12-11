@@ -18,9 +18,9 @@
             <p>@recipe.Description</p>
             <span class="category">@recipe.CategoryName</span>
             <div class="actions">
-                <a asp-action="Edit" asp-route-id="@recipe.Id" class="btn btn-warning btn-sm">Edit</a>
+                <a asp-action="Edit" asp-route-id="@recipe.Id" asp-route-pageNumber="@ViewData["CurrentPage"]" class="btn btn-warning btn-sm">Edit</a>
                 <a asp-action="Delete" asp-route-id="@recipe.Id" asp-route-pageNumber="@ViewData["CurrentPage"]" class="btn btn-danger btn-sm">Delete</a>
-                <a asp-action="ViewRecipe" asp-route-id="@recipe.Id" class="btn btn-primary btn-sm">View</a>
+                <a asp-action="ViewRecipe" asp-route-id="@recipe.Id" asp-route-pageNumber="@ViewData["CurrentPage"]" class="btn btn-primary btn-sm">View</a>
             </div>
         </div>
     }

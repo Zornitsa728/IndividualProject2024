@@ -33,7 +33,7 @@ namespace RecipeApp.Web.Areas.Admin.Controllers
                 userModel.Add(new AllUsersViewModel
                 {
                     Id = user.Id,
-                    Email = user.Email,
+                    Email = user.Email!,
                     Roles = roles.ToList()
                 });
             }

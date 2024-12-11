@@ -1243,3 +1243,7 @@ div.login-btn {
 .return-to-home-btn:hover{
     color:white;
 }
+
+.create-cookbook-inside-btn {
+    color: white;
+}

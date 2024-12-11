@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using RecipeApp.Data.Models;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace RecipeApp.Data
 {
@@ -22,6 +23,48 @@ namespace RecipeApp.Data
                 if (ingredients != null)
                 {
                     context.Ingredients.AddRange(ingredients);
+                    context.SaveChanges();
+                }
+            }
+        }
+
+        public static void SeedRecipesFromJson(RecipeDbContext context)
+        {
+            if (!context.Recipes.Any())
+            {
+                var path = Path.Combine(AppContext.BaseDirectory, "wwwroot", "recipes.json");
+
+                var jsonData = File.ReadAllText(path);
+
+                var recipes = JsonSerializer.Deserialize<List<Recipe>>(jsonData);
+
+                if (recipes != null)
+                {
+                    context.Recipes.AddRange(recipes);
+                    context.SaveChanges();
+                }
+            }
+        }
+
+        public static void SeedRecipesIngredientsFromJson(RecipeDbContext context)
+        {
+            if (!context.RecipesIngredients.Any())
+            {
+                var path = Path.Combine(AppContext.BaseDirectory, "wwwroot", "recipesIngredients.json");
+
+                var jsonData = File.ReadAllText(path);
+
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true, // Ignore case for property names
+                    Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) } // Enum case handling
+                };
+
+                var recipeIngredients = JsonSerializer.Deserialize<List<RecipeIngredient>>(jsonData, options);
+
+                if (recipeIngredients != null)
+                {
+                    context.RecipesIngredients.AddRange(recipeIngredients);
                     context.SaveChanges();
                 }
             }

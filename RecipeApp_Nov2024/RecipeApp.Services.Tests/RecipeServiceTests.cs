@@ -61,7 +61,7 @@ namespace RecipeApp.Services.Tests
         }
 
         [Test]
-        public void GetRecipes_ShouldReturnNonDeletedRecipesOrderedByTitle()
+        public async Task GetRecipes_ShouldReturnNonDeletedRecipesOrderedByTitle()
         {
             // Arrange
             var recipes = new List<Recipe>
@@ -74,7 +74,7 @@ namespace RecipeApp.Services.Tests
             recipeRepository.Setup(r => r.GetAllAttached()).Returns(recipes.AsQueryable());
 
             // Act
-            IEnumerable<Recipe>? result = recipeService.GetRecipes();
+            IEnumerable<Recipe>? result = await recipeService.GetRecipesAsync();
 
             // Assert
             Assert.That(result.Count(), Is.EqualTo(2));

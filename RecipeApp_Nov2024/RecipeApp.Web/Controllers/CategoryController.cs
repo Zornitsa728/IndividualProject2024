@@ -48,7 +48,7 @@ namespace RecipeApp.Web.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            var recipes = recipeService.GetRecipes();
+            var recipes = await recipeService.GetRecipesAsync();
 
             string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 

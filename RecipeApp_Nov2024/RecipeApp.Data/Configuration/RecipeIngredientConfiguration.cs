@@ -29,7 +29,7 @@ namespace RecipeApp.Data.Configuration
             builder.Property(ri => ri.Unit)
                 .IsRequired(true);
 
-            builder.HasData(this.SeedRecipeIngredients());
+            //builder.HasData(this.SeedRecipeIngredients());
         }
 
         private List<RecipeIngredient> SeedRecipeIngredients()

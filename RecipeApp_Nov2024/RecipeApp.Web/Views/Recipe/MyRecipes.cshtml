@@ -37,25 +37,25 @@
             </div>
 
             @* Pagination Navigation *@
-            @if ((int)ViewData["TotalPages"] > 1)
+            @if ((int)ViewData["TotalPages"]! > 1)
             {
                 <div class="pagination-container">
                     <nav aria-label="Page navigation">
                         <ul class="pagination">
-                            @if ((int)ViewData["CurrentPage"] > 1)
+                            @if ((int)ViewData["CurrentPage"]! > 1)
                             {
                                 <li class="page-item">
                                     <a class="page-link" asp-controller="Recipe" asp-action="MyRecipes"
-                                       asp-route-pageNumber="@((int)ViewData["CurrentPage"] - 1)"
-                                       asp-route-pageSize="@ViewData["PageSize"]">
+                                       asp-route-pageNumber="@((int)ViewData["CurrentPage"]! - 1)"
+                                       asp-route-pageSize="@ViewData["PageSize"]!">
                                         Previous
                                     </a>
                                 </li>
                             }
 
-                            @for (int i = 1; i <= (int)ViewData["TotalPages"]; i++)
+                            @for (int i = 1; i <= (int)ViewData["TotalPages"]!; i++)
                             {
-                                <li class="page-item @(i == (int)ViewData["CurrentPage"] ? "active" : "")">
+                                <li class="page-item @(i == (int)ViewData["CurrentPage"]! ? "active" : "")">
                                     <a class="page-link" asp-controller="Recipe" asp-action="MyRecipes"
                                        asp-route-pageNumber="@i"
                                        asp-route-pageSize="@ViewData["PageSize"]">
@@ -64,11 +64,11 @@
                                 </li>
                             }
 
-                            @if ((int)ViewData["CurrentPage"] < (int)ViewData["TotalPages"])
+                            @if ((int)ViewData["CurrentPage"]! < (int)ViewData["TotalPages"]!)
                             {
                                 <li class="page-item">
                                     <a class="page-link" asp-controller="Recipe" asp-action="MyRecipes"
-                                       asp-route-pageNumber="@((int)ViewData["CurrentPage"] + 1)"
+                                       asp-route-pageNumber="@((int)ViewData["CurrentPage"]! + 1)"
                                        asp-route-pageSize="@ViewData["PageSize"]">
                                         Next
                                     </a>

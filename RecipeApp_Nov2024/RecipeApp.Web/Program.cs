@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RecipeApp.Data;
 using RecipeApp.Data.Models;
@@ -20,7 +19,7 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services
     .AddIdentity<ApplicationUser, IdentityRole>(config =>
        {
-           ConfigureIdentity(config);
+           ConfigureIdentity(builder, config);
        })
        .AddEntityFrameworkStores<RecipeDbContext>()
        .AddRoles<IdentityRole>()
@@ -28,10 +27,12 @@ builder.Services
        .AddUserManager<UserManager<ApplicationUser>>();
 
 builder.Services.AddRazorPages();
-builder.Services.AddControllersWithViews(cfg =>
+builder.Services.AddControllersWithViews(
+    cfg =>
 {   //preventing csrf attacks (Cross-Site Request Forgery Attacks)
-    cfg.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
-});
+    cfg.Filters.Add(new Microsoft.AspNetCore.Mvc.AutoValidateAntiforgeryTokenAttribute());
+}
+);
 
 //This ensures all models in the Data.Models are automatically configured with their corresponding repositories
 var modelsAssembly = typeof(Recipe).Assembly;
@@ -57,6 +58,8 @@ using (var scope = app.Services.CreateScope())
     var services = scope.ServiceProvider;
 
     DatabaseSeeder.SeedIngredientsFromJson(context);
+    DatabaseSeeder.SeedRecipesFromJson(context);
+    DatabaseSeeder.SeedRecipesIngredientsFromJson(context);
     DatabaseSeeder.SeedRoles(services);
     DatabaseSeeder.AssignAdminRole(services);
 }
@@ -112,7 +115,7 @@ app.Run();
 
 //in real project this should be in manage user secrets
 // private is not needed because methods are scoped to the file and behave as private by default
-static void ConfigureIdentity(IdentityOptions config)
+static void ConfigureIdentity(WebApplicationBuilder builder, IdentityOptions config)
 {
     config.Password.RequireDigit = true;
     config.Password.RequireLowercase = true;

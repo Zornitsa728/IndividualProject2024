@@ -1,0 +1,92 @@
+﻿[
+  {
+    "Title": "Cranberry Pie",
+    "Description": "This vibrant Cranberry Pie, made with a flaky homemade pie crust and a sweet-tart cranberry filling, is the dessert perfect for the holiday season. Top a slice with vanilla ice cream, and the whole family will love this festive dessert!",
+    "Instructions": "1. Preheat the oven to 425°F. Let the pie dough soften on the counter so it is easier to roll out. Meanwhile, combine 5 cups of cranberries, sugar, cornstarch, orange zest, cinnamon, ginger, salt, and vanilla extract in the bowl of a food processor. Process the food processor for about 10 seconds to roughly chop the cranberries. 2. Transfer the mixture to a large bowl and fold in the remaining 1 cup of cranberries. Set aside.3. On a lightly floured surface, roll 1 disk of pie dough into a 13-inch circle (about ⅛-inch thick). Press the circle into a 9-inch deep-dish pie plate. Trim any excess dough to leave a 1-inch overhang over the edge of the pie plate. Place it in the fridge.4. Roll the other disk into a 12-inch circle. Cut the dough into ¾-inch-wide strips. There should be about 14 strips.5. Scoop the cranberry mixture into the bottom pie crust and smooth it into an even layer.6. Create a lattice pattern with the pie crust strips over the cranberries. Trim the lattice strips to have a ½-inch overhang (slightly shorter than the bottom crust). 7. Fold the bottom crust over the lattice strips and gently press down to create a flat edge. If desired, crimp the edges with your fingers. In a small bowl, beat the egg with 1 tablespoon of water.8. Use a pastry brush to apply the egg wash to the top crust, avoiding the filling. Then, place the pie on a rimmed baking sheet. Cover the edges of the pie with a pie shield or aluminum foil. Bake for 20 minutes, then reduce the oven temperature to 375°F and bake for 40-50 minutes or until the top is golden brown and the filling bubbles at the edges and in the center. Let the pie cool completely for about 4 hours before slicing.",
+    "CreatedOn": "2024-12-11T00:00:00",
+    "ImageUrl": "/images/Recipe/Cranberry-Pie.jpg",
+    "UserId": "9ccd592c-f245-4344-b4ed-dde7df4677e1",
+    "CategoryId": 4
+  },
+  {
+    "Title": "Sweet Potato Soup",
+    "Description": "Celebrate soup season with creamy Sweet Potato Soup! This comforting soup recipe is made with sweet potatoes, warm and smoky spices, and cream, and is one of my favorite ways to warm up on a chilly day.",
+    "Instructions": "1. In a large Dutch oven or large pot, heat the oil and butter over medium heat. Add the onion and cook, stirring occasionally, for about 5 minutes until softened. 2. Add the ginger, cumin, paprika, and garlic and cook for about 30 seconds until fragrant. 3. Add the sweet potatoes, vegetable stock, salt, and pepper. Bring to a boil over medium-high heat. Reduce the flame to medium-low heat, and simmer for 15 to 20 minutes until the sweet potatoes are very tender. 4. Ladle half of the soup into a blender. Place the lid on top, but remove the center insert to allow the steam to vent. Cover the opening loosely with a paper towel or clean dish towel and blend at medium speed for about 1 minute or smooth. Transfer the soup to a clean bowl and repeat with the remaining soup. 5. Return the soup to the pot and place over medium-low heat. 6. Stir in the heavy cream. Rewarm for 2 to 3 minutes, stirring occasionally. Garnish the soup with cream, olive oil, and freshly cracked black pepper before serving hot!",
+    "CreatedOn": "2024-12-11T00:00:00",
+    "ImageUrl": "/images/Recipe/Sweet-Potato-Soup.jpg",
+    "UserId": "9ccd592c-f245-4344-b4ed-dde7df4677e1",
+    "CategoryId": 10
+  },
+  {
+    "Title": "Garlic Bread",
+    "Description": "Crispy, buttery Garlic Bread made with fresh garlic, parsley, and a touch of parmesan cheese is the perfect side dish for any meal!",
+    "Instructions": "1. Preheat the oven to 375°F. 2. Cut a loaf of French bread in half lengthwise and place it on a baking sheet, cut side up. 3. In a small bowl, mix softened butter, minced garlic, chopped parsley, and grated parmesan cheese. 4. Spread the garlic butter mixture evenly over both halves of the bread. 5. Bake the bread in the preheated oven for 10-12 minutes until golden brown. 6. Slice and serve warm.",
+    "CreatedOn": "2024-12-11T00:00:00",
+    "ImageUrl": "/images/Recipe/Garlic-Bread.jpg",
+    "UserId": "9ccd592c-f245-4344-b4ed-dde7df4677e1",
+    "CategoryId": 2
+  },
+  {
+    "Title": "Classic Caesar Salad",
+    "Description": "This Classic Caesar Salad features crisp romaine lettuce, creamy Caesar dressing, and homemade croutons for a timeless favorite.",
+    "Instructions": "1. In a large bowl, toss chopped romaine lettuce with Caesar dressing until evenly coated. 2. Top with freshly grated parmesan cheese and homemade croutons. 3. Serve immediately.",
+    "CreatedOn": "2024-12-11T00:00:00",
+    "ImageUrl": "/images/Recipe/Caesar-Salad.jpg",
+    "UserId": "9ccd592c-f245-4344-b4ed-dde7df4677e1",
+    "CategoryId": 7
+  },
+  {
+    "Title": "Iced Coffee",
+    "Description": "This refreshing Iced Coffee is the perfect pick-me-up on a warm day, made with brewed coffee, milk, and a touch of sweetness.",
+    "Instructions": "1. Brew your favorite coffee and let it cool. 2. Fill a glass with ice cubes. 3. Pour the cooled coffee over the ice. 4. Add milk and sweetener to taste. Stir and serve immediately.",
+    "CreatedOn": "2024-12-11T00:00:00",
+    "ImageUrl": "/images/Recipe/Iced-Coffee.jpg",
+    "UserId": "9ccd592c-f245-4344-b4ed-dde7df4677e1",
+    "CategoryId": 5
+  },
+  {
+    "Title": "Breakfast Pancakes",
+    "Description": "Fluffy and golden breakfast pancakes, perfect for starting the day with a warm, delicious meal.",
+    "Instructions": "1. In a mixing bowl, combine flour, sugar, baking powder, and salt. 2. In another bowl, whisk together milk, egg, and melted butter. 3. Pour the wet ingredients into the dry ingredients and stir until just combined. 4. Heat a non-stick skillet over medium heat and grease lightly with butter or oil. 5. Pour 1/4 cup of batter onto the skillet for each pancake. Cook until bubbles form on the surface, then flip and cook until golden brown. 6. Serve with syrup, butter, or your favorite toppings.",
+    "CreatedOn": "2024-12-11T00:00:00",
+    "ImageUrl": "/images/Recipe/Breakfast-Pancakes.jpg",
+    "UserId": "9ccd592c-f245-4344-b4ed-dde7df4677e1",
+    "CategoryId": 3
+  },
+  {
+    "Title": "Turkey Sandwich",
+    "Description": "A classic turkey sandwich with fresh lettuce, tomato, and mayonnaise, served on whole-grain bread.",
+    "Instructions": "1. Spread mayonnaise on two slices of whole-grain bread. 2. Layer sliced turkey, lettuce, and tomato on one slice. 3. Top with the second slice of bread. 4. Slice diagonally and serve.",
+    "CreatedOn": "2024-12-11T00:00:00",
+    "ImageUrl": "/images/Recipe/Turkey-Sandwich.jpg",
+    "UserId": "9ccd592c-f245-4344-b4ed-dde7df4677e1",
+    "CategoryId": 8
+  },
+  {
+    "Title": "Grilled Veggie Side Dish",
+    "Description": "A colorful assortment of grilled vegetables, lightly seasoned and perfect as a side dish for any meal.",
+    "Instructions": "1. Preheat a grill to medium-high heat. 2. Slice bell peppers, zucchini, and eggplant into even pieces. 3. Toss the vegetables with olive oil, salt, and pepper. 4. Grill the vegetables for 3-5 minutes per side until tender and slightly charred. 5. Serve warm.",
+    "CreatedOn": "2024-12-11T00:00:00",
+    "ImageUrl": "/images/Recipe/Grilled-Veggies.jpg",
+    "UserId": "9ccd592c-f245-4344-b4ed-dde7df4677e1",
+    "CategoryId": 9
+  },
+  {
+    "Title": "Musaka",
+    "Description": "Moussaka is beloved Balkan and Middle East dish. Its preparation depends on the region. In Bulgaria Moussaka is based on potatoes and ground meat.",
+    "Instructions": "Start with cooking the onion in a pan with 1/4 oil until golden brown. Then add the ground meat, the pepper, the paprika, and half the salt. Fry until meat gets brown and then remove the pan from the heat.",
+    "CreatedOn": "2024-12-11T00:00:00",
+    "ImageUrl": "/images/Recipe/Musaka.jpg",
+    "UserId": "9ccd592c-f245-4344-b4ed-dde7df4677e1",
+    "CategoryId": 6
+  },
+  {
+    "Title": "Soft Dinner Rolls",
+    "Description": "You only need 7 ingredients to make these dinner rolls. Flaky, soft, and buttery, these fresh dinner rolls outshine any main dish.",
+    "Instructions": "Grease a 9x13-inch baking dish.Place bread flour, water, sugar, egg, 2 tablespoons softened butter, yeast, and salt into the pan of your bread machine in the order recommended by the manufacturer. Select the Dough cycle and press Start. When the cycle is complete, remove the dough and press down to deflate.Divide dough into 15 equal pieces and form into rolls. Place rolls in prepared baking dish, brush with melted butter, and cover dish loosely with plastic wrap; let rise until doubled in volume, about 30 minutes.Preheat oven to 375 degrees F (190 degrees C).Bake rolls in the preheated oven until the tops are golden brown, 12 to 15 minutes.",
+    "CreatedOn": "2024-12-11T00:00:00",
+    "ImageUrl": "/images/Recipe/Softrolls.jpg",
+    "UserId": "9ccd592c-f245-4344-b4ed-dde7df4677e1",
+    "CategoryId": 8
+  }
+]
