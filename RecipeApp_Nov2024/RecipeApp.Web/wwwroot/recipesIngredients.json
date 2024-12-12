@@ -1,109 +1,109 @@
 [
   {
     "IngredientId": 1,
-    "RecipeId": 3,
+    "RecipeId": 1,
     "Unit": "Gram",
     "Quantity": 500
   },
   {
     "IngredientId": 2,
-    "RecipeId": 3,
+    "RecipeId": 1,
     "Unit": "Gram",
     "Quantity": 100
   },
   {
     "IngredientId": 3,
-    "RecipeId": 3,
+    "RecipeId": 1,
     "Unit": "Teaspoon",
     "Quantity": 1
   },
   {
     "IngredientId": 4,
-    "RecipeId": 4,
+    "RecipeId": 2,
     "Unit": "Milliliter",
     "Quantity": 1000
   },
   {
     "IngredientId": 5,
-    "RecipeId": 4,
+    "RecipeId": 2,
     "Unit": "Gram",
     "Quantity": 300
   },
   {
     "IngredientId": 6,
-    "RecipeId": 4,
+    "RecipeId": 2,
     "Unit": "Teaspoon",
     "Quantity": 2
   },
   {
     "IngredientId": 7,
-    "RecipeId": 5,
+    "RecipeId": 3,
     "Unit": "Gram",
     "Quantity": 250
   },
   {
     "IngredientId": 8,
-    "RecipeId": 5,
+    "RecipeId": 3,
     "Unit": "Tablespoon",
     "Quantity": 2
   },
   {
     "IngredientId": 9,
-    "RecipeId": 5,
+    "RecipeId": 4,
     "Unit": "Cup",
     "Quantity": 4
   },
   {
     "IngredientId": 10,
-    "RecipeId": 6,
+    "RecipeId": 4,
     "Unit": "Teaspoon",
     "Quantity": 1
   },
   {
     "IngredientId": 11,
-    "RecipeId": 6,
+    "RecipeId": 5,
     "Unit": "Milliliter",
     "Quantity": 200
   },
   {
     "IngredientId": 12,
-    "RecipeId": 7,
+    "RecipeId": 5,
     "Unit": "Milliliter",
     "Quantity": 100
   },
   {
     "IngredientId": 13,
-    "RecipeId": 7,
+    "RecipeId": 6,
     "Unit": "Cup",
     "Quantity": 2
   },
   {
     "IngredientId": 14,
-    "RecipeId": 8,
+    "RecipeId": 6,
     "Unit": "Teaspoon",
     "Quantity": 1
   },
   {
     "IngredientId": 15,
-    "RecipeId": 9,
+    "RecipeId": 7,
     "Unit": "Gram",
     "Quantity": 150
   },
   {
     "IngredientId": 16,
-    "RecipeId": 10,
+    "RecipeId": 7,
     "Unit": "Gram",
     "Quantity": 50
   },
   {
     "IngredientId": 17,
-    "RecipeId": 11,
+    "RecipeId": 8,
     "Unit": "Gram",
     "Quantity": 400
   },
   {
     "IngredientId": 18,
-    "RecipeId": 12,
+    "RecipeId": 8,
     "Unit": "Teaspoon",
     "Quantity": 2
   }

@@ -7,7 +7,7 @@
 namespace RecipeApp.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class RemoveRecipesAndChangeCategoriesImages : Migration
+    public partial class RemoveAllRecipesResetPKAndAddCategoryImages : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -22,19 +22,21 @@ namespace RecipeApp.Data.Migrations
                 keyColumn: "Id",
                 keyValue: 2);
 
+            migrationBuilder.Sql("DBCC CHECKIDENT ('Recipes', RESEED, 0);");
+
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",
                 keyColumn: "Id",
                 keyValue: "6ca87836-1e87-4648-803f-c4c416c5d850",
                 columns: new[] { "ConcurrencyStamp", "SecurityStamp" },
-                values: new object[] { "e30222c4-0f9e-462f-96ed-5bae1767baf7", "bf44bb06-cb17-4c87-8112-0b97e24f7df8" });
+                values: new object[] { "908aea48-bfad-4f46-91d7-2ff91f9342d8", "db8fb419-6526-4f12-9f52-392149a1725f" });
 
             migrationBuilder.UpdateData(
                 table: "AspNetUsers",
                 keyColumn: "Id",
                 keyValue: "9ccd592c-f245-4344-b4ed-dde7df4677e1",
                 columns: new[] { "ConcurrencyStamp", "SecurityStamp" },
-                values: new object[] { "7824e012-d457-4328-ac3e-d9c792680b74", "44230084-950b-409d-8b47-658c15bf284f" });
+                values: new object[] { "f27ab1c6-f9bb-4828-a7d7-14a46bf8ca9a", "c0476dff-360d-45fb-a0e5-aa39de0e5207" });
 
             migrationBuilder.UpdateData(
                 table: "Categories",

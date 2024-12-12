@@ -12,8 +12,8 @@ using RecipeApp.Data;
 namespace RecipeApp.Data.Migrations
 {
     [DbContext(typeof(RecipeDbContext))]
-    [Migration("20241212004813_RemoveRecipesAndChangeCategoriesImages")]
-    partial class RemoveRecipesAndChangeCategoriesImages
+    [Migration("20241212104222_RemoveAllRecipesResetPKAndAddCategoryImages")]
+    partial class RemoveAllRecipesResetPKAndAddCategoryImages
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -227,22 +227,22 @@ namespace RecipeApp.Data.Migrations
                         {
                             Id = "9ccd592c-f245-4344-b4ed-dde7df4677e1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "7824e012-d457-4328-ac3e-d9c792680b74",
+                            ConcurrencyStamp = "f27ab1c6-f9bb-4828-a7d7-14a46bf8ca9a",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "44230084-950b-409d-8b47-658c15bf284f",
+                            SecurityStamp = "c0476dff-360d-45fb-a0e5-aa39de0e5207",
                             TwoFactorEnabled = false
                         },
                         new
                         {
                             Id = "6ca87836-1e87-4648-803f-c4c416c5d850",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "e30222c4-0f9e-462f-96ed-5bae1767baf7",
+                            ConcurrencyStamp = "908aea48-bfad-4f46-91d7-2ff91f9342d8",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "bf44bb06-cb17-4c87-8112-0b97e24f7df8",
+                            SecurityStamp = "db8fb419-6526-4f12-9f52-392149a1725f",
                             TwoFactorEnabled = false
                         });
                 });
