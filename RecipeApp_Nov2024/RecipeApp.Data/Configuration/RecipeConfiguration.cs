@@ -37,8 +37,6 @@ namespace RecipeApp.Data.Configuration
                 .IsRequired(false)
                 .HasMaxLength(ImageUrlMaxLength);
 
-            //builder.HasData(this.SeedRecipes());
-
         }
 
         private List<Recipe> SeedRecipes()
