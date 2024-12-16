@@ -77,3 +77,9 @@
     <button type="submit" class="btn btn-primary mt-2">Create Recipe</button>
     <script src="~/js/site.js"></script>
 </form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

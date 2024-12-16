@@ -8,7 +8,6 @@ using RecipeApp.Web.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
 builder.Services.AddDbContext<RecipeDbContext>(options =>
@@ -36,6 +35,7 @@ builder.Services.AddControllersWithViews(
 
 //This ensures all models in the Data.Models are automatically configured with their corresponding repositories
 var modelsAssembly = typeof(Recipe).Assembly;
+
 // Create a scope to access the DbContext
 using (var serviceScope = builder.Services.BuildServiceProvider().CreateScope())
 {

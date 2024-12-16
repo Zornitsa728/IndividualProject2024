@@ -20,6 +20,7 @@ namespace RecipeApp.Web.Infrastructure
                     !t.IsEnum &&
                     !t.Name.ToLower().EndsWith("attribute"))
                 .ToArray();
+
             foreach (Type modelType in modelTypes)
             {
                 if (typesToExclude.Contains(modelType))
@@ -27,9 +28,9 @@ namespace RecipeApp.Web.Infrastructure
                     continue;
                 }
 
-                // Check if the model has a primary key
                 var entityType = dbContext.Model.FindEntityType(modelType);
 
+                // Check if the model has a primary key
                 var primaryKey = entityType.FindPrimaryKey();
 
                 // Use `object` if there are multiple key properties (composite key)

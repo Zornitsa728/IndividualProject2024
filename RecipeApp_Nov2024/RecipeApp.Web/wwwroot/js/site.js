@@ -10,12 +10,14 @@
     if (tableBody) {
         Array.from(tableBody.children).forEach((row, newIndex) => {
             const ingredientId = row.getAttribute('data-id');
+            const name = row.children[0].textContent;
             const quantity = row.children[1].textContent;
             const unit = row.children[2].textContent;
 
             form.insertAdjacentHTML(
                 'beforeend',
                 `<input type="hidden" name="Ingredients[${newIndex}].IngredientId" value="${ingredientId}" class="ingredient-hidden">
+                <input type="hidden" name="Ingredients[${newIndex}].Name" value="${name}" class="ingredient-hidden">
              <input type="hidden" name="Ingredients[${newIndex}].Quantity" value="${quantity}" class="ingredient-hidden">
              <input type="hidden" name="Ingredients[${newIndex}].Unit" value="${unit}" class="ingredient-hidden">`
             );

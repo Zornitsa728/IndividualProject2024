@@ -1,7 +1,5 @@
 ﻿@model RecipeApp.Web.ViewModels.FavoritesViewModels.CookbookCreateViewModel
 
-<h2>Create New Cookbook</h2>
-
 <form method="post" asp-action="Create">
     <div class="mb-3">
         <label asp-for="Title" class="form-label">Cookbook Title</label>
@@ -17,3 +15,9 @@
 
     <button type="submit" class="btn btn-primary create-cookbook-inside-btn">Create Cookbook</button>
 </form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
