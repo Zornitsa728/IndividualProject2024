@@ -35,19 +35,18 @@ namespace RecipeApp.Services.Data
 
         public async Task<double> GetAverageRatingAsync(int recipeId)
         {
-            IQueryable<Rating>? currRecipeRatings = ratingRepository
+            var avrgRatingForCurrRecipe = await ratingRepository
                 .GetAllAttached()
-                .Where(r => r.RecipeId == recipeId);
+                .Where(r => r.RecipeId == recipeId)
+                .ToListAsync();
 
-            if (currRecipeRatings != null)
+            if (avrgRatingForCurrRecipe.Count != 0)
             {
-                return await currRecipeRatings
-                .AverageAsync(r => r.Score);
+                return avrgRatingForCurrRecipe.Average(r => r.Score);
             }
 
             return 0;
         }
-
         public bool CheckRecipeUserRating(int recipeId, string userId)
         {
             var rating = ratingRepository.GetAllAttached()

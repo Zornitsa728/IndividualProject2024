@@ -19,6 +19,9 @@ namespace RecipeApp.Services.Tests
         private Mock<IRepository<RecipeIngredient, object>> recipeIngredientRepository;
 
         private RecipeService recipeService;
+        private FavoriteService favoriteService;
+        private CommentService commentService;
+        private RatingService ratingService;
 
         [SetUp]
         public void Setup()
@@ -128,7 +131,7 @@ namespace RecipeApp.Services.Tests
                 .Returns(userCookbooks);
 
             // Act
-            IEnumerable<Cookbook>? result = await recipeService.GetUserCookbooksAsync(userId);
+            IEnumerable<Cookbook>? result = await favoriteService.GetUserCookbooksAsync(userId);
 
             // Assert
             Assert.That(result, Is.Not.Null);
@@ -202,7 +205,7 @@ namespace RecipeApp.Services.Tests
             ratingRepository.Setup(r => r.GetAllAttached()).Returns(ratings);
 
             // Act
-            double result = await recipeService.GetAverageRatingAsync(recipeId);
+            double result = await ratingService.GetAverageRatingAsync(recipeId);
 
             // Assert
             Assert.That(result, Is.EqualTo(4));
@@ -222,7 +225,7 @@ namespace RecipeApp.Services.Tests
             commentRepository.Setup(c => c.GetAllAttached()).Returns(comments);
 
             // Act
-            List<Comment>? result = await recipeService.GetCommentsAsync(1);
+            List<Comment>? result = commentService.GetCommentsAsync(1).Result.ToList();
 
             // Assert
             Assert.That(result.Count(), Is.EqualTo(2));

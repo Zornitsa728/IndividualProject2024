@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using RecipeApp.Data.Models;
 using RecipeApp.Data.Repository.Interfaces;
 using RecipeApp.Services.Data.Interfaces;
+using RecipeApp.Web.ViewModels.CommentViewModels;
+using RecipeApp.Web.ViewModels.RatingViewModels;
 using RecipeApp.Web.ViewModels.RecipeViewModels;
 
 namespace RecipeApp.Services.Data
@@ -18,6 +20,9 @@ namespace RecipeApp.Services.Data
         private readonly IRepository<RecipeIngredient, object> recipeIngredientRepository;
         private readonly IIngredientService ingredientService;
         private readonly ICategoryService categoryService;
+        private readonly IFavoriteService favoriteService;
+        private readonly IRatingService ratingService;
+        private readonly ICommentService commentService;
         private IRepository<Recipe, int> object1;
         private IRepository<Ingredient, int> object2;
         private IRepository<Comment, int> object3;
@@ -35,7 +40,8 @@ namespace RecipeApp.Services.Data
             IRepository<Category, int> categoryRepository,
             IRepository<RecipeIngredient, object> recipeIngredientRepository,
             IIngredientService ingredientService,
-            ICategoryService categoryService)
+            ICategoryService categoryService,
+            IFavoriteService favoriteService, IRatingService ratingService, ICommentService commentService)
         {
             this.recipeRepository = recipeRepository;
             this.ingredientRepository = ingredientRepository;
@@ -46,6 +52,9 @@ namespace RecipeApp.Services.Data
             this.recipeIngredientRepository = recipeIngredientRepository;
             this.ingredientService = ingredientService;
             this.categoryService = categoryService;
+            this.favoriteService = favoriteService;
+            this.ratingService = ratingService;
+            this.commentService = commentService;
         }
 
         public RecipeService(IRepository<Recipe, int> object1, IRepository<Ingredient, int> object2, IRepository<Comment, int> object3, IRepository<Rating, int> object4, IRepository<Cookbook, int> object5, IRepository<Category, int> object6, IRepository<RecipeIngredient, object> object7)
@@ -120,7 +129,7 @@ namespace RecipeApp.Services.Data
 
             if (!string.IsNullOrEmpty(userId))
             {
-                var cookbooks = await GetUserCookbooksAsync(userId);
+                var cookbooks = await favoriteService.GetUserCookbooksAsync(userId);
 
                 // Get all recipe IDs from user cookbooks
                 favoriteRecipeIds = cookbooks
@@ -157,16 +166,6 @@ namespace RecipeApp.Services.Data
                 .FirstOrDefaultAsync(r => r.Id == id && !r.IsDeleted);
 
             return recipes;
-        }
-
-        public async Task<IEnumerable<Cookbook>> GetUserCookbooksAsync(string userId)
-        {
-            List<Cookbook>? userCookbooks = await cookbookRepository.GetAllAttached()
-                .Where(cb => cb.UserId == userId)
-                .Include(cb => cb.RecipeCookbooks)
-                .ToListAsync();
-
-            return userCookbooks;
         }
 
         public async Task UpdateRecipeAsync(Recipe recipe, List<RecipeIngredient> updatedIngredients)
@@ -212,30 +211,6 @@ namespace RecipeApp.Services.Data
             return false;
         }
 
-        public async Task<double> GetAverageRatingAsync(int recipeId)
-        {
-            var avrgRatingForCurrRecipe = await ratingRepository
-                .GetAllAttached()
-                .Where(r => r.RecipeId == recipeId)
-                .ToListAsync();
-
-            if (avrgRatingForCurrRecipe.Count != 0)
-            {
-                return avrgRatingForCurrRecipe.Average(r => r.Score);
-            }
-
-            return 0;
-        }
-
-        public async Task<List<Comment>> GetCommentsAsync(int recipeId)
-        {
-            var comments = await commentRepository.GetAllAttached()
-                .Include(c => c.User)
-                .Where(c => c.RecipeId == recipeId && c.IsDeleted == false)
-                .ToListAsync();
-
-            return comments;
-        }
         public List<SelectListItem> GetUnitsOfMeasurementSelectList()
         {
             return Enum.GetValues(typeof(UnitOfMeasurement))
@@ -261,9 +236,54 @@ namespace RecipeApp.Services.Data
                     ImageUrl = r.ImageUrl,
                     Liked = favoriteRecipeIds.Contains(r.Id)
                 })
-                .ToListAsync();
-
+            .ToListAsync();
             return matches;
+        }
+
+        public async Task<RecipeDetailsViewModel> GetRecipeDetailsViewModel(string userId, Recipe recipe)
+        {
+            var recipeModel = new RecipeDetailsViewModel();
+
+            if (userId != null)
+            {
+                List<int> favoriteRecipeIds = await favoriteService.GetAllFavoriteRecipesIds(userId!);
+
+                var averageRating = await ratingService.GetAverageRatingAsync(recipe.Id);
+                var comments = await commentService.GetCommentsAsync(recipe.Id);
+
+                RecipeCommentsViewModel recipeCommentsViewModel = new RecipeCommentsViewModel()
+                {
+                    RecipeId = recipe.Id,
+                    Comments = comments
+                    .Select(c => new CommentViewModel()
+                    {
+                        CommentId = c.Id,
+                        Content = c.Content,
+                        UserId = c.UserId,
+                        UserName = c.User.UserName,
+                        RecipeId = c.RecipeId,
+                        DatePosted = c.DatePosted,
+                        UserCommented = (c.UserId == userId)
+                    })
+                    .ToList()
+                };
+
+                RatingViewModel ratingModel = new RatingViewModel()
+                {
+                    AverageRating = averageRating,
+                    RecipeId = recipe.Id
+                };
+
+                recipeModel = new RecipeDetailsViewModel
+                {
+                    Recipe = recipe,
+                    Comments = recipeCommentsViewModel,
+                    Rating = ratingModel,
+                    Liked = favoriteRecipeIds.Contains(recipe.Id)
+                };
+            }
+
+            return recipeModel;
         }
     }
 }

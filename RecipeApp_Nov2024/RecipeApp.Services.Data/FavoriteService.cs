@@ -107,5 +107,23 @@ namespace RecipeApp.Services.Data
 
             return false;
         }
+
+        public async Task<List<int>> GetAllFavoriteRecipesIds(string userId)
+        {
+            List<int> favoriteRecipeIds = new List<int>();
+
+            if (userId != null)
+            {
+                var cookbooks = await GetUserCookbooksAsync(userId);
+
+                //get all recipes from user cookbooks
+                favoriteRecipeIds = cookbooks
+                   .SelectMany(cb => cb.RecipeCookbooks)
+                   .Select(rc => rc.RecipeId)
+                   .ToList();
+            }
+
+            return favoriteRecipeIds;
+        }
     }
 }

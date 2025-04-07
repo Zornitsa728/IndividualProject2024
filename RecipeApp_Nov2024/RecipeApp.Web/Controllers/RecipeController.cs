@@ -3,9 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using RecipeApp.Data.Models;
 using RecipeApp.Services.Data.Interfaces;
-using RecipeApp.Web.ViewModels.CommentViewModels;
 using RecipeApp.Web.ViewModels.FavoritesViewModels;
-using RecipeApp.Web.ViewModels.RatingViewModels;
 using RecipeApp.Web.ViewModels.RecipeViewModels;
 using System.Security.Claims;
 
@@ -18,13 +16,17 @@ namespace RecipeApp.Web.Controllers
         private readonly IFavoriteService favoriteService;
         private readonly ICategoryService categoryService;
         private readonly IIngredientService ingredientService;
+        private readonly ICommentService commentService;
+        private readonly IRatingService ratingService;
 
-        public RecipeController(IRecipeService recipeService, IFavoriteService favoriteService, ICategoryService categoryService, IIngredientService ingredientService)
+        public RecipeController(IRecipeService recipeService, IFavoriteService favoriteService, ICategoryService categoryService, IIngredientService ingredientService, ICommentService commentService, IRatingService ratingService)
         {
             this.recipeService = recipeService;
             this.favoriteService = favoriteService;
             this.categoryService = categoryService;
             this.ingredientService = ingredientService;
+            this.commentService = commentService;
+            this.ratingService = ratingService;
         }
 
         [AllowAnonymous]
@@ -119,61 +121,16 @@ namespace RecipeApp.Web.Controllers
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var averageRating = await recipeService.GetAverageRatingAsync(id);
-            var comments = await recipeService.GetCommentsAsync(id);
+            var recipeModel = await recipeService.GetRecipeDetailsViewModel(userId, recipe);
 
-            List<int> favoriteRecipeIds = new List<int>();
+            ViewBag.Cookbooks = favoriteService.GetUserCookbooksAsync(userId!).Result
+                        .Select(c => new CookbookDropdownViewModel
+                        {
+                            Id = c.Id,
+                            Title = c.Title
+                        })
+                        .ToList();
 
-            if (userId != null)
-            {
-                var cookbooks = await recipeService.GetUserCookbooksAsync(userId);
-
-                //get all recipes from user cookbooks
-                favoriteRecipeIds = cookbooks
-                   .SelectMany(cb => cb.RecipeCookbooks)
-                   .Select(rc => rc.RecipeId)
-                   .ToList();
-
-                // Map cookbooks to a strong-typed view model
-                ViewBag.Cookbooks = cookbooks
-                    .Select(c => new CookbookDropdownViewModel
-                    {
-                        Id = c.Id,
-                        Title = c.Title
-                    })
-                    .ToList();
-            }
-
-            RecipeCommentsViewModel recipeCommentsViewModel = new RecipeCommentsViewModel()
-            {
-                RecipeId = id,
-                Comments = comments
-                .Select(c => new CommentViewModel()
-                {
-                    CommentId = c.Id,
-                    Content = c.Content,
-                    UserId = c.UserId,
-                    UserName = c.User.UserName,
-                    RecipeId = c.RecipeId,
-                    DatePosted = c.DatePosted,
-                    UserCommented = (c.UserId == userId)
-                })
-                .ToList()
-            };
-
-            RatingViewModel ratingModel = new RatingViewModel()
-            {
-                AverageRating = averageRating,
-                RecipeId = id
-            };
-
-            var recipeModel = new RecipeDetailsViewModel
-            {
-                Recipe = recipe,
-                Comments = recipeCommentsViewModel,
-                Rating = ratingModel,
-                Liked = favoriteRecipeIds.Contains(recipe.Id)
-            };
 
             return View(recipeModel);
         }
@@ -288,7 +245,7 @@ namespace RecipeApp.Web.Controllers
 
             if (userId != null)
             {
-                var cookbooks = await recipeService.GetUserCookbooksAsync(userId);
+                var cookbooks = await favoriteService.GetUserCookbooksAsync(userId);
 
                 //get all recipes from user cookbooks
                 favoriteRecipeIds = cookbooks

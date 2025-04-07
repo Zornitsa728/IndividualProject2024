@@ -19,13 +19,15 @@ namespace RecipeApp.Web.Areas.Admin.Controllers
         private readonly ICommentService commentService;
         private readonly ICategoryService categoryService;
         private readonly IIngredientService ingredientService;
+        private readonly IRatingService ratingService;
 
-        public RecipeManagementController(IRecipeService recipeService, ICommentService commentService, ICategoryService categoryService, IIngredientService ingredientService)
+        public RecipeManagementController(IRecipeService recipeService, ICommentService commentService, ICategoryService categoryService, IIngredientService ingredientService, IRatingService ratingService)
         {
             this.recipeService = recipeService;
             this.commentService = commentService;
             this.categoryService = categoryService;
             this.ingredientService = ingredientService;
+            this.ratingService = ratingService;
         }
 
         public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 6)
@@ -69,8 +71,8 @@ namespace RecipeApp.Web.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var averageRating = await recipeService.GetAverageRatingAsync(id);
-            var comments = await recipeService.GetCommentsAsync(id);
+            var averageRating = await ratingService.GetAverageRatingAsync(id);
+            var comments = await commentService.GetCommentsAsync(id);
 
             RecipeCommentsViewModel recipeCommentsViewModel = new RecipeCommentsViewModel()
             {
