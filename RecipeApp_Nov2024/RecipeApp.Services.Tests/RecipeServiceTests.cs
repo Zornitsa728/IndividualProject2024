@@ -3,6 +3,7 @@ using Moq;
 using RecipeApp.Data.Models;
 using RecipeApp.Data.Repository.Interfaces;
 using RecipeApp.Services.Data;
+using RecipeApp.Web.ViewModels.RecipeViewModels;
 
 namespace RecipeApp.Services.Tests
 {
@@ -47,9 +48,22 @@ namespace RecipeApp.Services.Tests
             // Arrange
             var recipe = new Recipe { Id = 1, Title = "Test Recipe" };
             var ingredients = new List<RecipeIngredient> { new RecipeIngredient { IngredientId = 1 } };
+            AddRecipeViewModel model = new AddRecipeViewModel
+            {
+                Title = "Test Recipe",
+                Description = "Test Description",
+                Instructions = "Test Instructions",
+                ImageUrl = "TestImageUrl",
+                CategoryId = 1,
+                UserId = "TestUserId",
+                Ingredients = new List<IngredientViewModel>
+                {
+                    new IngredientViewModel { IngredientId = 1, Quantity = 1, Unit = (UnitOfMeasurement)1 }
+                }
+            };
 
             // Act
-            await recipeService.AddRecipeAsync(recipe, ingredients);
+            await recipeService.AddRecipeAsync(model);
 
             // Assert
 

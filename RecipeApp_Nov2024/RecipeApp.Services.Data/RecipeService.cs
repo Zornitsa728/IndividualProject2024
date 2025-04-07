@@ -18,6 +18,13 @@ namespace RecipeApp.Services.Data
         private readonly IRepository<RecipeIngredient, object> recipeIngredientRepository;
         private readonly IIngredientService ingredientService;
         private readonly ICategoryService categoryService;
+        private IRepository<Recipe, int> object1;
+        private IRepository<Ingredient, int> object2;
+        private IRepository<Comment, int> object3;
+        private IRepository<Rating, int> object4;
+        private IRepository<Cookbook, int> object5;
+        private IRepository<Category, int> object6;
+        private IRepository<RecipeIngredient, object> object7;
 
         public RecipeService(
             IRepository<Recipe, int> recipeRepository,
@@ -39,6 +46,17 @@ namespace RecipeApp.Services.Data
             this.recipeIngredientRepository = recipeIngredientRepository;
             this.ingredientService = ingredientService;
             this.categoryService = categoryService;
+        }
+
+        public RecipeService(IRepository<Recipe, int> object1, IRepository<Ingredient, int> object2, IRepository<Comment, int> object3, IRepository<Rating, int> object4, IRepository<Cookbook, int> object5, IRepository<Category, int> object6, IRepository<RecipeIngredient, object> object7)
+        {
+            this.object1 = object1;
+            this.object2 = object2;
+            this.object3 = object3;
+            this.object4 = object4;
+            this.object5 = object5;
+            this.object6 = object6;
+            this.object7 = object7;
         }
 
         public async Task<AddRecipeViewModel> GetAddRecipeViewModelAsync(string userId)
@@ -96,12 +114,9 @@ namespace RecipeApp.Services.Data
             return recipes;
         }
 
-        public async Task<(IEnumerable<RecipeCardViewModel>, int)> GetCurrPageRecipes(string? userId, int pageNumber, int pageSize)
+        public async Task<(IEnumerable<RecipeCardViewModel>, int)> GetCurrPageRecipes(IEnumerable<Recipe> recipes, string? userId, int pageNumber, int pageSize)
         {
-            var recipes = await GetRecipesAsync();
-
             List<int> favoriteRecipeIds = new List<int>();
-
 
             if (!string.IsNullOrEmpty(userId))
             {

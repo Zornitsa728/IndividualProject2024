@@ -32,8 +32,9 @@ namespace RecipeApp.Web.Controllers
         public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 9)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var recipes = await recipeService.GetRecipesAsync();
 
-            var (modelCardView, totalPages) = await recipeService.GetCurrPageRecipes(userId, pageNumber, pageSize);
+            var (modelCardView, totalPages) = await recipeService.GetCurrPageRecipes(recipes, userId, pageNumber, pageSize);
 
             //Map cookbooks to a strong - typed view model
             ViewBag.Cookbooks = favoriteService.GetUserCookbooksAsync(userId!).Result
@@ -93,23 +94,16 @@ namespace RecipeApp.Web.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            var recipes = await recipeService.GetRecipesAsync();
+            var myRecipes = recipeService.GetRecipesAsync().Result.Where(r => r.UserId == currentUserId);
 
-            var myRecipes = recipes.Where(r => r.UserId == currentUserId);
-
-            var currPageRecipes = myRecipes
-                .Skip((pageNumber - 1) * pageSize) // Skip records for previous pages
-                .Take(pageSize) // Take only the records for the current page
-                .ToList();
-
-            var totalPages = (int)Math.Ceiling(myRecipes.Count() / (double)pageSize);
+            var (modelCardView, totalPages) = await recipeService.GetCurrPageRecipes(myRecipes, currentUserId, pageNumber, pageSize);
 
             // Set pagination data in ViewData
             ViewData["CurrentPage"] = pageNumber;
             ViewData["PageSize"] = pageSize;
             ViewData["TotalPages"] = totalPages;
 
-            return View(currPageRecipes);
+            return View(modelCardView);
         }
 
         [AllowAnonymous]
