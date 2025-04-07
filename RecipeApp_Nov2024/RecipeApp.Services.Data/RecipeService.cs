@@ -60,6 +60,43 @@ namespace RecipeApp.Services.Data
             return recipes;
         }
 
+        public async Task<(IEnumerable<RecipeCardViewModel>, int)> GetCurrPageRecipes(string? userId, int pageNumber, int pageSize)
+        {
+            var recipes = await GetRecipesAsync();
+
+            List<int> favoriteRecipeIds = new List<int>();
+
+
+            if (!string.IsNullOrEmpty(userId))
+            {
+                var cookbooks = await GetUserCookbooksAsync(userId);
+
+                // Get all recipe IDs from user cookbooks
+                favoriteRecipeIds = cookbooks
+                    .SelectMany(cb => cb.RecipeCookbooks)
+                            .Select(rc => rc.RecipeId)
+                            .ToList();
+            }
+
+            var model = recipes.Select(r => new RecipeCardViewModel()
+            {
+                Id = r.Id,
+                Title = r.Title,
+                ImageUrl = r.ImageUrl,
+                Liked = favoriteRecipeIds.Contains(r.Id)
+            }).ToList();
+
+            var totalPages = (int)Math.Ceiling(model.Count() / (double)pageSize);
+
+            var currPageRecipes = model
+                .Skip((pageNumber - 1) * pageSize) // Skip records for previous pages
+                .Take(pageSize) // Take only the records for the current page
+                .ToList();
+
+            return (currPageRecipes, totalPages);
+        }
+
+
         public async Task<Recipe?> GetRecipeByIdAsync(int id)
         {
             var recipes = await recipeRepository.GetAllAttached()

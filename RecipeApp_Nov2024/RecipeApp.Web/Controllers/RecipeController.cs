@@ -15,10 +15,12 @@ namespace RecipeApp.Web.Controllers
     public class RecipeController : Controller
     {
         private readonly IRecipeService recipeService;
+        private readonly IFavoriteService favoriteService;
 
-        public RecipeController(IRecipeService recipeService)
+        public RecipeController(IRecipeService recipeService, IFavoriteService favoriteService)
         {
             this.recipeService = recipeService;
+            this.favoriteService = favoriteService;
         }
 
         [AllowAnonymous]
@@ -27,52 +29,22 @@ namespace RecipeApp.Web.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var recipes = await recipeService.GetRecipesAsync();
+            var (modelCardView, totalPages) = await recipeService.GetCurrPageRecipes(userId, pageNumber, pageSize);
 
-            List<RecipeCardViewModel> model = new List<RecipeCardViewModel>();
-            List<int> favoriteRecipeIds = new List<int>();
+            //Map cookbooks to a strong - typed view model
+            ViewBag.Cookbooks = favoriteService.GetUserCookbooksAsync(userId!).Result
+                        .Select(c => new CookbookDropdownViewModel
+                        {
+                            Id = c.Id,
+                            Title = c.Title
+                        })
+                        .ToList();
 
-            if (userId != null)
-            {
-                var cookbooks = await recipeService.GetUserCookbooksAsync(userId);
-
-                //get all recipes from user cookbooks
-                favoriteRecipeIds = cookbooks
-                   .SelectMany(cb => cb.RecipeCookbooks)
-                   .Select(rc => rc.RecipeId)
-                   .ToList();
-
-                // Map cookbooks to a strong-typed view model
-                ViewBag.Cookbooks = cookbooks
-                    .Select(c => new CookbookDropdownViewModel
-                    {
-                        Id = c.Id,
-                        Title = c.Title
-                    })
-                    .ToList();
-            }
-
-            model = recipes.Select(r => new RecipeCardViewModel()
-            {
-                Id = r.Id,
-                Title = r.Title,
-                ImageUrl = r.ImageUrl,
-                Liked = favoriteRecipeIds.Contains(r.Id) //tag from all the liked ones (Liked - bool)
-            }).ToList();
-
-            var currPageRecipes = model
-                .Skip((pageNumber - 1) * pageSize) // Skip records for previous pages
-                .Take(pageSize) // Take only the records for the current page
-                .ToList();
-
-            var totalPages = (int)Math.Ceiling(model.Count() / (double)pageSize);
-
-            // Set pagination data in ViewData
             ViewData["CurrentPage"] = pageNumber;
             ViewData["PageSize"] = pageSize;
             ViewData["TotalPages"] = totalPages;
 
-            return View(currPageRecipes);
+            return View(modelCardView);
         }
 
         [HttpGet]

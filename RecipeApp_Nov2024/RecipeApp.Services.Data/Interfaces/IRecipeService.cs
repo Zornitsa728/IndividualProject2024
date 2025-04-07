@@ -7,6 +7,7 @@ namespace RecipeApp.Services.Data.Interfaces
     {
         Task AddRecipeAsync(Recipe recipe, List<RecipeIngredient> ingredients);
         Task<IEnumerable<Recipe>> GetRecipesAsync();
+        Task<(IEnumerable<RecipeCardViewModel>, int)> GetCurrPageRecipes(string? userId, int pageNumber, int pageSize);
         Task<Recipe?> GetRecipeByIdAsync(int id);
         Task UpdateRecipeAsync(Recipe recipe, List<RecipeIngredient> updatedIngredients);
         Task<IEnumerable<Cookbook>> GetUserCookbooksAsync(string userId);
