@@ -215,25 +215,6 @@ namespace RecipeApp.Services.Tests
         }
 
         [Test]
-        public async Task GetAllIngredientsAsync_ShouldReturnAllIngredients()
-        {
-            // Arrange
-            var ingredients = new List<Ingredient>
-            {
-                new Ingredient { Id = 1 },
-                new Ingredient { Id = 2 }
-            };
-
-            ingredientRepository.Setup(i => i.GetAllAsync()).ReturnsAsync(ingredients);
-
-            // Act
-            IEnumerable<Ingredient>? result = await recipeService.GetAllIngredientsAsync();
-
-            // Assert
-            Assert.That(result.Count, Is.EqualTo(2));
-        }
-
-        [Test]
         public async Task SearchRecipesAsync_ShouldReturnMatchingRecipes()
         {
             // Arrange

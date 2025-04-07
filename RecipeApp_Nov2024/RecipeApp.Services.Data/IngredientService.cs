@@ -12,12 +12,13 @@ namespace RecipeApp.Services.Data
         {
             this.ingredientRepository = ingredientRepository;
         }
-
-        public IList<Ingredient> GetAllIngredients()
+        public async Task<IEnumerable<Ingredient>> GetAllIngredientsAsync()
         {
-            return ingredientRepository.GetAll()
-                .ToList();
-        }
+            var ingredients = await ingredientRepository
+                .GetAllAsync();
 
+            return ingredients;
+
+        }
     }
 }

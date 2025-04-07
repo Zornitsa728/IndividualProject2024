@@ -31,7 +31,7 @@ namespace RecipeApp.Services.Tests
             ingredientRepository.Setup(i => i.GetAll()).Returns(ingredients.AsQueryable());
 
             // Act
-            var result = ingredientService.GetAllIngredients();
+            var result = ingredientService.GetAllIngredientsAsync().Result;
 
             // Assert
             Assert.That(result.Count(), Is.EqualTo(2));

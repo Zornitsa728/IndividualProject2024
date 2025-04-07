@@ -17,11 +17,15 @@ namespace RecipeApp.Web.Areas.Admin.Controllers
     {
         private readonly IRecipeService recipeService;
         private readonly ICommentService commentService;
+        private readonly ICategoryService categoryService;
+        private readonly IIngredientService ingredientService;
 
-        public RecipeManagementController(IRecipeService recipeService, ICommentService commentService)
+        public RecipeManagementController(IRecipeService recipeService, ICommentService commentService, ICategoryService categoryService, IIngredientService ingredientService)
         {
             this.recipeService = recipeService;
             this.commentService = commentService;
+            this.categoryService = categoryService;
+            this.ingredientService = ingredientService;
         }
 
         public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 6)
@@ -125,8 +129,8 @@ namespace RecipeApp.Web.Areas.Admin.Controllers
                 ImageUrl = recipe.ImageUrl,
                 UserId = recipe.UserId,
                 CategoryId = recipe.CategoryId,
-                Categories = await recipeService.GetAllCategoriesAsync(),
-                AvailableIngredients = await recipeService.GetAllIngredientsAsync(),
+                Categories = await categoryService.GetAllCategoriesAsync(),
+                AvailableIngredients = await ingredientService.GetAllIngredientsAsync(),
                 UnitsOfMeasurement = Enum.GetValues(typeof(UnitOfMeasurement))
                     .Cast<UnitOfMeasurement>()
                     .Select(u => new SelectListItem
@@ -154,8 +158,8 @@ namespace RecipeApp.Web.Areas.Admin.Controllers
         {
             if (!ModelState.IsValid)
             {
-                model.Categories = await recipeService.GetAllCategoriesAsync();
-                model.AvailableIngredients = await recipeService.GetAllIngredientsAsync();
+                model.Categories = await categoryService.GetAllCategoriesAsync();
+                model.AvailableIngredients = await ingredientService.GetAllIngredientsAsync();
                 model.UnitsOfMeasurement = Enum.GetValues(typeof(UnitOfMeasurement))
                     .Cast<UnitOfMeasurement>()
                     .Select(u => new SelectListItem

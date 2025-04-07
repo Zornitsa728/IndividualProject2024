@@ -4,6 +4,6 @@ namespace RecipeApp.Services.Data.Interfaces
 {
     public interface IIngredientService
     {
-        IList<Ingredient> GetAllIngredients();
+        Task<IEnumerable<Ingredient>> GetAllIngredientsAsync();
     }
 }

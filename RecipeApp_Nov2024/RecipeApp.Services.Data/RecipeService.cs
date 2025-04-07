@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using RecipeApp.Data.Models;
 using RecipeApp.Data.Repository.Interfaces;
 using RecipeApp.Services.Data.Interfaces;
@@ -185,21 +186,17 @@ namespace RecipeApp.Services.Data
 
             return comments;
         }
-
-        public async Task<IEnumerable<Ingredient>> GetAllIngredientsAsync()
+        public List<SelectListItem> GetUnitsOfMeasurementSelectList()
         {
-            var ingredients = await ingredientRepository
-                .GetAllAsync();
-
-            return ingredients;
-
+            return Enum.GetValues(typeof(UnitOfMeasurement))
+                .Cast<UnitOfMeasurement>()
+                .Select(u => new SelectListItem
+                {
+                    Text = u.ToString(),
+                    Value = ((int)u).ToString()
+                })
+                .ToList();
         }
-
-        public async Task<IEnumerable<Category>> GetAllCategoriesAsync()
-        {
-            return await categoryRepository.GetAllAsync();
-        }
-
         public async Task<IEnumerable<RecipeCardViewModel>> SearchRecipesAsync(string query, List<int> favoriteRecipeIds)
         {
             var searchQuery = query.ToLower().Trim();

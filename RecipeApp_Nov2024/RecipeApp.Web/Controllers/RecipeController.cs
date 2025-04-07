@@ -16,11 +16,15 @@ namespace RecipeApp.Web.Controllers
     {
         private readonly IRecipeService recipeService;
         private readonly IFavoriteService favoriteService;
+        private readonly ICategoryService categoryService;
+        private readonly IIngredientService ingredientService;
 
-        public RecipeController(IRecipeService recipeService, IFavoriteService favoriteService)
+        public RecipeController(IRecipeService recipeService, IFavoriteService favoriteService, ICategoryService categoryService, IIngredientService ingredientService)
         {
             this.recipeService = recipeService;
             this.favoriteService = favoriteService;
+            this.categoryService = categoryService;
+            this.ingredientService = ingredientService;
         }
 
         [AllowAnonymous]
@@ -51,23 +55,17 @@ namespace RecipeApp.Web.Controllers
         public async Task<IActionResult> Create()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             if (string.IsNullOrEmpty(userId))
             {
                 return RedirectToAction("Login", "Account");
             }
 
             AddRecipeViewModel model = new AddRecipeViewModel();
-            model.Categories = await recipeService.GetAllCategoriesAsync();
-            model.AvailableIngredients = await recipeService.GetAllIngredientsAsync();
+            model.Categories = await categoryService.GetAllCategoriesAsync();
+            model.AvailableIngredients = await ingredientService.GetAllIngredientsAsync();
 
-            model.UnitsOfMeasurement = Enum.GetValues(typeof(UnitOfMeasurement))
-                .Cast<UnitOfMeasurement>()
-                .Select(u => new SelectListItem
-                {
-                    Text = u.ToString(),
-                    Value = ((int)u).ToString()
-                })
-                .ToList();
+            model.UnitsOfMeasurement = recipeService.GetUnitsOfMeasurementSelectList();
 
             model.UserId = userId;
 
@@ -79,8 +77,8 @@ namespace RecipeApp.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                model.Categories = await recipeService.GetAllCategoriesAsync();
-                model.AvailableIngredients = await recipeService.GetAllIngredientsAsync();
+                model.Categories = await categoryService.GetAllCategoriesAsync();
+                model.AvailableIngredients = await ingredientService.GetAllIngredientsAsync();
                 model.UnitsOfMeasurement = Enum.GetValues(typeof(UnitOfMeasurement))
                     .Cast<UnitOfMeasurement>()
                     .Select(u => new SelectListItem
@@ -242,8 +240,8 @@ namespace RecipeApp.Web.Controllers
                 ImageUrl = recipe.ImageUrl,
                 UserId = recipe.UserId,
                 CategoryId = recipe.CategoryId,
-                Categories = await recipeService.GetAllCategoriesAsync(),
-                AvailableIngredients = await recipeService.GetAllIngredientsAsync(),
+                Categories = await categoryService.GetAllCategoriesAsync(),
+                AvailableIngredients = await ingredientService.GetAllIngredientsAsync(),
                 UnitsOfMeasurement = Enum.GetValues(typeof(UnitOfMeasurement))
                     .Cast<UnitOfMeasurement>()
                     .Select(u => new SelectListItem
@@ -271,8 +269,8 @@ namespace RecipeApp.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                model.Categories = await recipeService.GetAllCategoriesAsync();
-                model.AvailableIngredients = await recipeService.GetAllIngredientsAsync();
+                model.Categories = await categoryService.GetAllCategoriesAsync();
+                model.AvailableIngredients = await ingredientService.GetAllIngredientsAsync();
                 model.UnitsOfMeasurement = Enum.GetValues(typeof(UnitOfMeasurement))
                     .Cast<UnitOfMeasurement>()
                     .Select(u => new SelectListItem
