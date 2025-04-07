@@ -61,13 +61,7 @@ namespace RecipeApp.Web.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            AddRecipeViewModel model = new AddRecipeViewModel();
-            model.Categories = await categoryService.GetAllCategoriesAsync();
-            model.AvailableIngredients = await ingredientService.GetAllIngredientsAsync();
-
-            model.UnitsOfMeasurement = recipeService.GetUnitsOfMeasurementSelectList();
-
-            model.UserId = userId;
+            AddRecipeViewModel model = (await recipeService.GetAddRecipeViewModelAsync(userId));
 
             return View(model);
         }
@@ -79,38 +73,12 @@ namespace RecipeApp.Web.Controllers
             {
                 model.Categories = await categoryService.GetAllCategoriesAsync();
                 model.AvailableIngredients = await ingredientService.GetAllIngredientsAsync();
-                model.UnitsOfMeasurement = Enum.GetValues(typeof(UnitOfMeasurement))
-                    .Cast<UnitOfMeasurement>()
-                    .Select(u => new SelectListItem
-                    {
-                        Text = u.ToString(),
-                        Value = ((int)u).ToString()
-                    })
-                    .ToList();
+                model.UnitsOfMeasurement = recipeService.GetUnitsOfMeasurementSelectList();
 
                 return View(model);
             }
 
-            var recipe = new Recipe
-            {
-                Title = model.Title,
-                Description = model.Description,
-                Instructions = model.Instructions,
-                ImageUrl = model.ImageUrl,
-                CategoryId = model.CategoryId,
-                UserId = model.UserId
-            };
-
-            var ingredients = model.Ingredients
-                .Select(i => new RecipeIngredient
-                {
-                    IngredientId = i.IngredientId,
-                    Quantity = i.Quantity,
-                    Unit = i.Unit,
-                    RecipeId = recipe.Id
-                }).ToList();
-
-            await recipeService.AddRecipeAsync(recipe, ingredients);
+            await recipeService.AddRecipeAsync(model);
 
             return RedirectToAction(nameof(MyRecipes));
         }

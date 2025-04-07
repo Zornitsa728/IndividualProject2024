@@ -6,7 +6,8 @@ namespace RecipeApp.Services.Data.Interfaces
 {
     public interface IRecipeService
     {
-        Task AddRecipeAsync(Recipe recipe, List<RecipeIngredient> ingredients);
+        Task<AddRecipeViewModel> GetAddRecipeViewModelAsync(string userId);
+        Task AddRecipeAsync(AddRecipeViewModel model);
         Task<IEnumerable<Recipe>> GetRecipesAsync();
         Task<(IEnumerable<RecipeCardViewModel>, int)> GetCurrPageRecipes(string? userId, int pageNumber, int pageSize);
         Task<Recipe?> GetRecipeByIdAsync(int id);

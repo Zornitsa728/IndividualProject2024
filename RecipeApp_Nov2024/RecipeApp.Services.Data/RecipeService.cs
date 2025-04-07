@@ -16,6 +16,8 @@ namespace RecipeApp.Services.Data
         private readonly IRepository<Cookbook, int> cookbookRepository;
         private readonly IRepository<Category, int> categoryRepository;
         private readonly IRepository<RecipeIngredient, object> recipeIngredientRepository;
+        private readonly IIngredientService ingredientService;
+        private readonly ICategoryService categoryService;
 
         public RecipeService(
             IRepository<Recipe, int> recipeRepository,
@@ -24,7 +26,9 @@ namespace RecipeApp.Services.Data
             IRepository<Rating, int> ratingRepository,
             IRepository<Cookbook, int> cookbookRepository,
             IRepository<Category, int> categoryRepository,
-            IRepository<RecipeIngredient, object> recipeIngredientRepository)
+            IRepository<RecipeIngredient, object> recipeIngredientRepository,
+            IIngredientService ingredientService,
+            ICategoryService categoryService)
         {
             this.recipeRepository = recipeRepository;
             this.ingredientRepository = ingredientRepository;
@@ -33,10 +37,41 @@ namespace RecipeApp.Services.Data
             this.cookbookRepository = cookbookRepository;
             this.categoryRepository = categoryRepository;
             this.recipeIngredientRepository = recipeIngredientRepository;
+            this.ingredientService = ingredientService;
+            this.categoryService = categoryService;
         }
 
-        public async Task AddRecipeAsync(Recipe recipe, List<RecipeIngredient> ingredients)
+        public async Task<AddRecipeViewModel> GetAddRecipeViewModelAsync(string userId)
         {
+            return new AddRecipeViewModel
+            {
+                Categories = await categoryService.GetAllCategoriesAsync(),
+                AvailableIngredients = await ingredientService.GetAllIngredientsAsync(),
+                UnitsOfMeasurement = GetUnitsOfMeasurementSelectList(),
+                UserId = userId
+            };
+        }
+        public async Task AddRecipeAsync(AddRecipeViewModel model)
+        {
+            var recipe = new Recipe
+            {
+                Title = model.Title,
+                Description = model.Description,
+                Instructions = model.Instructions,
+                ImageUrl = model.ImageUrl,
+                CategoryId = model.CategoryId,
+                UserId = model.UserId
+            };
+
+            var ingredients = model.Ingredients
+                .Select(i => new RecipeIngredient
+                {
+                    IngredientId = i.IngredientId,
+                    Quantity = i.Quantity,
+                    Unit = i.Unit,
+                    RecipeId = recipe.Id
+                }).ToList();
+
             await recipeRepository.AddAsync(recipe);
 
             //avoid duplication
