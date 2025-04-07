@@ -39,13 +39,7 @@ namespace RecipeApp.Web.Controllers
             var (modelCardView, totalPages) = await recipeService.GetCurrPageRecipes(recipes, userId, pageNumber, pageSize);
 
             //Map cookbooks to a strong - typed view model
-            ViewBag.Cookbooks = favoriteService.GetUserCookbooksAsync(userId!).Result
-                        .Select(c => new CookbookDropdownViewModel
-                        {
-                            Id = c.Id,
-                            Title = c.Title
-                        })
-                        .ToList();
+            await SetCookbooksInViewBag(userId!);
 
             ViewData["CurrentPage"] = pageNumber;
             ViewData["PageSize"] = pageSize;
@@ -123,14 +117,7 @@ namespace RecipeApp.Web.Controllers
 
             var recipeModel = await recipeService.GetRecipeDetailsViewModel(userId, recipe);
 
-            ViewBag.Cookbooks = favoriteService.GetUserCookbooksAsync(userId!).Result
-                        .Select(c => new CookbookDropdownViewModel
-                        {
-                            Id = c.Id,
-                            Title = c.Title
-                        })
-                        .ToList();
-
+            await SetCookbooksInViewBag(userId!);
 
             return View(recipeModel);
         }
@@ -318,6 +305,18 @@ namespace RecipeApp.Web.Controllers
             }
 
             return RedirectToAction("MyRecipes", new { pageNumber });
+        }
+
+        private async Task SetCookbooksInViewBag(string userId)
+        {
+            var cookbooks = await favoriteService.GetUserCookbooksAsync(userId);
+
+            ViewBag.Cookbooks = cookbooks
+                .Select(c => new CookbookDropdownViewModel
+                {
+                    Id = c.Id,
+                    Title = c.Title
+                }).ToList();
         }
     }
 }
