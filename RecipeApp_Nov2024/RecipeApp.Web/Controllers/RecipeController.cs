@@ -138,34 +138,7 @@ namespace RecipeApp.Web.Controllers
                 return NotFound();
             }
 
-            var model = new EditRecipeViewModel
-            {
-                Title = recipe.Title,
-                Description = recipe.Description,
-                Instructions = recipe.Instructions,
-                ImageUrl = recipe.ImageUrl,
-                UserId = recipe.UserId,
-                CategoryId = recipe.CategoryId,
-                Categories = await categoryService.GetAllCategoriesAsync(),
-                AvailableIngredients = await ingredientService.GetAllIngredientsAsync(),
-                UnitsOfMeasurement = Enum.GetValues(typeof(UnitOfMeasurement))
-                    .Cast<UnitOfMeasurement>()
-                    .Select(u => new SelectListItem
-                    {
-                        Text = u.ToString(),
-                        Value = ((int)u).ToString()
-                    })
-                    .ToList(),
-                Ingredients = recipe.RecipeIngredients
-                    .Select(ri => new IngredientViewModel()
-                    {
-                        IngredientId = ri.IngredientId,
-                        Name = ri.Ingredient.Name,
-                        Quantity = ri.Quantity,
-                        Unit = ri.Unit
-                    })
-                    .ToList()
-            };
+            var model = await recipeService.GetEditRecipeviewModel(recipe);
 
             return View(model);
         }
