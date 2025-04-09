@@ -92,6 +92,12 @@ namespace RecipeApp.Web.Controllers
 
             var (modelCardView, totalPages) = await recipeService.GetCurrPageRecipes(myRecipes, currentUserId, pageNumber, pageSize);
 
+            // If the current page has no recipes and it's not the first page, redirect to the previous page
+            if (!modelCardView.Any() && pageNumber > 1)
+            {
+                return RedirectToAction(nameof(MyRecipes), new { pageNumber = pageNumber - 1, pageSize });
+            }
+
             // Set pagination data in ViewData
             ViewData["CurrentPage"] = pageNumber;
             ViewData["PageSize"] = pageSize;
@@ -136,7 +142,7 @@ namespace RecipeApp.Web.Controllers
                 return NotFound();
             }
 
-            var model = await recipeService.GetEditRecipeviewModel(recipe);
+            var model = await recipeService.GetEditRecipeViewModel(recipe);
 
             return View(model);
         }
@@ -207,13 +213,7 @@ namespace RecipeApp.Web.Controllers
                 return View(nameof(Index));
             }
 
-            DeleteRecipeViewModel model = new DeleteRecipeViewModel()
-            {
-                Id = recipe.Id,
-                Title = recipe.Title,
-                Description = recipe.Description,
-                ImageUrl = recipe.ImageUrl
-            };
+            DeleteRecipeViewModel model = await recipeService.GetDeleteRecipeViewModel(recipe);
 
             ViewData["PageNumber"] = pageNumber; // Pass it to the view
 

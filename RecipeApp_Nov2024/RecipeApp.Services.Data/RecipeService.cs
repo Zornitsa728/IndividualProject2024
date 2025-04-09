@@ -212,7 +212,7 @@ namespace RecipeApp.Services.Data
             return updatedIngredients;
         }
 
-        public async Task<EditRecipeViewModel> GetEditRecipeviewModel(Recipe recipe)
+        public async Task<EditRecipeViewModel> GetEditRecipeViewModel(Recipe recipe)
         {
             var model = new EditRecipeViewModel
             {
@@ -244,6 +244,17 @@ namespace RecipeApp.Services.Data
             };
 
             return model;
+        }
+
+        public async Task<DeleteRecipeViewModel> GetDeleteRecipeViewModel(Recipe recipe)
+        {
+            return new DeleteRecipeViewModel()
+            {
+                Id = recipe.Id,
+                Title = recipe.Title,
+                Description = recipe.Description,
+                ImageUrl = recipe.ImageUrl
+            };
         }
 
         public async Task<bool> DeleteRecipeAsync(int id)

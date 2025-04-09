@@ -16,7 +16,8 @@ namespace RecipeApp.Services.Data.Interfaces
         Task UpdateRecipeAsync(Recipe recipe, List<RecipeIngredient> updatedIngredients);
         List<SelectListItem> GetUnitsOfMeasurementSelectList();
         Task<(IEnumerable<RecipeCardViewModel>, int)> SearchRecipesAsync(string query, string userId, int pageNumber, int pageSize);
-        Task<EditRecipeViewModel> GetEditRecipeviewModel(Recipe recipe);
+        Task<EditRecipeViewModel> GetEditRecipeViewModel(Recipe recipe);
+        Task<DeleteRecipeViewModel> GetDeleteRecipeViewModel(Recipe recipe);
         Task<bool> DeleteRecipeAsync(int id);
         Task<RecipeDetailsViewModel> GetRecipeDetailsViewModel(string userId, Recipe recipe);
     }
