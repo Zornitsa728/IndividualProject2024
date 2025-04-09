@@ -28,7 +28,9 @@ namespace RecipeApp.Services.Tests
                 new Ingredient { Id = 2, Name = "Flour" }
             };
 
-            ingredientRepository.Setup(i => i.GetAll()).Returns(ingredients.AsQueryable());
+            ingredientRepository
+                .Setup(i => i.GetAllAsync())
+                .ReturnsAsync(ingredients);
 
             // Act
             var result = ingredientService.GetAllIngredientsAsync().Result;

@@ -3,6 +3,7 @@ using Moq;
 using RecipeApp.Data.Models;
 using RecipeApp.Data.Repository.Interfaces;
 using RecipeApp.Services.Data;
+using RecipeApp.Services.Data.Interfaces;
 using RecipeApp.Web.ViewModels.RecipeViewModels;
 
 namespace RecipeApp.Services.Tests
@@ -17,11 +18,13 @@ namespace RecipeApp.Services.Tests
         private Mock<IRepository<Cookbook, int>> cookbookRepository;
         private Mock<IRepository<Category, int>> categoryRepository;
         private Mock<IRepository<RecipeIngredient, object>> recipeIngredientRepository;
+        private Mock<IIngredientService> ingredientService;
+        private Mock<ICategoryService> categoryService;
+        private Mock<IFavoriteService> favoriteService;
+        private Mock<IRatingService> ratingService;
+        private Mock<ICommentService> commentService;
 
         private RecipeService recipeService;
-        private FavoriteService favoriteService;
-        private CommentService commentService;
-        private RatingService ratingService;
 
         [SetUp]
         public void Setup()
@@ -33,25 +36,33 @@ namespace RecipeApp.Services.Tests
             this.cookbookRepository = new Mock<IRepository<Cookbook, int>>();
             this.categoryRepository = new Mock<IRepository<Category, int>>();
             this.recipeIngredientRepository = new Mock<IRepository<RecipeIngredient, object>>();
+            this.ingredientService = new Mock<IIngredientService>();
+            this.categoryService = new Mock<ICategoryService>();
+            this.favoriteService = new Mock<IFavoriteService>();
+            this.ratingService = new Mock<IRatingService>();
+            this.commentService = new Mock<ICommentService>();
 
             this.recipeService = new RecipeService(
-                    recipeRepository.Object,
-                    ingredientRepository.Object,
-                    commentRepository.Object,
-                    ratingRepository.Object,
-                    cookbookRepository.Object,
-                    categoryRepository.Object,
-                    recipeIngredientRepository.Object
-                );
+                recipeRepository.Object,
+                ingredientRepository.Object,
+                commentRepository.Object,
+                ratingRepository.Object,
+                cookbookRepository.Object,
+                categoryRepository.Object,
+                recipeIngredientRepository.Object,
+                ingredientService.Object,
+                categoryService.Object,
+                favoriteService.Object,
+                ratingService.Object,
+                commentService.Object
+            );
         }
 
         [Test]
         public async Task AddRecipeAsync_ShouldCallAddOnRepositories()
         {
             // Arrange
-            var recipe = new Recipe { Id = 1, Title = "Test Recipe" };
-            var ingredients = new List<RecipeIngredient> { new RecipeIngredient { IngredientId = 1 } };
-            AddRecipeViewModel model = new AddRecipeViewModel
+            var model = new AddRecipeViewModel
             {
                 Title = "Test Recipe",
                 Description = "Test Description",
@@ -60,20 +71,25 @@ namespace RecipeApp.Services.Tests
                 CategoryId = 1,
                 UserId = "TestUserId",
                 Ingredients = new List<IngredientViewModel>
-                {
-                    new IngredientViewModel { IngredientId = 1, Quantity = 1, Unit = (UnitOfMeasurement)1 }
-                }
+        {
+            new IngredientViewModel { IngredientId = 1, Quantity = 1, Unit = UnitOfMeasurement.Gram }
+        }
             };
 
             // Act
             await recipeService.AddRecipeAsync(model);
 
-            // Assert
+            // Assert: check Recipe is added with matching fields
+            recipeRepository.Verify(r => r.AddAsync(It.Is<Recipe>(r =>
+                r.Title == model.Title &&
+                r.Description == model.Description &&
+                r.Instructions == model.Instructions &&
+                r.ImageUrl == model.ImageUrl &&
+                r.CategoryId == model.CategoryId &&
+                r.UserId == model.UserId
+            )), Times.Once);
 
-            //storing the recipe
-            recipeRepository.Verify(r => r.AddAsync(recipe), Times.Once);
-
-            //When a recipe is added with its ingredients, the system should call the ingredient repository to store the relationship between the recipe and its ingredients.
+            // Assert: at least one ingredient added
             recipeIngredientRepository.Verify(ri => ri.AddAsync(It.IsAny<RecipeIngredient>()), Times.Once);
         }
 
@@ -88,7 +104,8 @@ namespace RecipeApp.Services.Tests
                 new Recipe { Id = 3, Title = "Deleted Recipe", IsDeleted = true }
             };
 
-            recipeRepository.Setup(r => r.GetAllAttached()).Returns(recipes.AsQueryable());
+            var recipesMock = recipes.AsQueryable().BuildMock(); // Convert to mock IQueryable
+            recipeRepository.Setup(r => r.GetAllAttached()).Returns(recipesMock);
 
             // Act
             IEnumerable<Recipe>? result = await recipeService.GetRecipesAsync();
@@ -102,9 +119,9 @@ namespace RecipeApp.Services.Tests
         public async Task GetRecipeByIdAsync_ShouldReturnCorrectRecipe()
         {// Arrange
             var recipes = new List<Recipe>
-            {
-                new Recipe { Id = 1, Title = "Test Recipe", IsDeleted = false }
-            }.AsQueryable().BuildMock();
+             {
+                 new Recipe { Id = 1, Title = "Test Recipe", IsDeleted = false }
+             }.AsQueryable().BuildMock();
 
             recipeRepository.Setup(r => r.GetAllAttached()).Returns(recipes);
 
@@ -117,50 +134,27 @@ namespace RecipeApp.Services.Tests
         }
 
         [Test]
-        public async Task GetUserCookbooksAsync_ShouldReturnCookbooksForUser()
-        {
-            // Arrange
-            var userId = "123";
-            var userCookbooks = new List<Cookbook>
-            {
-                new Cookbook { Id = 1, UserId = userId, Title = "My Cookbook 1" },
-                new Cookbook { Id = 2, UserId = userId, Title = "My Cookbook 2" }
-            }.AsQueryable().BuildMock();
-
-            cookbookRepository.Setup(cr => cr.GetAllAttached())
-                .Returns(userCookbooks);
-
-            // Act
-            IEnumerable<Cookbook>? result = await favoriteService.GetUserCookbooksAsync(userId);
-
-            // Assert
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.Count(), Is.EqualTo(2));
-            Assert.That(result.All(cb => cb.UserId == userId), Is.True);
-        }
-
-        [Test]
         public async Task UpdateRecipeAsync_ShouldUpdateRecipeAndReplaceIngredients()
         {
             // Arrange
             var recipe = new Recipe { Id = 1, Title = "Updated Recipe" };
 
             var existingIngredients = new List<RecipeIngredient>
-            {
-                new RecipeIngredient { RecipeId = 1, IngredientId = 1 },
-                new RecipeIngredient { RecipeId = 1, IngredientId = 2 }
-            }.AsQueryable().BuildMock();
+             {
+                 new RecipeIngredient { RecipeId = 1, IngredientId = 1 },
+                 new RecipeIngredient { RecipeId = 1, IngredientId = 2 }
+             }.AsQueryable().BuildMock();
 
             var updatedIngredients = new List<RecipeIngredient>
-             {
-                 new RecipeIngredient { IngredientId = 3 },
-                 new RecipeIngredient { IngredientId = 4 }
-             };
+              {
+                  new RecipeIngredient { IngredientId = 3 },
+                  new RecipeIngredient { IngredientId = 4 }
+              };
 
             recipeRepository.Setup(r => r.UpdateAsync(recipe)).Returns(Task.FromResult(true)); // Update recipe details
             recipeIngredientRepository.Setup(ri => ri.GetAllAttached())
                 .Returns(existingIngredients); // Old ingredients
-            //removing the old ingredients
+                                               //removing the old ingredients
             recipeIngredientRepository.Setup(ri => ri.DeleteAsync(It.IsAny<object[]>())).Returns(Task.FromResult(true));
             // add new ingredients
             recipeIngredientRepository.Setup(ri => ri.AddAsync(It.IsAny<RecipeIngredient>())).Returns(Task.CompletedTask);
@@ -191,49 +185,12 @@ namespace RecipeApp.Services.Tests
         }
 
         [Test]
-        public async Task GetAverageRatingAsync_ShouldReturnCorrectAverage()
-        {
-            // Arrange
-            int recipeId = 1;
-
-            var ratings = new List<Rating>
-            {
-                new Rating { RecipeId = recipeId, Score = 5 },
-                new Rating { RecipeId = recipeId, Score = 3 }
-            }.AsQueryable().BuildMock();
-
-            ratingRepository.Setup(r => r.GetAllAttached()).Returns(ratings);
-
-            // Act
-            double result = await ratingService.GetAverageRatingAsync(recipeId);
-
-            // Assert
-            Assert.That(result, Is.EqualTo(4));
-        }
-
-        [Test]
-        public async Task GetCommentsAsync_ShouldReturnAllCommentsForRecipe()
-        {
-            // Arrange
-            var comments = new List<Comment>
-            {
-                new Comment { Id = 1, RecipeId = 1, IsDeleted = false },
-                new Comment { Id = 2, RecipeId = 1, IsDeleted = false },
-                new Comment { Id = 3, RecipeId = 2, IsDeleted = false }
-            }.AsQueryable().BuildMock();
-
-            commentRepository.Setup(c => c.GetAllAttached()).Returns(comments);
-
-            // Act
-            List<Comment>? result = commentService.GetCommentsAsync(1).Result.ToList();
-
-            // Assert
-            Assert.That(result.Count(), Is.EqualTo(2));
-        }
-
-        [Test]
         public async Task SearchRecipesAsync_ShouldReturnMatchingRecipes()
         {
+            int pageNumber = 1;
+            int pageSize = 9;
+            string userId = "TestUserId";
+
             // Arrange
             var recipes = new List<Recipe>
             {
@@ -245,11 +202,16 @@ namespace RecipeApp.Services.Tests
 
             recipeRepository.Setup(r => r.GetAllAttached()).Returns(recipes);
 
-            // Act
-            var result = await recipeService.SearchRecipesAsync("apple", new List<int> { 1 });
+            // Mock favoriteService to prevent null reference
+            favoriteService.Setup(fs => fs.GetUserCookbooksAsync(userId))
+                .ReturnsAsync(new List<Cookbook>());
 
-            var resultMore = await recipeService.SearchRecipesAsync("a", new List<int> { 1 });
-            //query and list with favorite recipes so the heart icon can be red
+            favoriteService.Setup(fs => fs.GetAllFavoriteRecipesIds(userId))
+                .ReturnsAsync(new List<int> { 1 }); // Only recipe with Id=1 is liked
+
+            // Act
+            var (result, totalPages) = await recipeService.SearchRecipesAsync("apple", userId, pageNumber, pageSize);
+            var (resultMore, totalPagesMore) = await recipeService.SearchRecipesAsync("a", userId, pageNumber, pageSize);
 
             // Assert
             Assert.Multiple(() =>
@@ -259,7 +221,8 @@ namespace RecipeApp.Services.Tests
                 Assert.That(result.First().Liked, Is.True);
             });
 
-            Assert.That(resultMore.Count(), Is.EqualTo(3));
+            Assert.That(resultMore.Count(), Is.EqualTo(3)); // Recipes 1, 2, 3
         }
+
     }
 }

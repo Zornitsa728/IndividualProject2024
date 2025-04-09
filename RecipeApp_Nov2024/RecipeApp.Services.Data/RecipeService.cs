@@ -57,17 +57,6 @@ namespace RecipeApp.Services.Data
             this.commentService = commentService;
         }
 
-        public RecipeService(IRepository<Recipe, int> object1, IRepository<Ingredient, int> object2, IRepository<Comment, int> object3, IRepository<Rating, int> object4, IRepository<Cookbook, int> object5, IRepository<Category, int> object6, IRepository<RecipeIngredient, object> object7)
-        {
-            this.object1 = object1;
-            this.object2 = object2;
-            this.object3 = object3;
-            this.object4 = object4;
-            this.object5 = object5;
-            this.object6 = object6;
-            this.object7 = object7;
-        }
-
         public async Task<AddRecipeViewModel> GetAddRecipeViewModelAsync(string userId)
         {
             return new AddRecipeViewModel
@@ -197,6 +186,32 @@ namespace RecipeApp.Services.Data
             }
         }
 
+        public async Task<Recipe> UpdateRecipeDetails(Recipe recipe, EditRecipeViewModel model)
+        {
+            // Update recipe details
+            recipe.Title = model.Title;
+            recipe.Description = model.Description;
+            recipe.Instructions = model.Instructions;
+            recipe.ImageUrl = model.ImageUrl;
+            recipe.CategoryId = model.CategoryId;
+
+            return recipe;
+        }
+
+        public async Task<List<RecipeIngredient>> UpdateRecipeIngredients(Recipe recipe, EditRecipeViewModel model)
+        {
+            // Update ingredients if ingredients > 0
+            var updatedIngredients = model.Ingredients.Select(i => new RecipeIngredient()
+            {
+                IngredientId = i.IngredientId,
+                Quantity = i.Quantity,
+                Unit = i.Unit,
+                RecipeId = recipe.Id
+            }).ToList();
+
+            return updatedIngredients;
+        }
+
         public async Task<EditRecipeViewModel> GetEditRecipeviewModel(Recipe recipe)
         {
             var model = new EditRecipeViewModel
@@ -230,6 +245,7 @@ namespace RecipeApp.Services.Data
 
             return model;
         }
+
         public async Task<bool> DeleteRecipeAsync(int id)
         {
             var recipe = await recipeRepository.GetByIdAsync(id);
@@ -255,8 +271,19 @@ namespace RecipeApp.Services.Data
                 })
                 .ToList();
         }
-        public async Task<IEnumerable<RecipeCardViewModel>> SearchRecipesAsync(string query, List<int> favoriteRecipeIds)
+        public async Task<(IEnumerable<RecipeCardViewModel>, int)> SearchRecipesAsync(string query, string userId, int pageNumber, int pageSize)
         {
+            List<int> favoriteRecipeIds = new List<int>();
+
+            if (userId != null)
+            {
+                var cookbooks = await favoriteService.GetUserCookbooksAsync(userId);
+
+                //get all recipes from user cookbooks
+                favoriteRecipeIds = await favoriteService.GetAllFavoriteRecipesIds(userId) ?? new List<int>();
+
+            }
+
             var searchQuery = query.ToLower().Trim();
 
             IEnumerable<RecipeCardViewModel> matches = await recipeRepository.GetAllAttached()
@@ -270,7 +297,15 @@ namespace RecipeApp.Services.Data
                     Liked = favoriteRecipeIds.Contains(r.Id)
                 })
             .ToListAsync();
-            return matches;
+
+            var totalPages = (int)Math.Ceiling(matches.Count() / (double)pageSize);
+
+            var currPageRecipes = matches
+                .Skip((pageNumber - 1) * pageSize) // Skip records for previous pages
+                .Take(pageSize) // Take only the records for the current page
+                .ToList();
+
+            return (matches, totalPages);
         }
 
         public async Task<RecipeDetailsViewModel> GetRecipeDetailsViewModel(string userId, Recipe recipe)

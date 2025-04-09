@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using RecipeApp.Data.Models;
 using RecipeApp.Services.Data.Interfaces;
 using RecipeApp.Web.ViewModels.FavoritesViewModels;
 using RecipeApp.Web.ViewModels.RecipeViewModels;
@@ -150,14 +148,7 @@ namespace RecipeApp.Web.Controllers
             {
                 model.Categories = await categoryService.GetAllCategoriesAsync();
                 model.AvailableIngredients = await ingredientService.GetAllIngredientsAsync();
-                model.UnitsOfMeasurement = Enum.GetValues(typeof(UnitOfMeasurement))
-                    .Cast<UnitOfMeasurement>()
-                    .Select(u => new SelectListItem
-                    {
-                        Text = u.ToString(),
-                        Value = ((int)u).ToString()
-                    })
-                    .ToList();
+                model.UnitsOfMeasurement = recipeService.GetUnitsOfMeasurementSelectList();
                 return View(model);
             }
 
@@ -169,20 +160,10 @@ namespace RecipeApp.Web.Controllers
             }
 
             // Update recipe details
-            recipe.Title = model.Title;
-            recipe.Description = model.Description;
-            recipe.Instructions = model.Instructions;
-            recipe.ImageUrl = model.ImageUrl;
-            recipe.CategoryId = model.CategoryId;
+            recipe = await recipeService.UpdateRecipeDetails(recipe, model);
 
             // Update ingredients if ingredients > 0
-            var updatedIngredients = model.Ingredients.Select(i => new RecipeIngredient()
-            {
-                IngredientId = i.IngredientId,
-                Quantity = i.Quantity,
-                Unit = i.Unit,
-                RecipeId = recipe.Id
-            }).ToList();
+            var updatedIngredients = await recipeService.UpdateRecipeIngredients(recipe, model);
 
             // Remove existing ingredients (if any) and add updated ones
             await recipeService.UpdateRecipeAsync(recipe, updatedIngredients);
@@ -201,43 +182,17 @@ namespace RecipeApp.Web.Controllers
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            List<int> favoriteRecipeIds = new List<int>();
+            // Map cookbooks to a strong-typed view model
+            await SetCookbooksInViewBag(userId!);
 
-            if (userId != null)
-            {
-                var cookbooks = await favoriteService.GetUserCookbooksAsync(userId);
-
-                //get all recipes from user cookbooks
-                favoriteRecipeIds = cookbooks
-                   .SelectMany(cb => cb.RecipeCookbooks)
-                   .Select(rc => rc.RecipeId)
-                   .ToList();
-
-                // Map cookbooks to a strong-typed view model
-                ViewBag.Cookbooks = cookbooks
-                    .Select(c => new CookbookDropdownViewModel
-                    {
-                        Id = c.Id,
-                        Title = c.Title
-                    })
-                    .ToList();
-            }
-
-            var searchResults = await recipeService.SearchRecipesAsync(query, favoriteRecipeIds);
-
-            var currPageRecipes = searchResults
-                .Skip((pageNumber - 1) * pageSize) // Skip records for previous pages
-                .Take(pageSize) // Take only the records for the current page
-                .ToList();
-
-            var totalPages = (int)Math.Ceiling(searchResults.Count() / (double)pageSize);
+            var (searchResults, totalPages) = await recipeService.SearchRecipesAsync(query, userId, pageNumber, pageSize);
 
             // Set pagination data in ViewData
             ViewData["CurrentPage"] = pageNumber;
             ViewData["PageSize"] = pageSize;
             ViewData["TotalPages"] = totalPages;
 
-            return View(currPageRecipes);
+            return View(searchResults);
         }
 
 

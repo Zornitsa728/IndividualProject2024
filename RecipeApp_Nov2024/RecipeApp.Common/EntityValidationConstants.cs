@@ -10,7 +10,7 @@
 
             public const int InstructionsMinLength = 10;
 
-            public const int InstructionsMaxLength = 3500;
+            public const int InstructionsMaxLength = 6000;
 
             public const int DescriptionMinLength = 20;
 
