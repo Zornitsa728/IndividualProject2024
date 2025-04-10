@@ -2,6 +2,7 @@
 using RecipeApp.Data.Models;
 using RecipeApp.Data.Repository.Interfaces;
 using RecipeApp.Services.Data.Interfaces;
+using RecipeApp.Web.ViewModels.CategoryViewModels;
 using RecipeApp.Web.ViewModels.FavoritesViewModels;
 
 namespace RecipeApp.Services.Data
@@ -138,6 +139,25 @@ namespace RecipeApp.Services.Data
                 Description = c.Description,
                 UserId = userId
             }).ToList();
+
+            return model;
+        }
+
+        public async Task<CookbookViewModel> GetCookbookWithRecipeViewModel(Cookbook cookbook)
+        {
+            CookbookViewModel model = new CookbookViewModel
+            {
+                Id = cookbook.Id,
+                Title = cookbook.Title,
+                Description = cookbook.Description,
+                UserId = cookbook.UserId,
+                Recipes = cookbook.RecipeCookbooks.Select(rc => new CategoryRecipeViewModel
+                {
+                    Id = rc.RecipeId,
+                    Title = rc.Recipe.Title,
+                    ImageUrl = rc.Recipe.ImageUrl
+                }).ToList()
+            };
 
             return model;
         }

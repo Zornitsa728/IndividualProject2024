@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RecipeApp.Services.Data.Interfaces;
-using RecipeApp.Web.ViewModels.CategoryViewModels;
 using RecipeApp.Web.ViewModels.FavoritesViewModels;
 using System.Security.Claims;
 
@@ -37,19 +36,7 @@ namespace RecipeApp.Web.Controllers
                 return RedirectToAction("Index");
             }
 
-            CookbookViewModel model = new CookbookViewModel
-            {
-                Id = cookbook.Id,
-                Title = cookbook.Title,
-                Description = cookbook.Description,
-                UserId = cookbook.UserId,
-                Recipes = cookbook.RecipeCookbooks.Select(rc => new CategoryRecipeViewModel
-                {
-                    Id = rc.RecipeId,
-                    Title = rc.Recipe.Title,
-                    ImageUrl = rc.Recipe.ImageUrl
-                }).ToList()
-            };
+            CookbookViewModel model = await favoriteService.GetCookbookWithRecipeViewModel(cookbook);
 
             return View(model);
         }
