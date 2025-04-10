@@ -19,7 +19,7 @@ namespace RecipeApp.Services.Tests
         }
 
         [Test]
-        public void GetAllIngredients_ShouldReturnAllIngredients()
+        public async Task GetAllIngredientsAsync_ShouldReturnAllIngredients()
         {
             // Arrange
             var ingredients = new List<Ingredient>
@@ -33,11 +33,26 @@ namespace RecipeApp.Services.Tests
                 .ReturnsAsync(ingredients);
 
             // Act
-            var result = ingredientService.GetAllIngredientsAsync().Result;
+            var result = await ingredientService.GetAllIngredientsAsync();
 
             // Assert
             Assert.That(result.Count(), Is.EqualTo(2));
             Assert.That(result.First().Name, Is.EqualTo("Sugar"));
+        }
+
+        [Test]
+        public async Task GetAllIngredientsAsync_WhenNoIngredientsExist_ShouldReturnEmptyList()
+        {
+            // Arrange
+            ingredientRepository
+                .Setup(i => i.GetAllAsync())
+                .ReturnsAsync(new List<Ingredient>());
+
+            // Act
+            var result = await ingredientService.GetAllIngredientsAsync();
+
+            // Assert
+            Assert.That(result, Is.Empty);
         }
     }
 }
