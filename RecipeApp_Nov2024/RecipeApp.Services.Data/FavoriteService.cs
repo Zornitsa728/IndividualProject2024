@@ -126,5 +126,20 @@ namespace RecipeApp.Services.Data
 
             return favoriteRecipeIds;
         }
+
+        public async Task<List<CookbookViewModel>> GetCookbooksViewModelAsync(string userId)
+        {
+            List<Cookbook> cookbooks = await GetUserCookbooksAsync(userId);
+
+            List<CookbookViewModel> model = cookbooks.Select(c => new CookbookViewModel
+            {
+                Id = c.Id,
+                Title = c.Title,
+                Description = c.Description,
+                UserId = userId
+            }).ToList();
+
+            return model;
+        }
     }
 }

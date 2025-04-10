@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using RecipeApp.Data.Models;
 using RecipeApp.Services.Data.Interfaces;
 using RecipeApp.Web.ViewModels.CategoryViewModels;
 using RecipeApp.Web.ViewModels.FavoritesViewModels;
@@ -23,15 +22,7 @@ namespace RecipeApp.Web.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
 
-            List<Cookbook> cookbooks = await favoriteService.GetUserCookbooksAsync(userId);
-
-            List<CookbookViewModel> model = cookbooks.Select(c => new CookbookViewModel
-            {
-                Id = c.Id,
-                Title = c.Title,
-                Description = c.Description,
-                UserId = userId
-            }).ToList();
+            List<CookbookViewModel> model = await favoriteService.GetCookbooksViewModelAsync(userId);
 
             return View(model);
         }

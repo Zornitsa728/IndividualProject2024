@@ -12,6 +12,7 @@ namespace RecipeApp.Services.Data.Interfaces
         Task<Cookbook> GetCookbookWithRecipesAsync(int cookbookId);
         Task<bool> RemoveCookbookAsync(int cookbookId);
         Task<List<int>> GetAllFavoriteRecipesIds(string userId);
+        Task<List<CookbookViewModel>> GetCookbooksViewModelAsync(string userId);
     }
 
 }
