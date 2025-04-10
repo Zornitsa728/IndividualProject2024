@@ -8,6 +8,7 @@ namespace RecipeApp.Services.Data.Interfaces
         Task<IEnumerable<Comment>> GetCommentsAsync(int recipeId);
         Task<Comment> AddCommentAsync(CommentViewModel model, string userId);
         Task<bool> DeleteCommentAsync(int recipeId, int commentId, string userId);
+        Task<CommentViewModel> GetCommentViewModel(Comment comment);
         Task EditCommentAsync(int commentId, string content);
     }
 }

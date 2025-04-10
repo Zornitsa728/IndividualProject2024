@@ -9,17 +9,17 @@ namespace RecipeApp.Web.Controllers
     [Authorize]
     public class CommentController : Controller
     {
-        private readonly ICommentService _commentService;
+        private readonly ICommentService commentService;
 
         public CommentController(ICommentService commentService)
         {
-            _commentService = commentService;
+            this.commentService = commentService;
         }
 
         //[HttpGet]
         //public async Task<ActionResult> GetComments(int recipeId)
         //{
-        //    var comments = await _commentService.GetCommentsAsync(recipeId);
+        //    var comments = await commentService.GetCommentsAsync(recipeId);
 
         //    return View(comments);
         //}
@@ -29,7 +29,7 @@ namespace RecipeApp.Web.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
             //todo: if user is not loged
-            var comment = await _commentService.AddCommentAsync(model, userId);
+            var comment = await commentService.AddCommentAsync(model, userId);
 
             return RedirectToAction("Details", "Recipe", new { id = model.RecipeId });
         }
@@ -39,7 +39,7 @@ namespace RecipeApp.Web.Controllers
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
 
-            var result = await _commentService.DeleteCommentAsync(recipeId, commentId, userId);
+            var result = await commentService.DeleteCommentAsync(recipeId, commentId, userId);
 
             if (!result) return RedirectToAction("Index", "Home");
 
@@ -49,7 +49,7 @@ namespace RecipeApp.Web.Controllers
         [HttpPost]
         public async Task<ActionResult> EditComment(int recipeId, int commentId)
         {
-            var comments = await _commentService.GetCommentsAsync(recipeId);
+            var comments = await commentService.GetCommentsAsync(recipeId);
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
 
             var comment = comments.FirstOrDefault(c => c.Id == commentId);
@@ -57,15 +57,7 @@ namespace RecipeApp.Web.Controllers
             if (comment == null || comment.UserId != userId)
                 return RedirectToAction("Details", "Recipe", new { id = recipeId });
 
-            CommentViewModel commentModel = new CommentViewModel()
-            {
-                CommentId = comment.Id,
-                Content = comment.Content,
-                UserId = comment.UserId,
-                UserName = comment.User.UserName,
-                RecipeId = comment.RecipeId,
-                DatePosted = comment.DatePosted
-            };
+            CommentViewModel commentModel = await commentService.GetCommentViewModel(comment);
 
             return View(commentModel);
         }
@@ -78,7 +70,7 @@ namespace RecipeApp.Web.Controllers
                 return View(model);
             }
 
-            await _commentService.EditCommentAsync(model.CommentId, model.Content);
+            await commentService.EditCommentAsync(model.CommentId, model.Content);
 
             return RedirectToAction("Details", "Recipe", new { id = model.RecipeId });
         }

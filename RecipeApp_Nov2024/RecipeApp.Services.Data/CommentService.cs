@@ -57,6 +57,19 @@ namespace RecipeApp.Services.Data
             return true;
         }
 
+        public async Task<CommentViewModel> GetCommentViewModel(Comment comment)
+        {
+            return new CommentViewModel()
+            {
+                CommentId = comment.Id,
+                Content = comment.Content,
+                UserId = comment.UserId,
+                UserName = comment.User.UserName,
+                RecipeId = comment.RecipeId,
+                DatePosted = comment.DatePosted
+            };
+        }
+
         public async Task EditCommentAsync(int commentId, string content)
         {
             var comment = await commentRepository.GetByIdAsync(commentId);
