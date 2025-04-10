@@ -1,6 +1,7 @@
 ﻿using RecipeApp.Data.Models;
 using RecipeApp.Data.Repository.Interfaces;
 using RecipeApp.Services.Data.Interfaces;
+using RecipeApp.Web.ViewModels.CategoryViewModels;
 
 namespace RecipeApp.Services.Data
 {
@@ -21,6 +22,22 @@ namespace RecipeApp.Services.Data
         public async Task<Category> GetCategoryAsync(int id)
         {
             return await categoryRepository.GetByIdAsync(id);
+        }
+
+        public async Task<List<CategoryViewModel>> GetCategoriesViewModelAsync()
+        {
+            var allCategories = await GetAllCategoriesAsync();
+
+            List<CategoryViewModel> model = allCategories
+            .Select(c => new CategoryViewModel()
+            {
+                Id = c.Id,
+                Name = c.Name,
+                ImageUrl = c.ImageUrl
+            })
+            .ToList();
+
+            return model;
         }
     }
 }

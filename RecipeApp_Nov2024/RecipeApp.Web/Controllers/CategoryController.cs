@@ -24,16 +24,7 @@ namespace RecipeApp.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var allCategories = await categoryService.GetAllCategoriesAsync();
-
-            IEnumerable<CategoryViewModel> model = allCategories
-                .Select(c => new CategoryViewModel()
-                {
-                    Id = c.Id,
-                    Name = c.Name,
-                    ImageUrl = c.ImageUrl
-                })
-            .ToList();
+            IEnumerable<CategoryViewModel> model = await categoryService.GetCategoriesViewModelAsync();
 
             return View(model);
         }
