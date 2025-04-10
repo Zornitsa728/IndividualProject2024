@@ -3,6 +3,7 @@ using Moq;
 using RecipeApp.Data.Models;
 using RecipeApp.Data.Repository.Interfaces;
 using RecipeApp.Services.Data;
+using RecipeApp.Services.Data.Interfaces;
 
 namespace RecipeApp.Services.Tests
 {
@@ -11,12 +12,18 @@ namespace RecipeApp.Services.Tests
     {
         private Mock<IRepository<Category, int>> categoryRepository;
         private CategoryService categoryService;
+        private Mock<IFavoriteService> favoriteService;
 
         [SetUp]
         public void Setup()
         {
             categoryRepository = new Mock<IRepository<Category, int>>();
-            categoryService = new CategoryService(categoryRepository.Object);
+            this.favoriteService = new Mock<IFavoriteService>();
+
+            this.categoryService = new CategoryService(
+                categoryRepository.Object,
+                favoriteService.Object
+                );
         }
 
         [Test]

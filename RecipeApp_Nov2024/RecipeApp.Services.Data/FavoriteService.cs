@@ -161,5 +161,17 @@ namespace RecipeApp.Services.Data
 
             return model;
         }
+
+        public async Task<IEnumerable<CookbookDropdownViewModel>> GetCookbookDropdownsAsync(string userId)
+        {
+            var cookbooks = await GetUserCookbooksAsync(userId);
+
+            return cookbooks.Select(c => new CookbookDropdownViewModel
+            {
+                Id = c.Id,
+                Title = c.Title
+            }).ToList();
+        }
+
     }
 }

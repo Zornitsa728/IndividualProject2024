@@ -2,8 +2,6 @@
 using RecipeApp.Data.Models;
 using RecipeApp.Services.Data.Interfaces;
 using RecipeApp.Web.ViewModels.CategoryViewModels;
-using RecipeApp.Web.ViewModels.FavoritesViewModels;
-using RecipeApp.Web.ViewModels.RecipeViewModels;
 using System.Security.Claims;
 
 namespace RecipeApp.Web.Controllers
@@ -24,7 +22,7 @@ namespace RecipeApp.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            IEnumerable<CategoryViewModel> model = await categoryService.GetCategoriesViewModelAsync();
+            List<CategoryViewModel> model = await categoryService.GetCategoriesViewModelAsync();
 
             return View(model);
         }
@@ -43,44 +41,12 @@ namespace RecipeApp.Web.Controllers
 
             string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            List<int> favoriteRecipeIds = new List<int>();
+            var (currPageRecipes, totalPages) = await categoryService.GetCurrPageRecipesForCategoryAsync(recipes, id, userId, pageNumber, pageSize);
 
             if (userId != null)
             {
-                var cookbooks = await favoriteService.GetUserCookbooksAsync(userId);
-
-                favoriteRecipeIds = cookbooks
-                      .SelectMany(cb => cb.RecipeCookbooks)
-                      .Select(rc => rc.RecipeId)
-                      .ToList();
-
-                // Map cookbooks to a strong-typed view model
-                ViewBag.Cookbooks = cookbooks
-                    .Select(c => new CookbookDropdownViewModel
-                    {
-                        Id = c.Id,
-                        Title = c.Title
-                    })
-                    .ToList();
+                ViewBag.Cookbooks = await favoriteService.GetCookbookDropdownsAsync(userId);
             }
-
-            IEnumerable<RecipeCardViewModel> recipesModel = recipes
-                .Where(r => r.CategoryId == id & r.IsDeleted == false)
-                .Select(rc => new RecipeCardViewModel()
-                {
-                    Id = rc.Id,
-                    Title = rc.Title,
-                    ImageUrl = rc.ImageUrl,
-                    Liked = favoriteRecipeIds.Contains(rc.Id)
-                })
-                .ToList();
-
-            var totalPages = (int)Math.Ceiling(recipesModel.Count() / (double)pageSize);
-
-            var currPageRecipes = recipesModel
-                .Skip((pageNumber - 1) * pageSize) // Skip records for previous pages
-                .Take(pageSize) // Take only the records for the current page
-                .ToList();
 
             ViewData["Title"] = category.Name;
 

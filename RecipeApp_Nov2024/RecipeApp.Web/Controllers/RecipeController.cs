@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RecipeApp.Services.Data.Interfaces;
-using RecipeApp.Web.ViewModels.FavoritesViewModels;
 using RecipeApp.Web.ViewModels.RecipeViewModels;
 using System.Security.Claims;
 
@@ -37,7 +36,11 @@ namespace RecipeApp.Web.Controllers
             var (modelCardView, totalPages) = await recipeService.GetCurrPageRecipes(recipes, userId, pageNumber, pageSize);
 
             //Map cookbooks to a strong - typed view model
-            await SetCookbooksInViewBag(userId!);
+            //await SetCookbooksInViewBag(userId!);
+            if (userId != null)
+            {
+                ViewBag.Cookbooks = await favoriteService.GetCookbookDropdownsAsync(userId);
+            }
 
             ViewData["CurrentPage"] = pageNumber;
             ViewData["PageSize"] = pageSize;
@@ -121,7 +124,10 @@ namespace RecipeApp.Web.Controllers
 
             var recipeModel = await recipeService.GetRecipeDetailsViewModel(userId, recipe);
 
-            await SetCookbooksInViewBag(userId!);
+            if (userId != null)
+            {
+                ViewBag.Cookbooks = await favoriteService.GetCookbookDropdownsAsync(userId);
+            }
 
             return View(recipeModel);
         }
@@ -189,7 +195,10 @@ namespace RecipeApp.Web.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             // Map cookbooks to a strong-typed view model
-            await SetCookbooksInViewBag(userId!);
+            if (userId != null)
+            {
+                ViewBag.Cookbooks = await favoriteService.GetCookbookDropdownsAsync(userId);
+            }
 
             var (searchResults, totalPages) = await recipeService.SearchRecipesAsync(query, userId, pageNumber, pageSize);
 
@@ -235,16 +244,16 @@ namespace RecipeApp.Web.Controllers
             return RedirectToAction("MyRecipes", new { pageNumber });
         }
 
-        private async Task SetCookbooksInViewBag(string userId)
-        {
-            var cookbooks = await favoriteService.GetUserCookbooksAsync(userId);
+        //private async Task SetCookbooksInViewBag(string userId)
+        //{
+        //    var cookbooks = await favoriteService.GetUserCookbooksAsync(userId);
 
-            ViewBag.Cookbooks = cookbooks
-                .Select(c => new CookbookDropdownViewModel
-                {
-                    Id = c.Id,
-                    Title = c.Title
-                }).ToList();
-        }
+        //    ViewBag.Cookbooks = cookbooks
+        //        .Select(c => new CookbookDropdownViewModel
+        //        {
+        //            Id = c.Id,
+        //            Title = c.Title
+        //        }).ToList();
+        //}
     }
 }

@@ -14,6 +14,7 @@ namespace RecipeApp.Services.Data.Interfaces
         Task<List<int>> GetAllFavoriteRecipesIds(string userId);
         Task<List<CookbookViewModel>> GetCookbooksViewModelAsync(string userId);
         Task<CookbookViewModel> GetCookbookWithRecipeViewModel(Cookbook cookbook);
+        Task<IEnumerable<CookbookDropdownViewModel>> GetCookbookDropdownsAsync(string userId);
     }
 
 }
