@@ -36,7 +36,6 @@ namespace RecipeApp.Web.Controllers
             var (modelCardView, totalPages) = await recipeService.GetCurrPageRecipes(recipes, userId, pageNumber, pageSize);
 
             //Map cookbooks to a strong - typed view model
-            //await SetCookbooksInViewBag(userId!);
             if (userId != null)
             {
                 ViewBag.Cookbooks = await favoriteService.GetCookbookDropdownsAsync(userId);
@@ -243,17 +242,5 @@ namespace RecipeApp.Web.Controllers
 
             return RedirectToAction("MyRecipes", new { pageNumber });
         }
-
-        //private async Task SetCookbooksInViewBag(string userId)
-        //{
-        //    var cookbooks = await favoriteService.GetUserCookbooksAsync(userId);
-
-        //    ViewBag.Cookbooks = cookbooks
-        //        .Select(c => new CookbookDropdownViewModel
-        //        {
-        //            Id = c.Id,
-        //            Title = c.Title
-        //        }).ToList();
-        //}
     }
 }
