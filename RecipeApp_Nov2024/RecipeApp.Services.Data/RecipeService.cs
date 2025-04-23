@@ -322,45 +322,45 @@ namespace RecipeApp.Services.Data
         public async Task<RecipeDetailsViewModel> GetRecipeDetailsViewModel(string userId, Recipe recipe)
         {
             var recipeModel = new RecipeDetailsViewModel();
+            List<int> favoriteRecipeIds = new List<int>();
 
             if (userId != null)
             {
-                List<int> favoriteRecipeIds = await favoriteService.GetAllFavoriteRecipesIds(userId!);
-
-                var averageRating = await ratingService.GetAverageRatingAsync(recipe.Id);
-                var comments = await commentService.GetCommentsAsync(recipe.Id);
-
-                RecipeCommentsViewModel recipeCommentsViewModel = new RecipeCommentsViewModel()
-                {
-                    RecipeId = recipe.Id,
-                    Comments = comments
-                    .Select(c => new CommentViewModel()
-                    {
-                        CommentId = c.Id,
-                        Content = c.Content,
-                        UserId = c.UserId,
-                        UserName = c.User.UserName,
-                        RecipeId = c.RecipeId,
-                        DatePosted = c.DatePosted,
-                        UserCommented = (c.UserId == userId)
-                    })
-                    .ToList()
-                };
-
-                RatingViewModel ratingModel = new RatingViewModel()
-                {
-                    AverageRating = averageRating,
-                    RecipeId = recipe.Id
-                };
-
-                recipeModel = new RecipeDetailsViewModel
-                {
-                    Recipe = recipe,
-                    Comments = recipeCommentsViewModel,
-                    Rating = ratingModel,
-                    Liked = favoriteRecipeIds.Contains(recipe.Id)
-                };
+                favoriteRecipeIds = await favoriteService.GetAllFavoriteRecipesIds(userId!);
             }
+            var averageRating = await ratingService.GetAverageRatingAsync(recipe.Id);
+            var comments = await commentService.GetCommentsAsync(recipe.Id);
+
+            RecipeCommentsViewModel recipeCommentsViewModel = new RecipeCommentsViewModel()
+            {
+                RecipeId = recipe.Id,
+                Comments = comments
+                .Select(c => new CommentViewModel()
+                {
+                    CommentId = c.Id,
+                    Content = c.Content,
+                    UserId = c.UserId,
+                    UserName = c.User.UserName,
+                    RecipeId = c.RecipeId,
+                    DatePosted = c.DatePosted,
+                    UserCommented = (c.UserId == userId)
+                })
+                .ToList()
+            };
+
+            RatingViewModel ratingModel = new RatingViewModel()
+            {
+                AverageRating = averageRating,
+                RecipeId = recipe.Id
+            };
+
+            recipeModel = new RecipeDetailsViewModel
+            {
+                Recipe = recipe,
+                Comments = recipeCommentsViewModel,
+                Rating = ratingModel,
+                Liked = favoriteRecipeIds.Contains(recipe.Id)
+            };
 
             return recipeModel;
         }
