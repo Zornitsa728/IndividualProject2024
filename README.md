@@ -13,6 +13,7 @@ Manage recipe categories and tags
 
 Responsive design ready for both desktop and mobile
 
+
 🛠️ Tech Stack
 
 Frontend & Backend: ASP.NET Core MVC
@@ -20,6 +21,7 @@ Frontend & Backend: ASP.NET Core MVC
 Database: Entity Framework Core (SQL Server / SQLite)
 
 API Services: Custom service layer for data management
+
 
 📁 Project Structure
 
@@ -39,9 +41,11 @@ RecipeApp_Nov2024/
 
 ├── RecipeApp.Web.ViewModels/  # ViewModels for passing data to views
 
+
 📝 Future Improvements
 
 Improve mobile responsiveness
+
 
 📄 License
 
