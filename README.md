@@ -26,10 +26,15 @@ API Services: Custom service layer for data management
 RecipeApp_Nov2024/
 │
 ├── RecipeApp.Web/             # Main Web Application (MVC)
+
 ├── RecipeApp.Common/          # Common helper classes
+
 ├── RecipeApp.Data/            # Database context and EF Core entities
+
 ├── RecipeApp.Services.Data/   # Business logic and services
+
 ├── RecipeApp.Web.Infrastructure/ # Infrastructure (extensions, middleware)
+
 ├── RecipeApp.Web.ViewModels/  # ViewModels for passing data to views
 
 📝 Future Improvements
