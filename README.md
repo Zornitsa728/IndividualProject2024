@@ -1,4 +1,5 @@
 🍳 RecipeApp
+
 A full-stack ASP.NET Core web application for managing and exploring recipes.
 Built with .NET 8, Entity Framework Core.
 
