@@ -24,7 +24,9 @@ API Services: Custom service layer for data management
 📁 Project Structure
 
 RecipeApp_Nov2024/
+
 │
+
 ├── RecipeApp.Web/             # Main Web Application (MVC)
 
 ├── RecipeApp.Common/          # Common helper classes
